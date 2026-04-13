@@ -134,7 +134,7 @@ func _update_recoil(delta: float) -> void:
 func _update_weapon_sway(delta: float) -> void:
 	_sway_time += delta
 
-	var idle_sway := Vector3(
+	var idle_sway: Vector3 = Vector3(
 		sin(_sway_time * 1.4) * idle_sway_x_amplitude,
 		sin(_sway_time * 2.1) * idle_sway_y_amplitude,
 		0.0
@@ -142,20 +142,32 @@ func _update_weapon_sway(delta: float) -> void:
 
 	_mouse_sway_target = _mouse_sway_target.lerp(Vector2.ZERO, delta * mouse_sway_return_speed)
 	_mouse_sway_current = _mouse_sway_current.lerp(_mouse_sway_target, delta * mouse_sway_return_speed)
-	var mouse_sway := Vector3(_mouse_sway_current.x, _mouse_sway_current.y, 0.0)
 
-	var move_sway := Vector3.ZERO
-	var player := get_parent().get_parent().get_parent() if get_parent() and get_parent().get_parent() else null
-	if player is CharacterBody3D:
-		var horizontal_speed := Vector2(player.velocity.x, player.velocity.z).length()
+	var mouse_sway: Vector3 = Vector3(
+		_mouse_sway_current.x,
+		_mouse_sway_current.y,
+		0.0
+	)
+
+	var move_sway: Vector3 = Vector3.ZERO
+
+	var player: CharacterBody3D = null
+	if get_parent() and get_parent().get_parent() and get_parent().get_parent().get_parent():
+		player = get_parent().get_parent().get_parent() as CharacterBody3D
+
+	if player:
+		var horizontal_speed: float = Vector2(player.velocity.x, player.velocity.z).length()
+
 		if player.is_on_floor() and horizontal_speed > 0.05:
-			var speed_factor := clamp(horizontal_speed / 4.0, 0.0, 1.0)
+			var speed_factor: float = clamp(horizontal_speed / 4.0, 0.0, 1.0)
+
 			_move_sway_time += delta * movement_sway_frequency * lerp(0.7, 1.4, speed_factor)
+
 			move_sway.x = sin(_move_sway_time) * movement_sway_amount * speed_factor
-			move_sway.y = abs(cos(_move_sway_time * 0.5)) * movement_sway_amount * 0.6 * speed_factor
-
-	position = _weapon_base_position + idle_sway + mouse_sway + move_sway + Vector3(0.0, 0.0, _fire_kick_offset_z)
-
+			move_sway.y = absf(cos(_move_sway_time * 0.5)) * movement_sway_amount * 0.6 * speed_factor
+			
+			
+			
 func _play_fire_animation() -> void:
 	var tween := get_tree().create_tween()
 	tween.tween_property(self, "_fire_kick_offset_z", 0.05, 0.05)

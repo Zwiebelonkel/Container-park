@@ -8,3 +8,5 @@ res://assets/3d/ship/ship.tscn
 res://assets/3d/container/container.tscn
 res://scripts/RoomController.gd
 res://scripts/RoomExit.gd
+res://scripts/Player.gd
+res://scripts/Shotgun.gd
