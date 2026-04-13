@@ -11,11 +11,18 @@ extends Node3D
 
 var _transition_overlay: ColorRect
 var _is_transitioning: bool = false
+var _segment_shifted_this_round: bool = false
 
 @export var transition_duration: float = 0.8
+@export var segment_repeat_offset: Vector3 = Vector3(-115.61612, 11.2995, 0.0)
+
+var _loop_segments: Array[Node3D] = []
 
 func _ready() -> void:
 	_setup_transition_overlay()
+	_collect_loop_segments()
+	if room_exit:
+		room_exit.body_entered.connect(_on_room_exit_body_entered)
 	if GameManager:
 		GameManager.round_ended.connect(_on_round_ended)
 	await get_tree().process_frame
@@ -60,6 +67,40 @@ func _start_next_round() -> void:
 		if h: h.rotation.y = 0.0
 	if room_exit and room_exit.has_method("reset"):
 		room_exit.call("reset")
+	_segment_shifted_this_round = false
 	await _fade_in()
 	_is_transitioning = false
 	GameManager.start_round()
+
+func _on_room_exit_body_entered(body: Node) -> void:
+	if _segment_shifted_this_round:
+		return
+	if not body.is_in_group("player"):
+		return
+	_shift_segments_once()
+	_segment_shifted_this_round = true
+
+func _collect_loop_segments() -> void:
+	_loop_segments.clear()
+	var back_segment := get_node_or_null("back_segment")
+	var mid_segment := get_node_or_null("mid_segment")
+	var front_segment := get_node_or_null("front_segment")
+	if back_segment is Node3D:
+		_loop_segments.append(back_segment)
+	if mid_segment is Node3D:
+		_loop_segments.append(mid_segment)
+	if front_segment is Node3D:
+		_loop_segments.append(front_segment)
+
+func _shift_segments_once() -> void:
+	if _loop_segments.size() < 3:
+		return
+
+	var first := _loop_segments[0]
+	var last := _loop_segments[_loop_segments.size() - 1]
+	var moved_transform := first.global_transform
+	moved_transform.origin = last.global_transform.origin + segment_repeat_offset
+	first.global_transform = moved_transform
+
+	_loop_segments.pop_front()
+	_loop_segments.append(first)
