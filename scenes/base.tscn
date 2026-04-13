@@ -4,7 +4,6 @@
 [ext_resource type="Shader" uid="uid://dlm1f7k18gvbj" path="res://assets/shaders/sky2.gdshader" id="2_baglu"]
 [ext_resource type="Script" uid="uid://bgiboesu2hm74" path="res://scripts/RoomController.gd" id="3_roomctrl"]
 [ext_resource type="Script" uid="uid://dm8a4gwausiap" path="res://scripts/AnomalyManager.gd" id="4_anomalymgr"]
-[ext_resource type="Script" uid="uid://cn6edeb5wkemh" path="res://scripts/RoomExit.gd" id="5_roomexit"]
 [ext_resource type="PackedScene" uid="uid://00xsnpo38nw4" path="res://assets/3d/ship/ship.tscn" id="6_xvvcp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_40w10"]
@@ -44,9 +43,6 @@ height = 0.8
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_barrel"]
 height = 0.8
 radius = 0.3
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_exit"]
-size = Vector3(32.1938, 9.98926, 0.5)
 
 [node name="Base" type="Node3D"]
 script = ExtResource("3_roomctrl")
@@ -96,15 +92,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, 2)
 
 [node name="Spawn3" type="Node3D" parent="AnomalyManager/SpawnPoints"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -3)
-
-[node name="RoomExit" type="Area3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -83.1428, 18.9866, -9.20885)
-script = ExtResource("5_roomexit")
-anomaly_manager_path = NodePath("../AnomalyManager")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RoomExit"]
-transform = Transform3D(0.999979, 0, -3.30402e-13, 0, 1, 0, 3.30402e-13, 0, 0.999979, -6.60231, -1.82821, 0)
-shape = SubResource("BoxShape3D_exit")
 
 [node name="mid_segment" parent="." instance=ExtResource("6_xvvcp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.91088, 1.90735e-06, -2.24718)
