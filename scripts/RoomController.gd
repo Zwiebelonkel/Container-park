@@ -130,11 +130,12 @@ func _shift_segments_once() -> void:
 	var first_entry := first.find_child("RoomEntry", true, false)
 
 	if last_exit is Node3D and first_entry is Node3D:
-		# Back-Segment an das Front-Segment anhängen (Entry auf letzten Exit ausrichten)
-		var entry_local := first.to_local(first_entry.global_position)
-		var new_transform := first.global_transform
-		new_transform.origin = last_exit.global_position - first.global_transform.basis * entry_local
-		first.global_transform = new_transform
+		# Back-Segment an das Front-Segment anhängen (inkl. korrekter Rotation).
+		# Formel: First_new * Entry_local = LastExit_global  =>  First_new = LastExit_global * Entry_local^-1
+		var entry_local_transform := first.global_transform.affine_inverse() * first_entry.global_transform
+		var aligned_transform := last_exit.global_transform * entry_local_transform.affine_inverse()
+		aligned_transform.basis = aligned_transform.basis.orthonormalized()
+		first.global_transform = aligned_transform
 	else:
 		var last_transform := last.global_transform
 		var new_origin := last_transform.origin - last_transform.basis * segment_repeat_offset
