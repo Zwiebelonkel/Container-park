@@ -13,16 +13,14 @@ var _is_transitioning: bool = false
 var _segment_shifted_this_round: bool = false
 
 @export var transition_duration: float = 0.8
+@export var segment_repeat_offset: Vector3 = Vector3(-115.61612, 11.2995, 0.0)
+
 var _loop_segments: Array[Node3D] = []
-var _loop_segment_roles: Array[String] = []
-var _segment_templates: Dictionary = {}
-var _relative_pattern: Dictionary = {}
 var _room_exits: Array[Area3D] = []
 
 func _ready() -> void:
 	_setup_transition_overlay()
 	_collect_loop_segments()
-	_build_segment_pattern()
 	_collect_room_exits()
 	for exit_area in _room_exits:
 		exit_area.body_entered.connect(_on_room_exit_body_entered)
@@ -79,7 +77,6 @@ func _on_room_exit_body_entered(body: Node) -> void:
 	_shift_segments_once()
 	_segment_shifted_this_round = true
 
-
 func _collect_room_exits() -> void:
 	_room_exits.clear()
 	for segment in _loop_segments:
@@ -91,50 +88,34 @@ func _collect_room_exits() -> void:
 
 func _collect_loop_segments() -> void:
 	_loop_segments.clear()
-	_loop_segment_roles.clear()
 	var back_segment := get_node_or_null("back_segment")
 	var mid_segment := get_node_or_null("mid_segment")
 	var front_segment := get_node_or_null("front_segment")
 	if back_segment is Node3D:
 		_loop_segments.append(back_segment)
-		_loop_segment_roles.append("back")
 	if mid_segment is Node3D:
 		_loop_segments.append(mid_segment)
-		_loop_segment_roles.append("mid")
 	if front_segment is Node3D:
 		_loop_segments.append(front_segment)
-		_loop_segment_roles.append("front")
-
-func _build_segment_pattern() -> void:
-	_segment_templates.clear()
-	_relative_pattern.clear()
-	for i in _loop_segments.size():
-		var role := _loop_segment_roles[i]
-		_segment_templates[role] = _loop_segments[i].global_transform
-
-	var roles := ["back", "mid", "front"]
-	for from_role in roles:
-		for to_role in roles:
-			if not _segment_templates.has(from_role) or not _segment_templates.has(to_role):
-				continue
-			var from_transform: Transform3D = _segment_templates[from_role]
-			var to_transform: Transform3D = _segment_templates[to_role]
-			_relative_pattern["%s>%s" % [from_role, to_role]] = from_transform.affine_inverse() * to_transform
 
 func _shift_segments_once() -> void:
 	if _loop_segments.size() < 3:
 		return
 
 	var first := _loop_segments[0]
-	var moved_role := _loop_segment_roles[0]
 	var last := _loop_segments[_loop_segments.size() - 1]
-	var last_role := _loop_segment_roles[_loop_segment_roles.size() - 1]
-	var key := "%s>%s" % [last_role, moved_role]
-	if _relative_pattern.has(key):
-		var relative: Transform3D = _relative_pattern[key]
-		first.global_transform = last.global_transform * relative
 
+	var last_transform := last.global_transform
+
+	# Offset relativ zur Rotation anwenden
+	var new_origin := last_transform.origin + last_transform.basis * segment_repeat_offset
+
+	# Rotation übernehmen
+	var new_transform := last_transform
+	new_transform.origin = new_origin
+
+	first.global_transform = new_transform
+
+	# Reihenfolge rotieren
 	_loop_segments.pop_front()
 	_loop_segments.append(first)
-	_loop_segment_roles.pop_front()
-	_loop_segment_roles.append(moved_role)
