@@ -1,12 +1,16 @@
-## Player.gd (v3 - Jump Update)
+## Player.gd (v4 - Headbob Update)
 ## CharacterBody3D - First-Person Controller
-## Movement + Mouse Look + Shooting + Jump
+## Movement + Mouse Look + Shooting + Jump + Headbob
 
 extends CharacterBody3D
 
 @export var walk_speed: float = 3.5
 @export var mouse_sensitivity: float = 0.002
 @export var jump_velocity: float = 5.5
+
+@export var headbob_frequency: float = 9.0
+@export var headbob_amplitude: float = 0.045
+@export var headbob_smoothing: float = 10.0
 
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
@@ -15,9 +19,13 @@ extends CharacterBody3D
 var _can_move: bool = true
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+var _headbob_time: float = 0.0
+var _camera_base_local_position: Vector3
+
 func _ready() -> void:
 	add_to_group("player")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	_camera_base_local_position = camera.position
 
 	if GameManager:
 		GameManager.round_started.connect(_on_round_started)
@@ -78,6 +86,22 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, walk_speed)
 
 	move_and_slide()
+	_update_headbob(delta)
+
+func _update_headbob(delta: float) -> void:
+	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
+	var movement_factor := clamp(horizontal_speed / max(walk_speed, 0.001), 0.0, 1.0)
+	var should_bob := is_on_floor() and movement_factor > 0.05
+
+	if should_bob:
+		_headbob_time += delta * headbob_frequency * lerp(0.5, 1.25, movement_factor)
+	else:
+		_headbob_time = lerp(_headbob_time, 0.0, delta * headbob_smoothing)
+
+	var bob_x := sin(_headbob_time * 0.5) * headbob_amplitude * 0.5 * movement_factor
+	var bob_y := abs(sin(_headbob_time)) * headbob_amplitude * movement_factor
+	var target_position := _camera_base_local_position + Vector3(bob_x, bob_y, 0.0)
+	camera.position = camera.position.lerp(target_position, delta * headbob_smoothing)
 
 # ── Utility ──────────────────────────────
 
