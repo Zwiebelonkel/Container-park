@@ -72,11 +72,12 @@ func _spawn_test_cubes(segment: Node3D) -> void:
 	if count <= 0:
 		return
 	for i in count:
-		var cube := CUBE_ANOMALY_SCRIPT.new()
+		var cube: Node = CUBE_ANOMALY_SCRIPT.new()
 		cube.name = "AnomalyCube_%d" % i
 		segment.add_child(cube)
-		if cube is Node3D:
-			(cube as Node3D).position = cube_spawn_local_positions[i]
+		var cube_node3d := cube as Node3D
+		if cube_node3d:
+			cube_node3d.position = cube_spawn_local_positions[i]
 		_active_anomaly_nodes.append(cube)
 	emit_signal("anomaly_spawned", "ShootableCubeAnomaly")
 	print("[AnomalyManager] %d Würfel-Anomalien in aktivem Segment gespawnt." % count)
