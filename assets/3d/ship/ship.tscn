@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bd2pym1leqyri" path="res://assets/3d/ship/ship.glb" id="1_la6qk"]
 [ext_resource type="PackedScene" uid="uid://cfimwrldvrmjx" path="res://assets/3d/container/container.tscn" id="2_qfyhj"]
 [ext_resource type="Texture2D" uid="uid://bg0v6u1tjnsmu" path="res://assets/3d/ship/ship_albedo.png" id="2_u4tj7"]
-[ext_resource type="Script" uid="uid://cn6edeb5wkemh" path="res://scripts/RoomExit.gd" id="4_7juku"]
+[ext_resource type="Script" uid="uid://cn6edeb5wkemh" path="res://scripts/RoomExit.gd" id="3_roomexit"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7juku"]
 albedo_texture = ExtResource("2_u4tj7")
@@ -14,7 +14,7 @@ data = PackedVector3Array(-0.9091, 1, 1, -1, 0, 1, -1, 1, 1, -1, 1, 1, -0.9091, 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_u4tj7"]
 data = PackedVector3Array(-1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1, -1, 1, 1)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_qcucu"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_room_exit"]
 size = Vector3(32.1938, 9.98926, 0.5)
 
 [node name="Node3D" type="Node3D"]
@@ -78,11 +78,12 @@ transform = Transform3D(-4.39955e-07, 0, 10.065, 0, 10.065, 0, -10.065, 0, -4.39
 transform = Transform3D(-4.39955e-07, 0, 10.065, 0, 10.065, 0, -10.065, 0, -4.39955e-07, 24.8655, 1.48501, -8.90535)
 
 [node name="RoomExit" type="Area3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -83.1428, 18.9866, -3.1046)
-script = ExtResource("4_7juku")
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -83.1428, 18.9866, -9.20885)
+script = ExtResource("3_roomexit")
+anomaly_manager_path = NodePath("../../../AnomalyManager")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RoomExit"]
 transform = Transform3D(0.999979, 0, -3.30402e-13, 0, 1, 0, 3.30402e-13, 0, 0.999979, -6.60231, -1.82821, 0)
-shape = SubResource("BoxShape3D_qcucu")
+shape = SubResource("BoxShape3D_room_exit")
 
 [editable path="ship"]
