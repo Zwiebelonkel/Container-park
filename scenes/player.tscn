@@ -1,27 +1,49 @@
-[gd_scene load_steps=7 format=3 uid="uid://0xdkhyk7g122"]
+[gd_scene load_steps=10 format=3 uid="uid://0xdkhyk7g122"]
 
 [ext_resource type="Script" uid="uid://cer627qg5q4eb" path="res://scripts/Player.gd" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://dpbgatemq2x3w" path="res://assets/3d/shotgun/shotgun.tscn" id="2_dqkch"]
 [ext_resource type="Script" uid="uid://ca72sjdbbhb66" path="res://scripts/Shotgun.gd" id="2_shotgun"]
 [ext_resource type="Shader" uid="uid://baaa0vbgor10e" path="res://assets/shaders/buckshot.gdshader" id="3_qhqgy"]
+[ext_resource type="AudioStream" uid="uid://dpcudtdabb87" path="res://assets/audio/shot.mp3" id="5_qlg0r"]
+[ext_resource type="Shader" uid="uid://c58tnpttta1w4" path="res://assets/shaders/CRT.gdshader" id="5_tuyoq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.4
 height = 1.8
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fjrip"]
+shader = ExtResource("5_tuyoq")
+shader_parameter/grain_intensity = 0.313
+shader_parameter/min_lum = 0.0
+shader_parameter/max_lum = 1.0
+shader_parameter/time_scale = 0.624
+shader_parameter/vignette_darkness = 0.5
+shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.2
+shader_parameter/barrel_distortion = 0.0
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 0.0
+shader_parameter/pixel_resolution_x = 165
+shader_parameter/pixel_resolution_y = 900
+shader_parameter/enable_color_quantization = false
+shader_parameter/color_quant_steps = 28.517
+shader_parameter/warble_amount = 0.0
+shader_parameter/warble_speed = 0.449
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dqkch"]
 shader = ExtResource("3_qhqgy")
-shader_parameter/exposure = 1.0
+shader_parameter/exposure = 2.0
 shader_parameter/contrast = 1.1
 shader_parameter/saturation = 1.12
 shader_parameter/enable_pixelate = true
-shader_parameter/pixel_factor = 3.0
+shader_parameter/pixel_factor = 1.331
 shader_parameter/enable_posterize = true
 shader_parameter/color_levels = 16.0
 shader_parameter/dither_strength = 0.35
-shader_parameter/chrom_aberration = 0.01
-shader_parameter/vignette_strength = 1.0
-shader_parameter/grain_strength = 0.2
+shader_parameter/chrom_aberration = 0.19
+shader_parameter/vignette_strength = 2.0
+shader_parameter/grain_strength = 0.616
 shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
 shader_parameter/tint_strength = 0.15
 shader_parameter/viewport_size_override = Vector2(0, 0)
@@ -47,19 +69,30 @@ transform = Transform3D(-1.25061, 0.336082, -0.344423, 0.347766, 1.29409, 3.0402
 script = ExtResource("2_shotgun")
 
 [node name="MuzzleFlash" type="OmniLight3D" parent="Head/Camera3D/Shotgun"]
-transform = Transform3D(0.746269, -2.51457e-08, 1.49012e-08, 3.72529e-08, 0.746269, -1.11759e-08, -1.49012e-08, 1.49012e-08, 0.746269, -0.160284, 0.14006, 0.749101)
+transform = Transform3D(0.746268, -5.01983e-07, -4.91738e-07, 4.74975e-08, 0.746266, 1.11759e-08, -2.98023e-08, 1.11759e-08, 0.746269, -0.238189, 0.160996, 1.05241)
 visible = false
 light_color = Color(1, 0.8, 0.4, 1)
-light_energy = 8.0
+light_energy = 16.0
+light_specular = 2.909
 omni_range = 3.0
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Head/Camera3D"]
 light_color = Color(1, 1, 0.756863, 1)
 light_energy = 10.212
+shadow_enabled = true
 spot_range = 9.28892
-spot_angle = 14.9869
+spot_angle = 27.72
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_fjrip")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
 material = SubResource("ShaderMaterial_dqkch")
@@ -69,3 +102,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="shot" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_qlg0r")
+pitch_scale = 0.91

@@ -10,3 +10,4 @@ res://scripts/RoomController.gd
 res://scripts/RoomExit.gd
 res://scripts/Player.gd
 res://scripts/Shotgun.gd
+res://assets/shaders/CRT.gdshader

@@ -18,7 +18,7 @@ extends CharacterBody3D
 @onready var shotgun: Node = $Head/Camera3D/Shotgun
 
 var _can_move: bool = true
-var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
+var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")*2.5
 
 var _headbob_time: float = 0.0
 var _camera_base_local_position: Vector3
@@ -86,20 +86,23 @@ func _physics_process(delta: float) -> void:
 	_update_headbob(delta)
 
 func _update_headbob(delta: float) -> void:
-	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
-	var speed_norm := clamp(horizontal_speed / max(walk_speed, 0.001), 0.0, 1.0)
-	var active := is_on_floor() and speed_norm > 0.05
+	var horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
+	var speed_norm: float = clamp(horizontal_speed / max(walk_speed, 0.001), 0.0, 1.0)
+	var active: bool = is_on_floor() and speed_norm > 0.05
 
 	if active:
 		_headbob_time += delta * headbob_frequency * lerp(0.8, 1.5, speed_norm)
 
-	var bob_factor := speed_norm if active else 0.0
-	var bob_x := sin(_headbob_time * 0.5) * headbob_amplitude * 0.55 * bob_factor
-	var bob_y := abs(sin(_headbob_time)) * headbob_amplitude * bob_factor
-	var target_position := _camera_base_local_position + Vector3(bob_x, bob_y, 0.0)
+	var bob_factor: float = speed_norm if active else 0.0
+
+	var bob_x: float = sin(_headbob_time * 0.5) * headbob_amplitude * 0.55 * bob_factor
+	var bob_y: float = absf(sin(_headbob_time)) * headbob_amplitude * bob_factor
+
+	var target_position: Vector3 = _camera_base_local_position + Vector3(bob_x, bob_y, 0.0)
 	camera.position = camera.position.lerp(target_position, delta * headbob_smoothing)
 
-	var target_roll := -sin(_headbob_time * 0.5) * headbob_roll_degrees * bob_factor
+	var target_roll: float = -sin(_headbob_time * 0.5) * headbob_roll_degrees * bob_factor
+	camera.rotation_degrees.z = lerp(camera.rotation_degrees.z, target_roll, delta * headbob_smoothing)
 	camera.rotation_degrees.z = lerp(camera.rotation_degrees.z, target_roll, delta * headbob_smoothing)
 
 func freeze(frozen: bool) -> void:

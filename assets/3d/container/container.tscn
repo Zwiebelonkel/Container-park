@@ -1,17 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://cfimwrldvrmjx"]
+[gd_scene load_steps=3 format=3 uid="uid://cfimwrldvrmjx"]
 
 [ext_resource type="PackedScene" uid="uid://bmd6vgm34eod0" path="res://assets/3d/container/scene.gltf" id="1_7c7s6"]
-[ext_resource type="Shader" uid="uid://c7l6htfbm8hw5" path="res://assets/shaders/ps1.gdshader" id="2_p2eku"]
-[ext_resource type="Texture2D" uid="uid://cdbq15p572qd1" path="res://assets/3d/container/textures/Material_baseColor.png" id="3_nyryc"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tmwx2"]
-render_priority = 0
-shader = ExtResource("2_p2eku")
-shader_parameter/affine_mapping = false
-shader_parameter/albedo = ExtResource("3_nyryc")
-shader_parameter/alpha_scissor = 0.534
-shader_parameter/jitter = 0.711
-shader_parameter/resolution = Vector2i(320, 240)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7c7s6"]
 size = Vector3(1.10596, 2.77008, 1.16296)
@@ -19,9 +8,6 @@ size = Vector3(1.10596, 2.77008, 1.16296)
 [node name="Container" type="Node3D"]
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("1_7c7s6")]
-
-[node name="Cube_085_Material_0" parent="Sketchfab_Scene/Sketchfab_model/62e92f83f7ee4dbeb064d0dab6ad6159_fbx/RootNode/Cube_085" index="0"]
-surface_material_override/0 = SubResource("ShaderMaterial_tmwx2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Sketchfab_Scene/Sketchfab_model/62e92f83f7ee4dbeb064d0dab6ad6159_fbx/RootNode/Cube_085/Cube_085_Material_0" index="0"]
 

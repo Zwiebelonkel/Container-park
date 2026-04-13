@@ -1,6 +1,7 @@
+SpotLight3D
+AudioStreamPlayer
 CollisionShape3D
 StaticBody3D
-SpotLight3D
 MeshInstance3D
 ColorRect
 CanvasLayer
