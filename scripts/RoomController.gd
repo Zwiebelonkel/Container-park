@@ -14,8 +14,15 @@ var _is_transitioning: bool = false
 
 @export var transition_duration: float = 0.8
 
+@export var loop_axis: Vector3 = Vector3.LEFT
+@export var segment_length: float = 115.0
+@export var recycle_threshold: float = 35.0
+
+var _loop_segments: Array[Node3D] = []
+
 func _ready() -> void:
 	_setup_transition_overlay()
+	_collect_loop_segments()
 	if GameManager:
 		GameManager.round_ended.connect(_on_round_ended)
 	await get_tree().process_frame
@@ -63,3 +70,45 @@ func _start_next_round() -> void:
 	await _fade_in()
 	_is_transitioning = false
 	GameManager.start_round()
+
+func _process(_delta: float) -> void:
+	_update_loop_segments()
+
+func _collect_loop_segments() -> void:
+	_loop_segments.clear()
+	for child in get_children():
+		if child is Node3D and String(child.name).ends_with("_segment"):
+			_loop_segments.append(child)
+	if _loop_segments.size() < 2:
+		return
+	_sort_segments_by_progress()
+
+func _sort_segments_by_progress() -> void:
+	if _loop_segments.is_empty():
+		return
+	var axis := loop_axis.normalized()
+	_loop_segments.sort_custom(func(a: Node3D, b: Node3D) -> bool:
+		return a.global_position.dot(axis) < b.global_position.dot(axis)
+	)
+
+func _update_loop_segments() -> void:
+	if not player or _loop_segments.size() < 2:
+		return
+	var axis := loop_axis.normalized()
+	if axis == Vector3.ZERO:
+		return
+
+	var player_progress := player.global_position.dot(axis)
+	var moved := false
+	while _loop_segments.size() >= 2:
+		var first := _loop_segments[0]
+		var last := _loop_segments[_loop_segments.size() - 1]
+		var first_progress := first.global_position.dot(axis)
+		if player_progress - first_progress <= recycle_threshold:
+			break
+		first.global_position = last.global_position + axis * segment_length
+		_loop_segments.pop_front()
+		_loop_segments.append(first)
+		moved = true
+	if moved:
+		_sort_segments_by_progress()
