@@ -110,8 +110,8 @@ func _shift_segments_once() -> void:
 	# Offset relativ zur Rotation anwenden
 	var new_origin := last_transform.origin + last_transform.basis * segment_repeat_offset
 
-	# Rotation übernehmen
-	var new_transform := last_transform
+	# Eigene Rotation des recycelten Segments beibehalten
+	var new_transform := first.global_transform
 	new_transform.origin = new_origin
 
 	first.global_transform = new_transform
