@@ -6,3 +6,4 @@ res://ui/mainMenu.tscn
 res://assets/3d/shotgun/shotgun.tscn
 res://assets/3d/ship/ship.tscn
 res://assets/3d/container/container.tscn
+res://scripts/RoomController.gd
