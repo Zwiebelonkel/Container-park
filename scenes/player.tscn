@@ -28,7 +28,8 @@ shader_parameter/viewport_size_override = Vector2(0, 0)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_player")
-walk_speed = 14.34
+walk_speed = 35.18
+jump_velocity = 20.405
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
