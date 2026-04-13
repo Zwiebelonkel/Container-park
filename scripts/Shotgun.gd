@@ -59,6 +59,11 @@ func _process(delta: float) -> void:
 	_update_recoil(delta)
 	_update_weapon_sway(delta)
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		_mouse_sway_target.x = clamp(-event.relative.x * mouse_sway_strength, -0.03, 0.03)
+		_mouse_sway_target.y = clamp(event.relative.y * mouse_sway_strength, -0.02, 0.02)
+
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		_mouse_sway_target.x = clamp(-event.relative.x * mouse_sway_strength, -0.08, 0.08)
