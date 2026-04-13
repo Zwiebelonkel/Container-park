@@ -1,4 +1,4 @@
-## Player.gd (v4 - Headbob Update)
+## Player.gd (v5 - Visible Headbob)
 ## CharacterBody3D - First-Person Controller
 ## Movement + Mouse Look + Shooting + Jump + Headbob
 
@@ -8,9 +8,10 @@ extends CharacterBody3D
 @export var mouse_sensitivity: float = 0.002
 @export var jump_velocity: float = 5.5
 
-@export var headbob_frequency: float = 9.0
-@export var headbob_amplitude: float = 0.045
-@export var headbob_smoothing: float = 10.0
+@export var headbob_frequency: float = 10.5
+@export var headbob_amplitude: float = 0.09
+@export var headbob_smoothing: float = 12.0
+@export var headbob_roll_degrees: float = 1.4
 
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
@@ -65,16 +66,12 @@ func _physics_process(delta: float) -> void:
 	if not _can_move:
 		return
 
-	# ── Gravity ─────────────────────────────
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
-	# ── Jump ───────────────────────────────
-	if is_on_floor():
-		if Input.is_action_just_pressed("jump"):
-			velocity.y = jump_velocity
+	if is_on_floor() and Input.is_action_just_pressed("jump"):
+		velocity.y = jump_velocity
 
-	# ── Movement ───────────────────────────
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var direction := (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
@@ -89,21 +86,21 @@ func _physics_process(delta: float) -> void:
 	_update_headbob(delta)
 
 func _update_headbob(delta: float) -> void:
-	var horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
-	var movement_factor: float = clamp(horizontal_speed / max(walk_speed, 0.001), 0.0, 1.0)
-	var should_bob: bool = is_on_floor() and movement_factor > 0.05
+	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
+	var speed_norm := clamp(horizontal_speed / max(walk_speed, 0.001), 0.0, 1.0)
+	var active := is_on_floor() and speed_norm > 0.05
 
-	if should_bob:
-		_headbob_time += delta * headbob_frequency * lerp(0.5, 1.25, movement_factor)
-	else:
-		_headbob_time = lerp(_headbob_time, 0.0, delta * headbob_smoothing)
+	if active:
+		_headbob_time += delta * headbob_frequency * lerp(0.8, 1.5, speed_norm)
 
-	var bob_x: float = sin(_headbob_time * 0.5) * headbob_amplitude * 0.5 * movement_factor
-	var bob_y: float = abs(sin(_headbob_time)) * headbob_amplitude * movement_factor
-
-	var target_position: Vector3 = _camera_base_local_position + Vector3(bob_x, bob_y, 0.0)
+	var bob_factor := speed_norm if active else 0.0
+	var bob_x := sin(_headbob_time * 0.5) * headbob_amplitude * 0.55 * bob_factor
+	var bob_y := abs(sin(_headbob_time)) * headbob_amplitude * bob_factor
+	var target_position := _camera_base_local_position + Vector3(bob_x, bob_y, 0.0)
 	camera.position = camera.position.lerp(target_position, delta * headbob_smoothing)
-# ── Utility ──────────────────────────────
+
+	var target_roll := -sin(_headbob_time * 0.5) * headbob_roll_degrees * bob_factor
+	camera.rotation_degrees.z = lerp(camera.rotation_degrees.z, target_roll, delta * headbob_smoothing)
 
 func freeze(frozen: bool) -> void:
 	_can_move = !frozen

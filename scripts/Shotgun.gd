@@ -18,15 +18,17 @@ signal ammo_changed(current: int, max_ammo: int)
 @export var recoil_kick_side: float = 0.6
 @export var recoil_recover_speed: float = 6.0
 
-@export var idle_sway_x_amplitude: float = 0.003
-@export var idle_sway_y_amplitude: float = 0.002
-@export var movement_sway_amount: float = 0.006
-@export var movement_sway_frequency: float = 9.0
-@export var mouse_sway_strength: float = 0.00004
-@export var mouse_sway_return_speed: float = 12.0
+@export var idle_sway_x_amplitude: float = 0.01
+@export var idle_sway_y_amplitude: float = 0.007
+@export var movement_sway_amount: float = 0.02
+@export var movement_sway_frequency: float = 9.5
+@export var mouse_sway_strength: float = 0.00018
+@export var mouse_sway_return_speed: float = 14.0
+@export var sway_rotation_degrees: float = 1.6
 
 @onready var muzzle_flash: OmniLight3D = $MuzzleFlash
 @onready var camera: Camera3D = get_parent() as Camera3D
+@onready var _player_body: CharacterBody3D = get_tree().get_first_node_in_group("player") as CharacterBody3D
 
 var current_ammo: int = max_ammo
 var _can_fire: bool = true
@@ -45,6 +47,8 @@ var _fire_kick_offset_z: float = 0.0
 func _ready() -> void:
 	if not camera:
 		camera = get_viewport().get_camera_3d()
+	if not _player_body:
+		_player_body = get_tree().get_first_node_in_group("player") as CharacterBody3D
 	_weapon_base_position = position
 	_weapon_base_rotation = rotation_degrees
 	if muzzle_flash:
@@ -61,6 +65,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		_mouse_sway_target.y = clamp(event.relative.y * mouse_sway_strength, -0.02, 0.02)
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		_mouse_sway_target.x = clamp(-event.relative.x * mouse_sway_strength, -0.08, 0.08)
+		_mouse_sway_target.y = clamp(event.relative.y * mouse_sway_strength, -0.06, 0.06)
+		return
+
 	if not (event is InputEventMouseButton or event is InputEventKey or event is InputEventJoypadButton):
 		return
 	if event.is_action_pressed("fire") and _can_fire and not _is_reloading:
@@ -76,7 +85,6 @@ func _fire() -> void:
 
 	var hit_nodes: Array = []
 	var space_state := get_viewport().get_camera_3d().get_world_3d().direct_space_state
-
 	for i in pellet_count:
 		var hit := _cast_pellet(space_state)
 		if hit and hit not in hit_nodes:
@@ -104,12 +112,7 @@ func _cast_pellet(space_state: PhysicsDirectSpaceState3D) -> Node:
 	)
 
 	var cam_basis := camera.global_transform.basis
-	var forward := -cam_basis.z
-	var right := cam_basis.x
-	var up := cam_basis.y
-
-	var direction := (forward + right * spread_dir.x + up * spread_dir.y).normalized()
-
+	var direction := (-cam_basis.z + cam_basis.x * spread_dir.x + cam_basis.y * spread_dir.y).normalized()
 	var origin := camera.global_position
 	var query := PhysicsRayQueryParameters3D.create(origin, origin + direction * fire_range)
 	query.collide_with_areas = true
@@ -133,8 +136,7 @@ func _update_recoil(delta: float) -> void:
 
 func _update_weapon_sway(delta: float) -> void:
 	_sway_time += delta
-
-	var idle_sway: Vector3 = Vector3(
+	var idle_sway := Vector3(
 		sin(_sway_time * 1.4) * idle_sway_x_amplitude,
 		sin(_sway_time * 2.1) * idle_sway_y_amplitude,
 		0.0
@@ -142,32 +144,22 @@ func _update_weapon_sway(delta: float) -> void:
 
 	_mouse_sway_target = _mouse_sway_target.lerp(Vector2.ZERO, delta * mouse_sway_return_speed)
 	_mouse_sway_current = _mouse_sway_current.lerp(_mouse_sway_target, delta * mouse_sway_return_speed)
+	var mouse_sway := Vector3(_mouse_sway_current.x, _mouse_sway_current.y, 0.0)
 
-	var mouse_sway: Vector3 = Vector3(
-		_mouse_sway_current.x,
-		_mouse_sway_current.y,
-		0.0
-	)
-
-	var move_sway: Vector3 = Vector3.ZERO
-
-	var player: CharacterBody3D = null
-	if get_parent() and get_parent().get_parent() and get_parent().get_parent().get_parent():
-		player = get_parent().get_parent().get_parent() as CharacterBody3D
-
-	if player:
-		var horizontal_speed: float = Vector2(player.velocity.x, player.velocity.z).length()
-
-		if player.is_on_floor() and horizontal_speed > 0.05:
-			var speed_factor: float = clamp(horizontal_speed / 4.0, 0.0, 1.0)
-
-			_move_sway_time += delta * movement_sway_frequency * lerp(0.7, 1.4, speed_factor)
-
+	var move_sway := Vector3.ZERO
+	if _player_body and _player_body.is_inside_tree():
+		var horizontal_speed := Vector2(_player_body.velocity.x, _player_body.velocity.z).length()
+		if _player_body.is_on_floor() and horizontal_speed > 0.05:
+			var player_walk_speed := float(_player_body.get("walk_speed"))
+			var speed_factor := clamp(horizontal_speed / max(player_walk_speed, 0.001), 0.0, 1.0)
+			_move_sway_time += delta * movement_sway_frequency * lerp(0.8, 1.5, speed_factor)
 			move_sway.x = sin(_move_sway_time) * movement_sway_amount * speed_factor
-			move_sway.y = absf(cos(_move_sway_time * 0.5)) * movement_sway_amount * 0.6 * speed_factor
-			
-			
-			
+			move_sway.y = abs(cos(_move_sway_time * 0.5)) * movement_sway_amount * 0.7 * speed_factor
+
+	position = _weapon_base_position + idle_sway + mouse_sway + move_sway + Vector3(0.0, 0.0, _fire_kick_offset_z)
+	rotation_degrees.x = _weapon_base_rotation.x + (mouse_sway.y + move_sway.y) * sway_rotation_degrees * 40.0
+	rotation_degrees.y = _weapon_base_rotation.y + (-mouse_sway.x + move_sway.x) * sway_rotation_degrees * 45.0
+
 func _play_fire_animation() -> void:
 	var tween := get_tree().create_tween()
 	tween.tween_property(self, "_fire_kick_offset_z", 0.05, 0.05)
