@@ -3,14 +3,20 @@ extends BaseAnomaly
 @export var cube_size: Vector3 = Vector3(1.2, 1.2, 1.2)
 @export var cube_color: Color = Color(1.0, 0.2, 0.2, 1.0)
 
+var _spawn_offset: Vector3 = Vector3.ZERO
+
 func _ready() -> void:
 	if get_child_count() == 0:
 		_build_cube()
 	super._ready()
 
+func set_spawn_offset(offset: Vector3) -> void:
+	_spawn_offset = offset
+
 func _build_cube() -> void:
 	var mesh_instance := MeshInstance3D.new()
 	mesh_instance.name = "MeshInstance3D"
+	mesh_instance.position = _spawn_offset
 	var box_mesh := BoxMesh.new()
 	box_mesh.size = cube_size
 	mesh_instance.mesh = box_mesh
