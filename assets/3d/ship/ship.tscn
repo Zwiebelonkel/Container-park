@@ -30,6 +30,9 @@ material_override = SubResource("StandardMaterial3D_7juku")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ship/Cube/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_la6qk")
 
+[node name="Cube_003" parent="ship" index="2"]
+transform = Transform3D(92.3071, 0, 0, 0, -2.50057, 0, 0, 0, 36.6858, 1064.49, 29.7816, 0)
+
 [node name="StaticBody3D" type="StaticBody3D" parent="ship/Cube_003" index="0"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ship/Cube_003/StaticBody3D"]
@@ -84,6 +87,13 @@ anomaly_manager_path = NodePath("../../../AnomalyManager")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RoomExit"]
 transform = Transform3D(0.999979, 0, -3.30402e-13, 0, 1, 0, 3.30402e-13, 0, 0.999979, -6.60231, -1.82821, 0)
+shape = SubResource("BoxShape3D_room_exit")
+
+[node name="RoomEntry" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.34471, 7.80708, 33.3899)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RoomEntry"]
+transform = Transform3D(0.999979, 0, -3.30402e-13, 0, 1, 0, 3.30402e-13, 0, 0.999979, -6.60231, -1.82821, -4.34394)
 shape = SubResource("BoxShape3D_room_exit")
 
 [editable path="ship"]
