@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cum0wceoa8anj"]
+
+[ext_resource type="PackedScene" uid="uid://0xdkhyk7g122" path="res://scenes/player.tscn" id="1_pvqg0"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_baglu"]
+size = Vector3(20, 0.2, 20)
+
+[node name="Base" type="Node3D"]
+
+[node name="floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_baglu")
+
+[node name="Player" parent="." instance=ExtResource("1_pvqg0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.47362, 0)

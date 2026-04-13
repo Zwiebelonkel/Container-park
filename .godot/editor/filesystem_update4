@@ -1,0 +1,8 @@
+res://scenes/base.tscn
+res://assets/shaders/ps1.gdshader
+res://assets/shaders/sky2.gdshader
+res://scenes/player.tscn
+res://ui/mainMenu.tscn
+res://assets/3d/shotgun/shotgun.tscn
+res://assets/3d/ship/ship.tscn
+res://assets/3d/container/container.tscn

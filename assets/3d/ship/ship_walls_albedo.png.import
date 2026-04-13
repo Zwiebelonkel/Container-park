@@ -1,0 +1,38 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://ds23p1ero5hx2"
+path.s3tc="res://.godot/imported/ship_walls_albedo.png-f98c9fa726a190d0ca1d1bdc1a1f0bf7.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "93f7c297a2ca65e346e9f1e5fb525f6a"
+}
+
+[deps]
+
+source_file="res://assets/3d/ship/ship_walls_albedo.png"
+dest_files=["res://.godot/imported/ship_walls_albedo.png-f98c9fa726a190d0ca1d1bdc1a1f0bf7.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

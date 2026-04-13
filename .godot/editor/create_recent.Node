@@ -1,0 +1,10 @@
+CollisionShape3D
+StaticBody3D
+SpotLight3D
+MeshInstance3D
+ColorRect
+CanvasLayer
+TextureRect
+Button
+DirectionalLight3D
+WorldEnvironment
