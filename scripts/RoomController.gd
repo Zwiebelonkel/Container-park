@@ -24,6 +24,7 @@ func _ready() -> void:
 	_collect_loop_segments()
 	_collect_room_exits()
 	_refresh_shift_exit_connection()
+	_sync_anomaly_manager_segments()
 	if GameManager:
 		GameManager.round_ended.connect(_on_round_ended)
 	await get_tree().process_frame
@@ -149,3 +150,9 @@ func _shift_segments_once() -> void:
 
 	# Nach dem Shift ist ein neues Segment in der Mitte -> neuen Trigger verbinden
 	_refresh_shift_exit_connection()
+	_sync_anomaly_manager_segments()
+
+
+func _sync_anomaly_manager_segments() -> void:
+	if anomaly_manager and anomaly_manager.has_method("set_segment_order"):
+		anomaly_manager.call("set_segment_order", _loop_segments)
