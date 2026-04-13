@@ -132,8 +132,8 @@ func _shift_segments_once() -> void:
 	if last_exit is Node3D and first_entry is Node3D:
 		# Back-Segment an das Front-Segment anhängen (inkl. korrekter Rotation).
 		# Formel: First_new * Entry_local = LastExit_global  =>  First_new = LastExit_global * Entry_local^-1
-		var entry_local_transform := first.global_transform.affine_inverse() * first_entry.global_transform
-		var aligned_transform := last_exit.global_transform * entry_local_transform.affine_inverse()
+		var entry_local_transform: Transform3D = first.global_transform.affine_inverse() * first_entry.global_transform
+		var aligned_transform: Transform3D = last_exit.global_transform * entry_local_transform.affine_inverse()
 		aligned_transform.basis = aligned_transform.basis.orthonormalized()
 		first.global_transform = aligned_transform
 	else:

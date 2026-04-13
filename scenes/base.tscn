@@ -50,7 +50,7 @@ transition_duration = 0.0
 
 [node name="Player" parent="." instance=ExtResource("1_pvqg0")]
 transform = Transform3D(3.89, 0, 0, 0, 3.89, 0, 0, 0, 3.89, 0, 2.47362, 0)
-jump_velocity = 41.485
+jump_velocity = 17.12
 
 [node name="SpotLight3D" parent="Player/Head/Camera3D" index="1"]
 spot_range = 40.3236
