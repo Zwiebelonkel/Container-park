@@ -1,6 +1,6 @@
-## RoomController.gd  (v2 - Shooting Update)
+## RoomController.gd  (v3 - Segment Trigger Update)
 ## Root-Node der Room-Szene.
-## Neu: RoomExit wird nach jeder Runde zurueckgesetzt.
+## Segment-Loop verschiebt jetzt gezielt beim Exit des mittleren Segments.
 
 extends Node3D
 
@@ -17,13 +17,13 @@ var _segment_shifted_this_round: bool = false
 
 var _loop_segments: Array[Node3D] = []
 var _room_exits: Array[Area3D] = []
+var _active_shift_exit: Area3D
 
 func _ready() -> void:
 	_setup_transition_overlay()
 	_collect_loop_segments()
 	_collect_room_exits()
-	for exit_area in _room_exits:
-		exit_area.body_entered.connect(_on_room_exit_body_entered)
+	_refresh_shift_exit_connection()
 	if GameManager:
 		GameManager.round_ended.connect(_on_round_ended)
 	await get_tree().process_frame
@@ -50,7 +50,7 @@ func _fade_in() -> void:
 	tween.tween_property(_transition_overlay, "modulate:a", 0.0, transition_duration * 0.5)
 	await tween.finished
 
-func _on_round_ended(was_correct: bool) -> void:
+func _on_round_ended(_was_correct: bool) -> void:
 	if _is_transitioning:
 		return
 	await get_tree().create_timer(0.8).timeout
@@ -80,10 +80,8 @@ func _on_room_exit_body_entered(body: Node) -> void:
 func _collect_room_exits() -> void:
 	_room_exits.clear()
 	for segment in _loop_segments:
-		if not segment:
-			continue
-		var exit_node := segment.find_child("RoomExit", true, false)
-		if exit_node is Area3D:
+		var exit_node := _find_room_exit(segment)
+		if exit_node:
 			_room_exits.append(exit_node)
 
 func _collect_loop_segments() -> void:
@@ -98,6 +96,29 @@ func _collect_loop_segments() -> void:
 	if front_segment is Node3D:
 		_loop_segments.append(front_segment)
 
+func _refresh_shift_exit_connection() -> void:
+	if _active_shift_exit and _active_shift_exit.body_entered.is_connected(_on_room_exit_body_entered):
+		_active_shift_exit.body_entered.disconnect(_on_room_exit_body_entered)
+
+	_active_shift_exit = null
+	if _loop_segments.size() < 3:
+		return
+
+	var middle_segment := _loop_segments[1]
+	var middle_exit := _find_room_exit(middle_segment)
+	if middle_exit:
+		_active_shift_exit = middle_exit
+		if not _active_shift_exit.body_entered.is_connected(_on_room_exit_body_entered):
+			_active_shift_exit.body_entered.connect(_on_room_exit_body_entered)
+
+func _find_room_exit(segment: Node3D) -> Area3D:
+	if not segment:
+		return null
+	var exit_node := segment.find_child("RoomExit", true, false)
+	if exit_node is Area3D:
+		return exit_node
+	return null
+
 func _shift_segments_once() -> void:
 	if _loop_segments.size() < 3:
 		return
@@ -109,7 +130,7 @@ func _shift_segments_once() -> void:
 	var first_entry := first.find_child("RoomEntry", true, false)
 
 	if last_exit is Node3D and first_entry is Node3D:
-		# Entry des recycelten Segments exakt auf Exit des letzten Segments setzen
+		# Back-Segment an das Front-Segment anhängen (Entry auf letzten Exit ausrichten)
 		var entry_local := first.to_local(first_entry.global_position)
 		var new_transform := first.global_transform
 		new_transform.origin = last_exit.global_position - first.global_transform.basis * entry_local
@@ -121,6 +142,9 @@ func _shift_segments_once() -> void:
 		fallback_transform.origin = new_origin
 		first.global_transform = fallback_transform
 
-	# Reihenfolge rotieren
+	# Reihenfolge rotieren: [back, mid, front] -> [mid, front, back]
 	_loop_segments.pop_front()
 	_loop_segments.append(first)
+
+	# Nach dem Shift ist ein neues Segment in der Mitte -> neuen Trigger verbinden
+	_refresh_shift_exit_connection()
