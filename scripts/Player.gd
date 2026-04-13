@@ -89,20 +89,20 @@ func _physics_process(delta: float) -> void:
 	_update_headbob(delta)
 
 func _update_headbob(delta: float) -> void:
-	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
-	var movement_factor := clamp(horizontal_speed / max(walk_speed, 0.001), 0.0, 1.0)
-	var should_bob := is_on_floor() and movement_factor > 0.05
+	var horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
+	var movement_factor: float = clamp(horizontal_speed / max(walk_speed, 0.001), 0.0, 1.0)
+	var should_bob: bool = is_on_floor() and movement_factor > 0.05
 
 	if should_bob:
 		_headbob_time += delta * headbob_frequency * lerp(0.5, 1.25, movement_factor)
 	else:
 		_headbob_time = lerp(_headbob_time, 0.0, delta * headbob_smoothing)
 
-	var bob_x := sin(_headbob_time * 0.5) * headbob_amplitude * 0.5 * movement_factor
-	var bob_y := abs(sin(_headbob_time)) * headbob_amplitude * movement_factor
-	var target_position := _camera_base_local_position + Vector3(bob_x, bob_y, 0.0)
-	camera.position = camera.position.lerp(target_position, delta * headbob_smoothing)
+	var bob_x: float = sin(_headbob_time * 0.5) * headbob_amplitude * 0.5 * movement_factor
+	var bob_y: float = abs(sin(_headbob_time)) * headbob_amplitude * movement_factor
 
+	var target_position: Vector3 = _camera_base_local_position + Vector3(bob_x, bob_y, 0.0)
+	camera.position = camera.position.lerp(target_position, delta * headbob_smoothing)
 # ── Utility ──────────────────────────────
 
 func freeze(frozen: bool) -> void:
