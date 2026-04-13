@@ -18,6 +18,12 @@ var _segment_shifted_this_round: bool = false
 
 var _loop_segments: Array[Node3D] = []
 
+@export var loop_axis: Vector3 = Vector3.LEFT
+@export var segment_length: float = 115.0
+@export var recycle_threshold: float = 35.0
+
+var _loop_segments: Array[Node3D] = []
+
 func _ready() -> void:
 	_setup_transition_overlay()
 	_collect_loop_segments()
