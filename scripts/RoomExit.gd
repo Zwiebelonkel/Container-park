@@ -15,7 +15,7 @@ extends Area3D
 
 @export var anomaly_manager_path: NodePath = ""
 
-@onready var _anomaly_manager: Node = get_node_or_null(anomaly_manager_path)
+@onready var _anomaly_manager: Node = _resolve_anomaly_manager()
 
 # Cooldown damit der Exit nicht mehrfach triggert
 var _triggered: bool = false
@@ -48,3 +48,13 @@ func _on_body_entered(body: Node) -> void:
 ## Muss nach jeder Runde zurückgesetzt werden
 func reset() -> void:
 	_triggered = false
+
+func _resolve_anomaly_manager() -> Node:
+	if anomaly_manager_path != NodePath(""):
+		var by_path := get_node_or_null(anomaly_manager_path)
+		if by_path:
+			return by_path
+	var scene := get_tree().current_scene
+	if scene:
+		return scene.find_child("AnomalyManager", true, false)
+	return null
