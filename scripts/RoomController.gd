@@ -105,16 +105,21 @@ func _shift_segments_once() -> void:
 	var first := _loop_segments[0]
 	var last := _loop_segments[_loop_segments.size() - 1]
 
-	var last_transform := last.global_transform
+	var last_exit := last.find_child("RoomExit", true, false)
+	var first_entry := first.find_child("RoomEntry", true, false)
 
-	# Offset relativ zur Rotation anwenden
-	var new_origin := last_transform.origin - last_transform.basis * segment_repeat_offset
-
-	# Eigene Rotation des recycelten Segments beibehalten
-	var new_transform := first.global_transform
-	new_transform.origin = new_origin
-
-	first.global_transform = new_transform
+	if last_exit is Node3D and first_entry is Node3D:
+		# Entry des recycelten Segments exakt auf Exit des letzten Segments setzen
+		var entry_local := first.to_local(first_entry.global_position)
+		var new_transform := first.global_transform
+		new_transform.origin = last_exit.global_position - first.global_transform.basis * entry_local
+		first.global_transform = new_transform
+	else:
+		var last_transform := last.global_transform
+		var new_origin := last_transform.origin - last_transform.basis * segment_repeat_offset
+		var fallback_transform := first.global_transform
+		fallback_transform.origin = new_origin
+		first.global_transform = fallback_transform
 
 	# Reihenfolge rotieren
 	_loop_segments.pop_front()
