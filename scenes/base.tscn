@@ -50,6 +50,7 @@ size = Vector3(32.1938, 9.98926, 0.5)
 
 [node name="Base" type="Node3D"]
 script = ExtResource("3_roomctrl")
+transition_duration = 0.0
 
 [node name="Player" parent="." instance=ExtResource("1_pvqg0")]
 transform = Transform3D(3.89, 0, 0, 0, 3.89, 0, 0, 0, 3.89, 0, 2.47362, 0)
