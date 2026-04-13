@@ -58,6 +58,7 @@ transition_duration = 0.0
 transform = Transform3D(3.89, 0, 0, 0, 3.89, 0, 0, 0, 3.89, 0, 2.47362, 0)
 walk_speed = 19.21
 jump_velocity = 13.01
+step_height = 1.815
 
 [node name="MuzzleFlash" parent="Player/Head/Camera3D/Shotgun" index="1"]
 omni_range = 4096.0

@@ -1,8 +1,10 @@
+CollisionShape3D
+Area3D
+OmniLight3D
+MeshInstance3D
 SpotLight3D
 AudioStreamPlayer
-CollisionShape3D
 StaticBody3D
-MeshInstance3D
 ColorRect
 CanvasLayer
 TextureRect

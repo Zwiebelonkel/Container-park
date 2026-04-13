@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://0xdkhyk7g122"]
+[gd_scene load_steps=12 format=3 uid="uid://0xdkhyk7g122"]
 
 [ext_resource type="Script" uid="uid://cer627qg5q4eb" path="res://scripts/Player.gd" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://dpbgatemq2x3w" path="res://assets/3d/shotgun/shotgun.tscn" id="2_dqkch"]
@@ -10,6 +10,18 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.4
 height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tuyoq"]
+emission_enabled = true
+emission = Color(1, 0.854902, 0, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_fjrip"]
+material = SubResource("StandardMaterial3D_tuyoq")
+top_radius = 0.3
+bottom_radius = 0.0
+radial_segments = 4
+rings = 0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fjrip"]
 shader = ExtResource("5_tuyoq")
@@ -70,15 +82,21 @@ script = ExtResource("2_shotgun")
 
 [node name="MuzzleFlash" type="OmniLight3D" parent="Head/Camera3D/Shotgun"]
 transform = Transform3D(0.746268, -5.01983e-07, -4.91738e-07, 4.74975e-08, 0.746266, 1.11759e-08, -2.98023e-08, 1.11759e-08, 0.746269, -0.238189, 0.160996, 1.05241)
-visible = false
 light_color = Color(1, 0.8, 0.4, 1)
 light_energy = 16.0
 light_specular = 2.909
 omni_range = 3.0
 
+[node name="flash" type="MeshInstance3D" parent="Head/Camera3D/Shotgun/MuzzleFlash"]
+transform = Transform3D(1.33865, -0.0592531, 0.0107483, 0.012065, 0.0295599, -1.33962, 0.0590002, 1.33836, 0.0300636, 0.29922, 0.120271, 0.949675)
+mesh = SubResource("CylinderMesh_fjrip")
+skeleton = NodePath("../..")
+
 [node name="SpotLight3D" type="SpotLight3D" parent="Head/Camera3D"]
 light_color = Color(1, 1, 0.756863, 1)
-light_energy = 10.212
+light_energy = 5.835
+light_indirect_energy = 1.1
+light_volumetric_fog_energy = 0.0
 shadow_enabled = true
 spot_range = 9.28892
 spot_angle = 27.72

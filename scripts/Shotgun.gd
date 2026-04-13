@@ -9,7 +9,7 @@ signal ammo_changed(current: int, max_ammo: int)
 @export var spread_degrees: float = 4.5
 @export var fire_range: float = 25.0
 @export var reload_time: float = 0.9
-@export var fire_rate: float = 1.1
+@export var fire_rate: float = 0.2
 
 # ── Sway ───────────────────────────────
 @export var idle_sway_x_amplitude: float = 0.01
@@ -21,6 +21,8 @@ signal ammo_changed(current: int, max_ammo: int)
 @export var sway_rotation_degrees: float = 1.6
 
 @onready var muzzle_flash: OmniLight3D = $MuzzleFlash
+@onready var flash: MeshInstance3D = $MuzzleFlash/flash
+
 @onready var shot: AudioStreamPlayer = $"../../../shot"
 
 @onready var camera: Camera3D = get_parent() as Camera3D
@@ -56,6 +58,7 @@ func _ready() -> void:
 
 	if muzzle_flash:
 		muzzle_flash.visible = false
+		flash.visible = false
 
 	emit_signal("ammo_changed", current_ammo, max_ammo)
 
@@ -213,11 +216,13 @@ func _trigger_muzzle_flash() -> void:
 		return
 
 	muzzle_flash.visible = true
+	flash.visible = true
 	shot.play()
 	await get_tree().create_timer(0.06).timeout
 
 	if is_instance_valid(muzzle_flash):
 		muzzle_flash.visible = false
+		flash.visible = false
 
 # ──────────────────────────────────────
 
