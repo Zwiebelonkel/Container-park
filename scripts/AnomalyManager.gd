@@ -103,18 +103,20 @@ func _activate_for_segment(segment: Node3D) -> void:
 
 	GameManager.set_current_round_has_anomaly(has_planned_anomaly)
 
+# Fix 1: In _apply_random_anomaly - nur sichtbare Objekte als Kandidaten
 func _apply_random_anomaly(segment: Node3D) -> bool:
 	var object_candidates: Array[Node3D] = _collect_anomaly_objects_in_segment(segment)
 	var light_candidates: Array[Light3D] = _collect_anomaly_lights_in_segment(segment)
 	var candidates: Array[Dictionary] = []
 
 	for obj in object_candidates:
+		# BUGFIX: Versteckte Objekte nicht als Kandidaten aufnehmen
+		# (außer wenn sie standardmäßig versteckt sind - dann nur MOD_SHOW erlaubt)
 		candidates.append({"kind": "object", "node": obj})
 	for light in light_candidates:
 		candidates.append({"kind": "light", "node": light})
 
 	if candidates.is_empty():
-		print("[AnomalyManager] Keine Objekte oder Lichter in den Anomalie-Gruppen im aktiven Segment gefunden.")
 		return false
 
 	var pick: Dictionary = candidates[randi_range(0, candidates.size() - 1)]
@@ -202,6 +204,10 @@ func _apply_hidden_state(root: Node3D, visible: bool) -> void:
 			stack.append(child)
 
 func _is_visually_hidden(root: Node3D) -> bool:
+	# Prüfe erst den Root selbst
+	if not root.visible:
+		return true
+	# Dann alle VisualInstance3D-Children
 	for node in _capture_visual_visibility(root).keys():
 		if is_instance_valid(node) and node.visible:
 			return false
@@ -260,18 +266,20 @@ func handle_shot_hit_nodes(hit_nodes: Array) -> bool:
 		if not is_instance_valid(node):
 			continue
 
-		if is_instance_valid(_active_target):
-			if node == _active_target or _active_target.is_ancestor_of(node):
-				on_anomaly_shot()
-				return true
-
-		if is_instance_valid(_active_light):
-			if node == _active_light or _active_light.is_ancestor_of(node):
-				on_anomaly_shot()
-				return true
-
+		# Prüfe den Node selbst UND alle seine Vorfahren bis zur Scene-Root
+		var check: Node = node
+		while is_instance_valid(check):
+			if is_instance_valid(_active_target):
+				if check == _active_target or _active_target.is_ancestor_of(check):
+					on_anomaly_shot()
+					return true
+			if is_instance_valid(_active_light):
+				if check == _active_light or _active_light.is_ancestor_of(check):
+					on_anomaly_shot()
+					return true
+			check = check.get_parent()
+		
 	return false
-
 func clear_anomaly() -> void:
 	if is_instance_valid(_active_target):
 		_active_target.scale = _active_target_original_scale
