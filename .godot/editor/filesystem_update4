@@ -7,3 +7,4 @@ res://assets/3d/ship/ship.tscn
 res://assets/3d/container/container.tscn
 res://scenes/base.tscn
 res://ui/optionsPanel.tscn
+res://scripts/AnomalyManager.gd

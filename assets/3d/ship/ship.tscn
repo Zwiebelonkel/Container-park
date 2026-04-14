@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://00xsnpo38nw4"]
+[gd_scene load_steps=23 format=3 uid="uid://00xsnpo38nw4"]
 
 [ext_resource type="PackedScene" uid="uid://bd2pym1leqyri" path="res://assets/3d/ship/ship.glb" id="1_la6qk"]
 [ext_resource type="PackedScene" uid="uid://cfimwrldvrmjx" path="res://assets/3d/container/container.tscn" id="2_qfyhj"]
@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://0842k2ibitsc" path="res://assets/3d/shelves/scene.gltf" id="8_oj46n"]
 [ext_resource type="PackedScene" uid="uid://c7i6kl7sghaks" path="res://assets/3d/wetFloor/scene.gltf" id="9_i74pi"]
 [ext_resource type="PackedScene" uid="uid://bi8yilbwgih4e" path="res://assets/3d/mannequin/scene.gltf" id="10_cuepq"]
+[ext_resource type="PackedScene" uid="uid://dltsjdp7kdtfx" path="res://assets/3d/musicBox/scene.gltf" id="11_oj46n"]
+[ext_resource type="AudioStream" uid="uid://cr6m1tosptbef" path="res://assets/audio/musicbox.mp3" id="12_i74pi"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7juku"]
 albedo_texture = ExtResource("2_u4tj7")
@@ -196,22 +198,34 @@ shadow_enabled = true
 spot_range = 50.7166
 spot_angle = 41.245
 
-[node name="shelves" parent="." instance=ExtResource("8_oj46n") groups=["anomaly_objects"]]
+[node name="shelves" parent="." groups=["anomaly_objects"] instance=ExtResource("8_oj46n")]
 transform = Transform3D(4.44202e-08, 0, -3.725, 0, 3.725, 0, 3.725, 0, 4.44202e-08, 80.1388, 12.2531, -12.3938)
 
-[node name="shelves2" parent="." instance=ExtResource("8_oj46n") groups=["anomaly_objects"]]
+[node name="shelves2" parent="." groups=["anomaly_objects"] instance=ExtResource("8_oj46n")]
 transform = Transform3D(4.44202e-08, 0, -3.725, 0, 3.725, 0, 3.725, 0, 4.44202e-08, -54.0188, 12.2531, -8.01424)
 
-[node name="floorsign" parent="." instance=ExtResource("9_i74pi") groups=["anomaly_objects"]]
+[node name="floorsign" parent="." groups=["anomaly_objects"] instance=ExtResource("9_i74pi")]
 transform = Transform3D(-0.555087, 0, 3.94615, 0, 3.985, 0, -3.94615, 0, -0.555087, 56.5857, 0.855992, -14.642)
 
-[node name="mannequin" parent="." instance=ExtResource("10_cuepq") groups=["anomaly_objects"]]
+[node name="mannequin" parent="." groups=["anomaly_objects"] instance=ExtResource("10_cuepq")]
 transform = Transform3D(-5.61292, 0, -3.19792, 0, 6.46, 0, 3.19792, 0, -5.61292, 5.02064, 1.27826, -9.35246)
 
-[node name="Vendingmaschine" parent="." instance=ExtResource("4_uv0cr") groups=["anomaly_objects"]]
+[node name="mannequin2" parent="." groups=["anomaly_objects"] instance=ExtResource("10_cuepq")]
+transform = Transform3D(-0.0562591, 0, -6.45975, 3.72545, 5.27746, -0.0324456, 5.27725, -3.7256, -0.0459605, 71.2954, 0.67665, -2.41113)
+visible = false
+
+[node name="Vendingmaschine" parent="." groups=["anomaly_objects"] instance=ExtResource("4_uv0cr")]
 transform = Transform3D(5.10385e-08, 0, -4.28, 0, 4.28, 0, 4.28, 0, 5.10385e-08, 16.3086, 1.36058, 24.2824)
 
-[node name="Barrels" parent="." instance=ExtResource("5_2k72t") groups=["anomaly_objects"]]
+[node name="Barrels" parent="." groups=["anomaly_objects"] instance=ExtResource("5_2k72t")]
 transform = Transform3D(2.499, 0, 2.62595, 0, 3.625, 0, -2.62595, 0, 2.499, 10.8447, 3.10207, 0.0787596)
+
+[node name="musicBox" parent="." groups=["anomaly_objects"] instance=ExtResource("11_oj46n")]
+transform = Transform3D(0.00216483, 0, 0.00450705, 0, 0.005, 0, -0.00450705, 0, 0.00216483, 16.2645, 13.4779, -8.07819)
+visible = false
+
+[node name="music" type="AudioStreamPlayer3D" parent="musicBox"]
+stream = ExtResource("12_i74pi")
+pitch_scale = 0.93
 
 [editable path="ship"]

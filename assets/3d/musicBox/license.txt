@@ -1,0 +1,11 @@
+Model Information:
+* title:	Music Box Prop
+* source:	https://sketchfab.com/3d-models/music-box-prop-d93e0f676d9d41c1a7e33930befc366f
+* author:	Nabbakadnashr (https://sketchfab.com/Nabbakadnashr)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Music Box Prop" (https://sketchfab.com/3d-models/music-box-prop-d93e0f676d9d41c1a7e33930befc366f) by Nabbakadnashr (https://sketchfab.com/Nabbakadnashr) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
