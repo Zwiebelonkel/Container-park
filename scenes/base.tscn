@@ -93,7 +93,6 @@ shape = SubResource("CylinderShape3D_barrel")
 
 [node name="AnomalyManager" type="Node" parent="."]
 script = ExtResource("4_anomalymgr")
-room_root = NodePath("..")
 
 [node name="SpawnPoints" type="Node3D" parent="AnomalyManager"]
 

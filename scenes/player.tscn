@@ -33,14 +33,14 @@ shader_parameter/vignette_darkness = 0.5
 shader_parameter/vignette_outer_radius = 0.7
 shader_parameter/vignette_inner_radius = 0.2
 shader_parameter/scanline_intensity = 0.2
-shader_parameter/barrel_distortion = 0.0
+shader_parameter/barrel_distortion = 0.5
 shader_parameter/chromatic_aberration = 0.0
 shader_parameter/crt_vignette_power = 0.0
-shader_parameter/pixel_resolution_x = 165
+shader_parameter/pixel_resolution_x = 410
 shader_parameter/pixel_resolution_y = 900
 shader_parameter/enable_color_quantization = false
 shader_parameter/color_quant_steps = 28.517
-shader_parameter/warble_amount = 0.0
+shader_parameter/warble_amount = 0.003
 shader_parameter/warble_speed = 0.449
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dqkch"]
@@ -49,7 +49,7 @@ shader_parameter/exposure = 2.0
 shader_parameter/contrast = 1.1
 shader_parameter/saturation = 1.12
 shader_parameter/enable_pixelate = true
-shader_parameter/pixel_factor = 1.331
+shader_parameter/pixel_factor = 1.281
 shader_parameter/enable_posterize = true
 shader_parameter/color_levels = 16.0
 shader_parameter/dither_strength = 0.35
@@ -123,4 +123,5 @@ mouse_filter = 2
 
 [node name="shot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_qlg0r")
+volume_db = -80.0
 pitch_scale = 0.91

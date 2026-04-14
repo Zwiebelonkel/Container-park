@@ -8,3 +8,8 @@ res://ui/mainMenu.tscn
 res://assets/3d/container/container.tscn
 res://scripts/Shotgun.gd
 res://scripts/Player.gd
+res://scripts/AnomalyManager.gd
+res://scripts/GameManager.gd
+res://scripts/RoomController.gd
+res://scripts/RoomExit.gd
+res://anomalies/ShootableCubeAnomaly.gd
