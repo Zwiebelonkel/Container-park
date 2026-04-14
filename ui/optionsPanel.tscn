@@ -1,0 +1,82 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/OptionsPanel.gd" id="1_opts"]
+
+[node name="OptionsPanel" type="Panel"]
+custom_minimum_size = Vector2(420, 320)
+visible = false
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_opts")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Options"
+horizontal_alignment = 1
+
+[node name="FullscreenCheck" type="CheckBox" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="VolumeRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VolumeLabel" type="Label" parent="MarginContainer/VBoxContainer/VolumeRow"]
+layout_mode = 2
+text = "Master Volume"
+custom_minimum_size = Vector2(120, 0)
+
+[node name="VolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/VolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+value = 100.0
+
+[node name="VolumeValue" type="Label" parent="MarginContainer/VBoxContainer/VolumeRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(55, 0)
+text = "100%"
+
+[node name="SensitivityRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SensitivityLabel" type="Label" parent="MarginContainer/VBoxContainer/SensitivityRow"]
+layout_mode = 2
+text = "Mouse Sensitivity"
+custom_minimum_size = Vector2(120, 0)
+
+[node name="SensitivitySlider" type="HSlider" parent="MarginContainer/VBoxContainer/SensitivityRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 60.0
+step = 1.0
+value = 20.0
+
+[node name="SensitivityValue" type="Label" parent="MarginContainer/VBoxContainer/SensitivityRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(55, 0)
+text = "0.002"
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back"

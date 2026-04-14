@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://cum0wceoa8anj"]
+[gd_scene load_steps=12 format=3 uid="uid://cum0wceoa8anj"]
 
 [ext_resource type="PackedScene" uid="uid://0xdkhyk7g122" path="res://scenes/player.tscn" id="1_pvqg0"]
 [ext_resource type="Shader" uid="uid://dlm1f7k18gvbj" path="res://assets/shaders/sky2.gdshader" id="2_baglu"]
 [ext_resource type="Script" uid="uid://bgiboesu2hm74" path="res://scripts/RoomController.gd" id="3_roomctrl"]
 [ext_resource type="Script" uid="uid://dm8a4gwausiap" path="res://scripts/AnomalyManager.gd" id="4_anomalymgr"]
 [ext_resource type="PackedScene" uid="uid://00xsnpo38nw4" path="res://assets/3d/ship/ship.tscn" id="6_xvvcp"]
+[ext_resource type="PackedScene" path="res://ui/optionsPanel.tscn" id="7_opts"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_40w10"]
 shader = ExtResource("2_baglu")
@@ -113,5 +114,76 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.910
 
 [node name="front_segment" parent="." instance=ExtResource("6_xvvcp")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -116.527, 11.2995, -2.24718)
+
+[node name="PauseUI" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="PauseOverlay" type="ColorRect" parent="PauseUI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 0.55)
+
+[node name="PauseMenu" type="Panel" parent="PauseUI/PauseOverlay"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -170.0
+offset_top = -130.0
+offset_right = 170.0
+offset_bottom = 130.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PauseUI/PauseOverlay/PauseMenu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 22
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseUI/PauseOverlay/PauseMenu/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="PauseUI/PauseOverlay/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Paused"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PauseUI/PauseOverlay/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Resume"
+
+[node name="OptionsButton" type="Button" parent="PauseUI/PauseOverlay/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
+[node name="MainMenuButton" type="Button" parent="PauseUI/PauseOverlay/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back to Main Menu"
+
+[node name="OptionsPanel" parent="PauseUI/PauseOverlay" instance=ExtResource("7_opts")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -160.0
+offset_right = 210.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [editable path="Player"]
