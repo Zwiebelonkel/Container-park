@@ -199,6 +199,9 @@ spot_angle = 41.245
 [node name="shelves" parent="." instance=ExtResource("8_oj46n")]
 transform = Transform3D(4.44202e-08, 0, -3.725, 0, 3.725, 0, 3.725, 0, 4.44202e-08, 80.1388, 12.2531, -12.3938)
 
+[node name="shelves2" parent="." instance=ExtResource("8_oj46n")]
+transform = Transform3D(4.44202e-08, 0, -3.725, 0, 3.725, 0, 3.725, 0, 4.44202e-08, -54.0188, 12.2531, -8.01424)
+
 [node name="floorsign" parent="." instance=ExtResource("9_i74pi")]
 transform = Transform3D(-0.555087, 0, 3.94615, 0, 3.985, 0, -3.94615, 0, -0.555087, 56.5857, 0.855992, -14.642)
 
