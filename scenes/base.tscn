@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cum0wceoa8anj"]
+[gd_scene load_steps=14 format=3 uid="uid://cum0wceoa8anj"]
 
 [ext_resource type="PackedScene" uid="uid://0xdkhyk7g122" path="res://scenes/player.tscn" id="1_pvqg0"]
 [ext_resource type="Shader" uid="uid://dlm1f7k18gvbj" path="res://assets/shaders/sky2.gdshader" id="2_baglu"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://00xsnpo38nw4" path="res://assets/3d/ship/ship.tscn" id="6_xvvcp"]
 [ext_resource type="AudioStream" uid="uid://cnawauj45jwto" path="res://assets/audio/music.mp3" id="7_hh5oj"]
 [ext_resource type="PackedScene" uid="uid://dtipbknvtg5co" path="res://ui/optionsPanel.tscn" id="7_opts"]
+[ext_resource type="AudioStream" uid="uid://cmup8ec2kiv2e" path="res://assets/audio/waves.mp3" id="8_vqfsp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_40w10"]
 shader = ExtResource("2_baglu")
@@ -190,6 +191,10 @@ grow_vertical = 2
 [node name="music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_hh5oj")
 pitch_scale = 0.82
+autoplay = true
+
+[node name="waves" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_vqfsp")
 autoplay = true
 
 [editable path="Player"]
