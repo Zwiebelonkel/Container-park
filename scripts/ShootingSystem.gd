@@ -65,6 +65,10 @@ func _on_shotgun_fired(hit_nodes: Array) -> void:
 			# Treffer aber noch nicht behoben (requires_multiple_hits > 1)
 			print("[ShootingSystem] Anomalie getroffen – braucht noch %d Treffer" % \
 				(anomaly_hit.requires_multiple_hits - anomaly_hit._hits_received))
+	elif _anomaly_manager and _anomaly_manager.has_method("handle_shot_hit_nodes"):
+		var corrected := _anomaly_manager.call("handle_shot_hit_nodes", hit_nodes)
+		if corrected:
+			print("[ShootingSystem] ✅ Segment-Anomalie durch Schuss korrigiert!")
 
 # ─── Anomalie-Auflosung ────────────────────────────────────────────────────────
 func _on_anomaly_eliminated() -> void:
