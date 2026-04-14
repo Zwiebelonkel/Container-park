@@ -92,6 +92,13 @@ func _update_active_segment() -> void:
 	if _active_segment == new_active and has_active_anomaly():
 		return
 	_active_segment = new_active
+
+	# Segmentwechsel kann auch zwischen zwei Runden passieren (z.B. direkt am Exit).
+	# In dem Fall erst bei round_started aktivieren, sonst erscheinen im Log scheinbar
+	# zwei Anomalien nacheinander für dieselbe Runde.
+	if GameManager and not GameManager.round_active:
+		return
+
 	_activate_for_segment(_active_segment)
 
 func _activate_for_segment(segment: Node3D) -> void:
@@ -107,15 +114,14 @@ func _activate_for_segment(segment: Node3D) -> void:
 
 	GameManager.set_current_round_has_anomaly(has_planned_anomaly)
 
-# Fix 1: In _apply_random_anomaly - nur sichtbare Objekte als Kandidaten
 func _apply_random_anomaly(segment: Node3D) -> bool:
 	var object_candidates: Array[Node3D] = _collect_anomaly_objects_in_segment(segment)
 	var light_candidates: Array[Light3D] = _collect_anomaly_lights_in_segment(segment)
 	var candidates: Array[Dictionary] = []
 
 	for obj in object_candidates:
-		# BUGFIX: Versteckte Objekte nicht als Kandidaten aufnehmen
-		# (außer wenn sie standardmäßig versteckt sind - dann nur MOD_SHOW erlaubt)
+		if _is_visually_hidden(obj):
+			continue
 		candidates.append({"kind": "object", "node": obj})
 	for light in light_candidates:
 		candidates.append({"kind": "light", "node": light})
@@ -148,23 +154,24 @@ func _apply_random_object_modification(target: Node3D) -> bool:
 	_active_target = target
 	_active_target_original_scale = _active_target.scale
 	_active_target_original_visibility = _capture_visual_visibility(_active_target)
-	_active_target_hit_root = _find_or_create_hit_root(_active_target, "ShotProxyObject", 1.4)
-
 	var is_hidden_by_default := _is_visually_hidden(_active_target)
-	var modifications: Array[String] = [MOD_SCALE_UP, MOD_SCALE_DOWN]
 	if is_hidden_by_default:
-		modifications.append(MOD_SHOW)
-	else:
-		modifications.append(MOD_HIDE)
+		return false
+
+	var modifications: Array[String] = [MOD_SCALE_UP, MOD_SCALE_DOWN, MOD_HIDE]
 
 	_active_modification = modifications[randi_range(0, modifications.size() - 1)]
+	if _active_modification == MOD_HIDE:
+		# Bei versteckten Objekten muss das Korrigieren weiterhin möglich sein:
+		# deshalb immer einen zusätzlichen, gut treffbaren Proxy erzeugen.
+		_active_target_hit_root = _create_hit_proxy(_active_target, "ShotProxyHiddenObject", 1.8)
+	else:
+		_active_target_hit_root = _find_or_create_hit_root(_active_target, "ShotProxyObject", 1.4)
+
 	match _active_modification:
 		MOD_HIDE:
 			_apply_hidden_state(_active_target, false)
 			_apply_special_hide_rules(_active_target)
-		MOD_SHOW:
-			_apply_hidden_state(_active_target, true)
-			_apply_special_show_rules(_active_target)
 		MOD_SCALE_UP:
 			_active_target.scale = _active_target_original_scale * scale_up_factor
 		MOD_SCALE_DOWN:
@@ -303,6 +310,12 @@ func _find_or_create_hit_root(root: Node3D, proxy_name: String, radius: float) -
 	var existing := _find_hit_root(root)
 	if is_instance_valid(existing):
 		return existing
+
+	return _create_hit_proxy(root, proxy_name, radius)
+
+func _create_hit_proxy(root: Node3D, proxy_name: String, radius: float) -> StaticBody3D:
+	if not is_instance_valid(root):
+		return null
 
 	var proxy := StaticBody3D.new()
 	proxy.name = proxy_name
