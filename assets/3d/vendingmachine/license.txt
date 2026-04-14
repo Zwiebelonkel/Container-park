@@ -1,0 +1,11 @@
+Model Information:
+* title:	Vending Machine PSX
+* source:	https://sketchfab.com/3d-models/vending-machine-psx-3af4cef8f4314c53b07c1c807060c46a
+* author:	alonsojose12play4 (https://sketchfab.com/alonsojose12play4)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Vending Machine PSX" (https://sketchfab.com/3d-models/vending-machine-psx-3af4cef8f4314c53b07c1c807060c46a) by alonsojose12play4 (https://sketchfab.com/alonsojose12play4) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

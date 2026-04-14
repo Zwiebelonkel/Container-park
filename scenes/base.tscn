@@ -1,11 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://cum0wceoa8anj"]
+[gd_scene load_steps=13 format=3 uid="uid://cum0wceoa8anj"]
 
 [ext_resource type="PackedScene" uid="uid://0xdkhyk7g122" path="res://scenes/player.tscn" id="1_pvqg0"]
 [ext_resource type="Shader" uid="uid://dlm1f7k18gvbj" path="res://assets/shaders/sky2.gdshader" id="2_baglu"]
 [ext_resource type="Script" uid="uid://bgiboesu2hm74" path="res://scripts/RoomController.gd" id="3_roomctrl"]
 [ext_resource type="Script" uid="uid://dm8a4gwausiap" path="res://scripts/AnomalyManager.gd" id="4_anomalymgr"]
 [ext_resource type="PackedScene" uid="uid://00xsnpo38nw4" path="res://assets/3d/ship/ship.tscn" id="6_xvvcp"]
-[ext_resource type="PackedScene" path="res://ui/optionsPanel.tscn" id="7_opts"]
+[ext_resource type="AudioStream" uid="uid://cnawauj45jwto" path="res://assets/audio/music.mp3" id="7_hh5oj"]
+[ext_resource type="PackedScene" uid="uid://dtipbknvtg5co" path="res://ui/optionsPanel.tscn" id="7_opts"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_40w10"]
 shader = ExtResource("2_baglu")
@@ -129,7 +130,7 @@ mouse_filter = 1
 color = Color(0, 0, 0, 0.55)
 
 [node name="PauseMenu" type="Panel" parent="PauseUI/PauseOverlay"]
-anchors_preset = 8
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -142,7 +143,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="PauseUI/PauseOverlay/PauseMenu"]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -174,7 +175,7 @@ layout_mode = 2
 text = "Back to Main Menu"
 
 [node name="OptionsPanel" parent="PauseUI/PauseOverlay" instance=ExtResource("7_opts")]
-anchors_preset = 8
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -185,5 +186,10 @@ offset_right = 210.0
 offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_hh5oj")
+pitch_scale = 0.82
+autoplay = true
 
 [editable path="Player"]

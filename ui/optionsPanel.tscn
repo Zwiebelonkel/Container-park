@@ -1,16 +1,16 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://dtipbknvtg5co"]
 
-[ext_resource type="Script" path="res://scripts/OptionsPanel.gd" id="1_opts"]
+[ext_resource type="Script" uid="uid://dnc04b62i2k2l" path="res://scripts/OptionsPanel.gd" id="1_opts"]
 
 [node name="OptionsPanel" type="Panel"]
-custom_minimum_size = Vector2(420, 320)
 visible = false
+custom_minimum_size = Vector2(420, 320)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_opts")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -38,21 +38,18 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="VolumeLabel" type="Label" parent="MarginContainer/VBoxContainer/VolumeRow"]
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Master Volume"
-custom_minimum_size = Vector2(120, 0)
 
 [node name="VolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/VolumeRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-min_value = 0.0
-max_value = 100.0
-step = 1.0
 value = 100.0
 
 [node name="VolumeValue" type="Label" parent="MarginContainer/VBoxContainer/VolumeRow"]
-layout_mode = 2
 custom_minimum_size = Vector2(55, 0)
+layout_mode = 2
 text = "100%"
 
 [node name="SensitivityRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
@@ -60,21 +57,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="SensitivityLabel" type="Label" parent="MarginContainer/VBoxContainer/SensitivityRow"]
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Mouse Sensitivity"
-custom_minimum_size = Vector2(120, 0)
 
 [node name="SensitivitySlider" type="HSlider" parent="MarginContainer/VBoxContainer/SensitivityRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = 1.0
 max_value = 60.0
-step = 1.0
 value = 20.0
 
 [node name="SensitivityValue" type="Label" parent="MarginContainer/VBoxContainer/SensitivityRow"]
-layout_mode = 2
 custom_minimum_size = Vector2(55, 0)
+layout_mode = 2
 text = "0.002"
 
 [node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer"]

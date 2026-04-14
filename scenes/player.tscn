@@ -123,5 +123,5 @@ mouse_filter = 2
 
 [node name="shot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_qlg0r")
-volume_db = -80.0
+volume_db = -0.36
 pitch_scale = 0.91

@@ -1,10 +1,15 @@
-[gd_scene load_steps=16 format=3 uid="uid://00xsnpo38nw4"]
+[gd_scene load_steps=21 format=3 uid="uid://00xsnpo38nw4"]
 
 [ext_resource type="PackedScene" uid="uid://bd2pym1leqyri" path="res://assets/3d/ship/ship.glb" id="1_la6qk"]
 [ext_resource type="PackedScene" uid="uid://cfimwrldvrmjx" path="res://assets/3d/container/container.tscn" id="2_qfyhj"]
 [ext_resource type="Texture2D" uid="uid://bg0v6u1tjnsmu" path="res://assets/3d/ship/ship_albedo.png" id="2_u4tj7"]
 [ext_resource type="Shader" uid="uid://c7l6htfbm8hw5" path="res://assets/shaders/ps1.gdshader" id="3_qcucu"]
 [ext_resource type="Script" uid="uid://cn6edeb5wkemh" path="res://scripts/RoomExit.gd" id="3_roomexit"]
+[ext_resource type="PackedScene" uid="uid://c1dj8ntjdlhgs" path="res://assets/3d/vendingmachine/scene.gltf" id="4_uv0cr"]
+[ext_resource type="PackedScene" uid="uid://dv5dlhgqt005g" path="res://assets/3d/barrels/scene.gltf" id="5_2k72t"]
+[ext_resource type="PackedScene" uid="uid://0842k2ibitsc" path="res://assets/3d/shelves/scene.gltf" id="8_oj46n"]
+[ext_resource type="PackedScene" uid="uid://c7i6kl7sghaks" path="res://assets/3d/wetFloor/scene.gltf" id="9_i74pi"]
+[ext_resource type="PackedScene" uid="uid://bi8yilbwgih4e" path="res://assets/3d/mannequin/scene.gltf" id="10_cuepq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7juku"]
 albedo_texture = ExtResource("2_u4tj7")
@@ -190,5 +195,20 @@ light_specular = 5.187
 shadow_enabled = true
 spot_range = 50.7166
 spot_angle = 41.245
+
+[node name="shelves" parent="." instance=ExtResource("8_oj46n")]
+transform = Transform3D(4.44202e-08, 0, -3.725, 0, 3.725, 0, 3.725, 0, 4.44202e-08, 80.1388, 12.2531, -12.3938)
+
+[node name="floorsign" parent="." instance=ExtResource("9_i74pi")]
+transform = Transform3D(-0.555087, 0, 3.94615, 0, 3.985, 0, -3.94615, 0, -0.555087, 56.5857, 0.855992, -14.642)
+
+[node name="mannequin" parent="." instance=ExtResource("10_cuepq")]
+transform = Transform3D(-5.61292, 0, -3.19792, 0, 6.46, 0, 3.19792, 0, -5.61292, 5.02064, 1.27826, -9.35246)
+
+[node name="Vendingmaschine" parent="." instance=ExtResource("4_uv0cr")]
+transform = Transform3D(5.10385e-08, 0, -4.28, 0, 4.28, 0, 4.28, 0, 5.10385e-08, 16.3086, 1.36058, 24.2824)
+
+[node name="Barrels" parent="." instance=ExtResource("5_2k72t")]
+transform = Transform3D(2.499, 0, 2.62595, 0, 3.625, 0, -2.62595, 0, 2.499, 10.8447, 3.10207, 0.0787596)
 
 [editable path="ship"]

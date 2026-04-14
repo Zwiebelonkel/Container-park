@@ -1,9 +1,9 @@
+AudioStreamPlayer
 CollisionShape3D
 Area3D
 OmniLight3D
 MeshInstance3D
 SpotLight3D
-AudioStreamPlayer
 StaticBody3D
 ColorRect
 CanvasLayer
