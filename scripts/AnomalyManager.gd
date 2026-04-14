@@ -157,13 +157,6 @@ func _apply_random_object_modification(target: Node3D) -> bool:
 	else:
 		modifications.append(MOD_HIDE)
 
-	var is_hidden_by_default := _is_visually_hidden(_active_target)
-	var modifications: Array[String] = [MOD_SCALE_UP, MOD_SCALE_DOWN]
-	if is_hidden_by_default:
-		modifications.append(MOD_SHOW)
-	else:
-		modifications.append(MOD_HIDE)
-
 	_active_modification = modifications[randi_range(0, modifications.size() - 1)]
 	match _active_modification:
 		MOD_HIDE:
