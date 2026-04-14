@@ -11,6 +11,14 @@ extends Node3D
 var _transition_overlay: ColorRect
 var _is_transitioning: bool = false
 var _segment_shifted_this_round: bool = false
+var _is_paused: bool = false
+
+@onready var pause_overlay: ColorRect = $PauseUI/PauseOverlay
+@onready var pause_menu: Panel = $PauseUI/PauseOverlay/PauseMenu
+@onready var pause_options: Panel = $PauseUI/PauseOverlay/OptionsPanel
+@onready var resume_button: Button = $PauseUI/PauseOverlay/PauseMenu/MarginContainer/VBoxContainer/ResumeButton
+@onready var options_button: Button = $PauseUI/PauseOverlay/PauseMenu/MarginContainer/VBoxContainer/OptionsButton
+@onready var main_menu_button: Button = $PauseUI/PauseOverlay/PauseMenu/MarginContainer/VBoxContainer/MainMenuButton
 
 @export var transition_duration: float = 0.8
 @export var segment_repeat_offset: Vector3 = Vector3(-115.61612, 11.2995, 0.0)
@@ -20,7 +28,9 @@ var _room_exits: Array[Area3D] = []
 var _active_shift_exit: Area3D
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_setup_transition_overlay()
+	_setup_pause_menu()
 	_collect_loop_segments()
 	_collect_room_exits()
 	_refresh_shift_exit_connection()
@@ -29,6 +39,25 @@ func _ready() -> void:
 		GameManager.round_ended.connect(_on_round_ended)
 	await get_tree().process_frame
 	GameManager.start_game()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		if _is_paused:
+			_resume_game()
+		else:
+			_pause_game()
+		get_viewport().set_input_as_handled()
+
+func _setup_pause_menu() -> void:
+	pause_overlay.visible = false
+	pause_menu.visible = true
+	pause_options.visible = false
+
+	resume_button.pressed.connect(_resume_game)
+	options_button.pressed.connect(_show_pause_options)
+	main_menu_button.pressed.connect(_go_to_main_menu)
+	if pause_options.has_signal("back_requested"):
+		pause_options.back_requested.connect(_on_pause_options_back_requested)
 
 func _setup_transition_overlay() -> void:
 	_transition_overlay = ColorRect.new()
@@ -52,12 +81,16 @@ func _fade_in() -> void:
 	await tween.finished
 
 func _on_round_ended(_was_correct: bool) -> void:
+	if _is_paused:
+		return
 	if _is_transitioning:
 		return
 	await get_tree().create_timer(0.8).timeout
 	_start_next_round()
 
 func _start_next_round() -> void:
+	if _is_paused:
+		return
 	if _is_transitioning:
 		return
 	_is_transitioning = true
@@ -156,3 +189,31 @@ func _shift_segments_once() -> void:
 func _sync_anomaly_manager_segments() -> void:
 	if anomaly_manager and anomaly_manager.has_method("set_segment_order"):
 		anomaly_manager.call("set_segment_order", _loop_segments)
+
+func _pause_game() -> void:
+	_is_paused = true
+	get_tree().paused = true
+	pause_overlay.visible = true
+	pause_menu.visible = true
+	pause_options.visible = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+func _resume_game() -> void:
+	_is_paused = false
+	get_tree().paused = false
+	pause_overlay.visible = false
+	pause_menu.visible = true
+	pause_options.visible = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _show_pause_options() -> void:
+	pause_menu.visible = false
+	pause_options.visible = true
+
+func _on_pause_options_back_requested() -> void:
+	pause_options.visible = false
+	pause_menu.visible = true
+
+func _go_to_main_menu() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://ui/mainMenu.tscn")
