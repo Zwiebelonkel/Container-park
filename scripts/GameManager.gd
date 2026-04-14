@@ -6,7 +6,7 @@ signal score_changed(new_score: int)
 signal game_over_triggered(final_score: int)
 signal streak_changed(new_streak: int)
 
-@export var rounds_to_win: int = 10
+@export var rounds_to_win: int = 8
 
 var current_score: int = 0
 var current_streak: int = 0
@@ -75,6 +75,9 @@ func _process_answer(correct: bool) -> void:
 		emit_signal("score_changed", current_score)
 		emit_signal("streak_changed", current_streak)
 		print("[GameManager] ✅ Segment korrekt abgeschlossen! +%d Punkte (Streak: %d)" % [points, current_streak])
+		if rounds_to_win > 0 and current_streak >= rounds_to_win:
+			print("[GameManager] 🏆 Sieg erreicht! %d/%d richtige Segmente." % [current_streak, rounds_to_win])
+			trigger_game_over()
 	else:
 		current_streak = 0
 		current_score = 0

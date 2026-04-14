@@ -4,6 +4,7 @@
 [ext_resource type="Shader" uid="uid://dlm1f7k18gvbj" path="res://assets/shaders/sky2.gdshader" id="2_baglu"]
 [ext_resource type="Script" uid="uid://bgiboesu2hm74" path="res://scripts/RoomController.gd" id="3_roomctrl"]
 [ext_resource type="Script" uid="uid://dm8a4gwausiap" path="res://scripts/AnomalyManager.gd" id="4_anomalymgr"]
+[ext_resource type="Script" path="res://ui/GameUI.gd" id="5_gameui"]
 [ext_resource type="PackedScene" uid="uid://00xsnpo38nw4" path="res://assets/3d/ship/ship.tscn" id="6_xvvcp"]
 [ext_resource type="AudioStream" uid="uid://cnawauj45jwto" path="res://assets/audio/music.mp3" id="7_hh5oj"]
 [ext_resource type="PackedScene" uid="uid://dtipbknvtg5co" path="res://ui/optionsPanel.tscn" id="7_opts"]
@@ -96,6 +97,9 @@ shape = SubResource("CylinderShape3D_barrel")
 
 [node name="AnomalyManager" type="Node" parent="."]
 script = ExtResource("4_anomalymgr")
+
+[node name="GameUI" type="CanvasLayer" parent="."]
+script = ExtResource("5_gameui")
 
 [node name="mid_segment" parent="." instance=ExtResource("6_xvvcp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.91088, 1.90735e-06, -2.24718)

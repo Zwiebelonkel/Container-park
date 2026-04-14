@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://00xsnpo38nw4"]
+[gd_scene load_steps=24 format=3 uid="uid://00xsnpo38nw4"]
 
 [ext_resource type="PackedScene" uid="uid://bd2pym1leqyri" path="res://assets/3d/ship/ship.glb" id="1_la6qk"]
 [ext_resource type="PackedScene" uid="uid://cfimwrldvrmjx" path="res://assets/3d/container/container.tscn" id="2_qfyhj"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://bi8yilbwgih4e" path="res://assets/3d/mannequin/scene.gltf" id="10_cuepq"]
 [ext_resource type="PackedScene" uid="uid://dltsjdp7kdtfx" path="res://assets/3d/musicBox/scene.gltf" id="11_oj46n"]
 [ext_resource type="AudioStream" uid="uid://cr6m1tosptbef" path="res://assets/audio/musicbox.mp3" id="12_i74pi"]
+[ext_resource type="AudioStream" uid="uid://bc2r7igx8sisr" path="res://assets/audio/scare_high.mp3" id="13_scare"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7juku"]
 albedo_texture = ExtResource("2_u4tj7")
@@ -213,6 +214,11 @@ transform = Transform3D(-5.61292, 0, -3.19792, 0, 6.46, 0, 3.19792, 0, -5.61292,
 [node name="mannequin2" parent="." groups=["anomaly_objects"] instance=ExtResource("10_cuepq")]
 transform = Transform3D(-0.0562591, 0, -6.45975, 3.72545, 5.27746, -0.0324456, 5.27725, -3.7256, -0.0459605, 71.2954, 0.67665, -2.41113)
 visible = false
+
+[node name="Scare_HI" type="AudioStreamPlayer3D" parent="mannequin2"]
+stream = ExtResource("13_scare")
+unit_size = 8.0
+max_distance = 35.0
 
 [node name="Vendingmaschine" parent="." groups=["anomaly_objects"] instance=ExtResource("4_uv0cr")]
 transform = Transform3D(5.10385e-08, 0, -4.28, 0, 4.28, 0, 4.28, 0, 5.10385e-08, 16.3086, 1.36058, 24.2824)
