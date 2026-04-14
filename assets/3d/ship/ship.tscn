@@ -126,7 +126,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.34471, 7.80708, 33.3899)
 transform = Transform3D(0.999979, 0, -3.30402e-13, 0, 1, 0, 3.30402e-13, 0, 0.999979, -6.60231, -1.82821, -4.34394)
 shape = SubResource("BoxShape3D_room_exit")
 
-[node name="SpotLight3D" type="SpotLight3D" parent="."]
+[node name="SpotLight3D" type="SpotLight3D" parent="." groups=["anomaly_lights"]]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 28.7204, 4.41227)
 light_color = Color(1, 1, 0.788235, 1)
 light_energy = 16.0
@@ -136,7 +136,7 @@ shadow_enabled = true
 spot_range = 49.7374
 spot_angle = 34.0509
 
-[node name="SpotLight3D3" type="SpotLight3D" parent="."]
+[node name="SpotLight3D3" type="SpotLight3D" parent="." groups=["anomaly_lights"]]
 transform = Transform3D(1, 0, 0, 0, -0.0481176, 0.998842, 0, -0.998842, -0.0481176, -43.2856, 27.1293, -28.3645)
 light_color = Color(1, 1, 0.788235, 1)
 light_energy = 16.0
@@ -146,7 +146,7 @@ shadow_enabled = true
 spot_range = 50.7166
 spot_angle = 41.245
 
-[node name="SpotLight3D4" type="SpotLight3D" parent="."]
+[node name="SpotLight3D4" type="SpotLight3D" parent="." groups=["anomaly_lights"]]
 transform = Transform3D(1, 0, 0, 0, -0.0481176, 0.998842, 0, -0.998842, -0.0481176, 48.7144, 27.1293, -28.3645)
 light_color = Color(1, 1, 0.788235, 1)
 light_energy = 16.0
@@ -156,7 +156,7 @@ shadow_enabled = true
 spot_range = 50.7166
 spot_angle = 41.245
 
-[node name="SpotLight3D5" type="SpotLight3D" parent="."]
+[node name="SpotLight3D5" type="SpotLight3D" parent="." groups=["anomaly_lights"]]
 transform = Transform3D(1, 0, 0, 0, -0.0481176, 0.998842, 0, -0.998842, -0.0481176, 79.7144, 27.1293, -21.3645)
 light_color = Color(1, 1, 0.788235, 1)
 light_energy = 16.0
@@ -166,7 +166,7 @@ shadow_enabled = true
 spot_range = 50.7166
 spot_angle = 41.245
 
-[node name="SpotLight3D6" type="SpotLight3D" parent="."]
+[node name="SpotLight3D6" type="SpotLight3D" parent="." groups=["anomaly_lights"]]
 transform = Transform3D(1, 0, 0, 0, -0.0481176, 0.998842, 0, -0.998842, -0.0481176, 79.7144, 27.1293, -1.36452)
 light_color = Color(1, 1, 0.788235, 1)
 light_energy = 16.0
@@ -176,7 +176,7 @@ shadow_enabled = true
 spot_range = 50.7166
 spot_angle = 41.245
 
-[node name="SpotLight3D8" type="SpotLight3D" parent="."]
+[node name="SpotLight3D8" type="SpotLight3D" parent="." groups=["anomaly_lights"]]
 transform = Transform3D(1, 0, 0, 0, -0.0481176, 0.998842, 0, -0.998842, -0.0481176, 50.7144, 11.1293, -1.36452)
 light_color = Color(1, 1, 0.788235, 1)
 light_energy = 16.0
@@ -186,7 +186,7 @@ shadow_enabled = true
 spot_range = 50.7166
 spot_angle = 41.245
 
-[node name="SpotLight3D7" type="SpotLight3D" parent="."]
+[node name="SpotLight3D7" type="SpotLight3D" parent="." groups=["anomaly_lights"]]
 transform = Transform3D(1, 0, 0, 0, -0.0481176, 0.998842, 0, -0.998842, -0.0481176, 79.7144, 27.1293, 20.6355)
 light_color = Color(1, 1, 0.788235, 1)
 light_energy = 16.0
@@ -196,22 +196,22 @@ shadow_enabled = true
 spot_range = 50.7166
 spot_angle = 41.245
 
-[node name="shelves" parent="." instance=ExtResource("8_oj46n")]
+[node name="shelves" parent="." instance=ExtResource("8_oj46n") groups=["anomaly_objects"]]
 transform = Transform3D(4.44202e-08, 0, -3.725, 0, 3.725, 0, 3.725, 0, 4.44202e-08, 80.1388, 12.2531, -12.3938)
 
-[node name="shelves2" parent="." instance=ExtResource("8_oj46n")]
+[node name="shelves2" parent="." instance=ExtResource("8_oj46n") groups=["anomaly_objects"]]
 transform = Transform3D(4.44202e-08, 0, -3.725, 0, 3.725, 0, 3.725, 0, 4.44202e-08, -54.0188, 12.2531, -8.01424)
 
-[node name="floorsign" parent="." instance=ExtResource("9_i74pi")]
+[node name="floorsign" parent="." instance=ExtResource("9_i74pi") groups=["anomaly_objects"]]
 transform = Transform3D(-0.555087, 0, 3.94615, 0, 3.985, 0, -3.94615, 0, -0.555087, 56.5857, 0.855992, -14.642)
 
-[node name="mannequin" parent="." instance=ExtResource("10_cuepq")]
+[node name="mannequin" parent="." instance=ExtResource("10_cuepq") groups=["anomaly_objects"]]
 transform = Transform3D(-5.61292, 0, -3.19792, 0, 6.46, 0, 3.19792, 0, -5.61292, 5.02064, 1.27826, -9.35246)
 
-[node name="Vendingmaschine" parent="." instance=ExtResource("4_uv0cr")]
+[node name="Vendingmaschine" parent="." instance=ExtResource("4_uv0cr") groups=["anomaly_objects"]]
 transform = Transform3D(5.10385e-08, 0, -4.28, 0, 4.28, 0, 4.28, 0, 5.10385e-08, 16.3086, 1.36058, 24.2824)
 
-[node name="Barrels" parent="." instance=ExtResource("5_2k72t")]
+[node name="Barrels" parent="." instance=ExtResource("5_2k72t") groups=["anomaly_objects"]]
 transform = Transform3D(2.499, 0, 2.62595, 0, 3.625, 0, -2.62595, 0, 2.499, 10.8447, 3.10207, 0.0787596)
 
 [editable path="ship"]

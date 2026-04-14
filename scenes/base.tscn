@@ -96,17 +96,6 @@ shape = SubResource("CylinderShape3D_barrel")
 [node name="AnomalyManager" type="Node" parent="."]
 script = ExtResource("4_anomalymgr")
 
-[node name="SpawnPoints" type="Node3D" parent="AnomalyManager"]
-
-[node name="Spawn1" type="Node3D" parent="AnomalyManager/SpawnPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, -2)
-
-[node name="Spawn2" type="Node3D" parent="AnomalyManager/SpawnPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, 2)
-
-[node name="Spawn3" type="Node3D" parent="AnomalyManager/SpawnPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -3)
-
 [node name="mid_segment" parent="." instance=ExtResource("6_xvvcp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.91088, 1.90735e-06, -2.24718)
 
