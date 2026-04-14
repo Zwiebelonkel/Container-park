@@ -5,26 +5,56 @@ signal anomaly_cleared()
 signal anomaly_shot_down()
 
 @export var anomaly_chance_per_segment: float = 0.45
-@export var test_cube_count: int = 3
-@export var cube_spawn_local_positions: Array[Vector3] = [
-	Vector3(10.0, 3.0, 2.0),
-	Vector3(22.0, 3.0, -4.0),
-	Vector3(35.0, 3.0, 6.0),
-	Vector3(48.0, 3.0, -2.0)
-]
+@export var anomaly_object_group: StringName = &"anomaly_objects"
+@export var anomaly_light_group: StringName = &"anomaly_lights"
+@export var scale_up_factor: float = 1.25
+@export var scale_down_factor: float = 0.75
+@export var flicker_interval_min: float = 0.05
+@export var flicker_interval_max: float = 0.2
+@export var flicker_energy_min_multiplier: float = 0.2
+@export var flicker_energy_max_multiplier: float = 1.3
+@export var flicker_off_chance: float = 0.15
 
-const CUBE_ANOMALY_SCRIPT := preload("res://anomalies/ShootableCubeAnomaly.gd")
+const MOD_HIDE := "hide"
+const MOD_SCALE_UP := "scale_up"
+const MOD_SCALE_DOWN := "scale_down"
+const MOD_LIGHT_FLICKER := "light_flicker"
 
 var _segment_order: Array[Node3D] = []
 var _segment_has_planned_anomaly: Dictionary = {}
 var _active_segment: Node3D = null
-var _active_anomaly_nodes: Array[Node] = []
-var _anomaly_was_shot: bool = false
+
+var _active_target: Node3D = null
+var _active_target_original_scale: Vector3 = Vector3.ONE
+var _active_target_original_visibility: Dictionary = {}
+
+var _active_light: Light3D = null
+var _active_light_original_energy: float = 1.0
+var _next_flicker_tick: float = 0.0
+
+var _active_modification: String = ""
 
 func _ready() -> void:
+	set_process(false)
 	if GameManager:
 		GameManager.round_started.connect(_on_round_started)
 		GameManager.round_ended.connect(_on_round_ended)
+
+func _process(delta: float) -> void:
+	if not is_instance_valid(_active_light):
+		return
+
+	_next_flicker_tick -= delta
+	if _next_flicker_tick > 0.0:
+		return
+
+	if randf() <= flicker_off_chance:
+		_active_light.light_energy = 0.0
+	else:
+		var random_multiplier := randf_range(flicker_energy_min_multiplier, flicker_energy_max_multiplier)
+		_active_light.light_energy = _active_light_original_energy * random_multiplier
+
+	_next_flicker_tick = randf_range(flicker_interval_min, max(flicker_interval_min, flicker_interval_max))
 
 func set_segment_order(segments: Array[Node3D]) -> void:
 	_segment_order = segments.duplicate()
@@ -32,7 +62,6 @@ func set_segment_order(segments: Array[Node3D]) -> void:
 	_update_active_segment()
 
 func _on_round_started(_unused: bool) -> void:
-	_anomaly_was_shot = false
 	_update_active_segment()
 
 func _on_round_ended(_was_correct: bool) -> void:
@@ -50,58 +79,139 @@ func _update_active_segment() -> void:
 	if _segment_order.size() < 2:
 		return
 	var new_active: Node3D = _segment_order[1]
-	if _active_segment == new_active and not _active_anomaly_nodes.is_empty():
+	if _active_segment == new_active and has_active_anomaly():
 		return
 	_active_segment = new_active
 	_activate_for_segment(_active_segment)
 
 func _activate_for_segment(segment: Node3D) -> void:
 	clear_anomaly()
-	_anomaly_was_shot = false
 	if not is_instance_valid(segment):
 		GameManager.set_current_round_has_anomaly(false)
 		return
-	var has_planned_anomaly: bool = _segment_has_planned_anomaly.get(segment, false)
-	GameManager.set_current_round_has_anomaly(has_planned_anomaly)
-	if not has_planned_anomaly:
-		return
-	_spawn_test_cubes(segment)
 
-func _spawn_test_cubes(segment: Node3D) -> void:
-	var count := mini(test_cube_count, cube_spawn_local_positions.size())
-	if count <= 0:
-		return
-	for i in count:
-		var cube: Node = CUBE_ANOMALY_SCRIPT.new()
-		cube.name = "AnomalyCube_%d" % i
-		if cube.has_method("set_spawn_offset"):
-			cube.call("set_spawn_offset", cube_spawn_local_positions[i])
-		segment.add_child(cube)
-		_active_anomaly_nodes.append(cube)
-	emit_signal("anomaly_spawned", "ShootableCubeAnomaly")
-	print("[AnomalyManager] %d Würfel-Anomalien in aktivem Segment gespawnt." % count)
+	var has_planned_anomaly: bool = _segment_has_planned_anomaly.get(segment, false)
+	if has_planned_anomaly:
+		has_planned_anomaly = _apply_random_anomaly(segment)
+		_segment_has_planned_anomaly[segment] = has_planned_anomaly
+
+	GameManager.set_current_round_has_anomaly(has_planned_anomaly)
+
+func _apply_random_anomaly(segment: Node3D) -> bool:
+	var object_candidates: Array[Node3D] = _collect_anomaly_objects_in_segment(segment)
+	var light_candidates: Array[Light3D] = _collect_anomaly_lights_in_segment(segment)
+	var candidates: Array[Dictionary] = []
+
+	for obj in object_candidates:
+		candidates.append({"kind": "object", "node": obj})
+	for light in light_candidates:
+		candidates.append({"kind": "light", "node": light})
+
+	if candidates.is_empty():
+		print("[AnomalyManager] Keine Objekte oder Lichter in den Anomalie-Gruppen im aktiven Segment gefunden.")
+		return false
+
+	var pick: Dictionary = candidates[randi_range(0, candidates.size() - 1)]
+	if pick.get("kind") == "light":
+		return _start_light_flicker(pick.get("node") as Light3D)
+	return _apply_random_object_modification(pick.get("node") as Node3D)
+
+func _start_light_flicker(light: Light3D) -> bool:
+	if not is_instance_valid(light):
+		return false
+	_active_light = light
+	_active_light_original_energy = light.light_energy
+	_active_modification = MOD_LIGHT_FLICKER
+	_next_flicker_tick = 0.0
+	set_process(true)
+	emit_signal("anomaly_spawned", _active_modification)
+	print("[AnomalyManager] Anomalie '%s' auf Licht '%s' angewendet." % [_active_modification, _active_light.name])
+	return true
+
+func _apply_random_object_modification(target: Node3D) -> bool:
+	if not is_instance_valid(target):
+		return false
+
+	_active_target = target
+	_active_target_original_scale = _active_target.scale
+	_active_target_original_visibility = _capture_visual_visibility(_active_target)
+
+	var modifications := [MOD_HIDE, MOD_SCALE_UP, MOD_SCALE_DOWN]
+	_active_modification = modifications[randi_range(0, modifications.size() - 1)]
+	match _active_modification:
+		MOD_HIDE:
+			_apply_hidden_state(_active_target, false)
+		MOD_SCALE_UP:
+			_active_target.scale = _active_target_original_scale * scale_up_factor
+		MOD_SCALE_DOWN:
+			_active_target.scale = _active_target_original_scale * scale_down_factor
+
+	emit_signal("anomaly_spawned", _active_modification)
+	print("[AnomalyManager] Anomalie '%s' auf Objekt '%s' angewendet." % [_active_modification, _active_target.name])
+	return true
+
+func _collect_anomaly_objects_in_segment(segment: Node3D) -> Array[Node3D]:
+	var result: Array[Node3D] = []
+	for node in get_tree().get_nodes_in_group(anomaly_object_group):
+		if node is Node3D and segment.is_ancestor_of(node):
+			result.append(node)
+	return result
+
+func _collect_anomaly_lights_in_segment(segment: Node3D) -> Array[Light3D]:
+	var result: Array[Light3D] = []
+	for node in get_tree().get_nodes_in_group(anomaly_light_group):
+		if node is Light3D and segment.is_ancestor_of(node):
+			result.append(node)
+	return result
+
+func _capture_visual_visibility(root: Node3D) -> Dictionary:
+	var state: Dictionary = {}
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var current: Node = stack.pop_back()
+		if current is VisualInstance3D:
+			state[current] = current.visible
+		for child in current.get_children():
+			stack.append(child)
+	return state
+
+func _apply_hidden_state(root: Node3D, visible: bool) -> void:
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var current: Node = stack.pop_back()
+		if current is VisualInstance3D:
+			current.visible = visible
+		for child in current.get_children():
+			stack.append(child)
 
 func clear_anomaly() -> void:
-	for anomaly in _active_anomaly_nodes:
-		if is_instance_valid(anomaly):
-			anomaly.queue_free()
-	_active_anomaly_nodes.clear()
+	if is_instance_valid(_active_target):
+		_active_target.scale = _active_target_original_scale
+		for node in _active_target_original_visibility.keys():
+			if is_instance_valid(node):
+				node.visible = _active_target_original_visibility[node]
+
+	if is_instance_valid(_active_light):
+		_active_light.light_energy = _active_light_original_energy
+
+	_active_target = null
+	_active_target_original_scale = Vector3.ONE
+	_active_target_original_visibility.clear()
+	_active_light = null
+	_active_light_original_energy = 1.0
+	_next_flicker_tick = 0.0
+	_active_modification = ""
+	set_process(false)
+
 	emit_signal("anomaly_cleared")
 
 func on_anomaly_shot() -> void:
-	_anomaly_was_shot = true
-	_active_anomaly_nodes = _active_anomaly_nodes.filter(func(node: Node) -> bool:
-		return is_instance_valid(node)
-	)
-	if _active_anomaly_nodes.is_empty():
-		if _active_segment and _segment_has_planned_anomaly.has(_active_segment):
-			_segment_has_planned_anomaly[_active_segment] = false
-		GameManager.set_current_round_has_anomaly(false)
-		emit_signal("anomaly_shot_down")
-		print("[AnomalyManager] Alle Anomalien im aktiven Segment beseitigt.")
+	# Legacy-Hook: Es gibt keine Shoot-Anomalien mehr.
+	if _active_segment and _segment_has_planned_anomaly.has(_active_segment):
+		_segment_has_planned_anomaly[_active_segment] = false
+	clear_anomaly()
+	GameManager.set_current_round_has_anomaly(false)
+	emit_signal("anomaly_shot_down")
 
 func has_active_anomaly() -> bool:
-	_active_anomaly_nodes = _active_anomaly_nodes.filter(func(node: Node) -> bool:
-		return is_instance_valid(node)
-	)
-	return not _active_anomaly_nodes.is_empty()
+	return _active_modification != "" and (is_instance_valid(_active_target) or is_instance_valid(_active_light))
