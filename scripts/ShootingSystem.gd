@@ -38,6 +38,14 @@ func _ready() -> void:
 
 # ─── Schuss-Handler ────────────────────────────────────────────────────────────
 func _on_shotgun_fired(hit_nodes: Array) -> void:
+	var camera := get_viewport().get_camera_3d()
+	if not camera:
+		return
+
+	var from := camera.global_position
+	var to := from + (-camera.global_basis.z * 50.0)
+
+	_draw_shot_ray(from, to)
 	var anomaly_hit: BaseAnomaly = null
 
 	for node in hit_nodes:
@@ -104,3 +112,30 @@ func _spawn_impact_effect(at_node: Node) -> void:
 	var effect := impact_effect_scene.instantiate()
 	get_tree().current_scene.add_child(effect)
 	(effect as Node3D).global_position = (at_node as Node3D).global_position
+	##
+	
+func _draw_shot_ray(from: Vector3, to: Vector3) -> void:
+	var mesh := ImmediateMesh.new()
+	mesh.clear_surfaces()
+	mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	mesh.surface_add_vertex(from)
+	mesh.surface_add_vertex(to)
+	mesh.surface_end()
+
+	var instance := MeshInstance3D.new()
+	instance.mesh = mesh
+
+	# Material (rot leuchtend)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(1, 0, 0)
+	mat.emission_enabled = true
+	mat.emission = Color(1, 0, 0)
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+	instance.material_override = mat
+
+	get_tree().current_scene.add_child(instance)
+
+	# automatisch löschen nach kurzer Zeit
+	await get_tree().create_timer(0.1).timeout
+	instance.queue_free()

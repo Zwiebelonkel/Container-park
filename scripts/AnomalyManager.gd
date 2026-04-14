@@ -155,10 +155,13 @@ func _apply_random_object_modification(target: Node3D) -> bool:
 	_active_target_original_scale = _active_target.scale
 	_active_target_original_visibility = _capture_visual_visibility(_active_target)
 	var is_hidden_by_default := _is_visually_hidden(_active_target)
-	if is_hidden_by_default:
-		return false
+	var modifications: Array[String] = []
 
-	var modifications: Array[String] = [MOD_SCALE_UP, MOD_SCALE_DOWN, MOD_HIDE]
+	if is_hidden_by_default:
+	# Versteckte Objekte dürfen NUR erscheinen
+		modifications = [MOD_SHOW]
+	else:
+		modifications = [MOD_SCALE_UP, MOD_SCALE_DOWN, MOD_HIDE]
 
 	_active_modification = modifications[randi_range(0, modifications.size() - 1)]
 	if _active_modification == MOD_HIDE:

@@ -10,3 +10,4 @@ res://ui/optionsPanel.tscn
 res://scripts/AnomalyManager.gd
 res://scripts/GameManager.gd
 res://ui/GameUI.gd
+res://scripts/ShootingSystem.gd
