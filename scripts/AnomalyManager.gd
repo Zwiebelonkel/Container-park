@@ -29,10 +29,14 @@ var _active_segment: Node3D = null
 var _active_target: Node3D = null
 var _active_target_original_scale: Vector3 = Vector3.ONE
 var _active_target_original_visibility: Dictionary = {}
+var _active_target_hit_root: Node = null
+var _active_target_created_proxy: Node = null
 
 var _active_light: Light3D = null
 var _active_light_original_energy: float = 1.0
 var _next_flicker_tick: float = 0.0
+var _active_light_hit_root: Node = null
+var _active_light_created_proxy: Node = null
 
 var _active_modification: String = ""
 var _active_mannequin_swap: bool = false
@@ -127,6 +131,7 @@ func _start_light_flicker(light: Light3D) -> bool:
 		return false
 	_active_light = light
 	_active_light_original_energy = light.light_energy
+	_active_light_hit_root = _find_or_create_hit_root(_active_light, "ShotProxyLight", 1.2)
 	_active_modification = MOD_LIGHT_FLICKER
 	_next_flicker_tick = 0.0
 	set_process(true)
@@ -141,6 +146,14 @@ func _apply_random_object_modification(target: Node3D) -> bool:
 	_active_target = target
 	_active_target_original_scale = _active_target.scale
 	_active_target_original_visibility = _capture_visual_visibility(_active_target)
+	_active_target_hit_root = _find_or_create_hit_root(_active_target, "ShotProxyObject", 1.4)
+
+	var is_hidden_by_default := _is_visually_hidden(_active_target)
+	var modifications: Array[String] = [MOD_SCALE_UP, MOD_SCALE_DOWN]
+	if is_hidden_by_default:
+		modifications.append(MOD_SHOW)
+	else:
+		modifications.append(MOD_HIDE)
 
 	var is_hidden_by_default := _is_visually_hidden(_active_target)
 	var modifications: Array[String] = [MOD_SCALE_UP, MOD_SCALE_DOWN]
@@ -261,16 +274,66 @@ func handle_shot_hit_nodes(hit_nodes: Array) -> bool:
 			continue
 
 		if is_instance_valid(_active_target):
-			if node == _active_target or _active_target.is_ancestor_of(node):
+			if _nodes_related(node, _active_target) or _nodes_related(node, _active_target_hit_root):
 				on_anomaly_shot()
 				return true
 
 		if is_instance_valid(_active_light):
-			if node == _active_light or _active_light.is_ancestor_of(node):
+			if _nodes_related(node, _active_light) or _nodes_related(node, _active_light_hit_root):
 				on_anomaly_shot()
 				return true
 
 	return false
+
+func _nodes_related(a: Node, b: Node) -> bool:
+	if not is_instance_valid(a) or not is_instance_valid(b):
+		return false
+	if a == b:
+		return true
+	return _is_in_parent_chain(a, b) or _is_in_parent_chain(b, a)
+
+func _is_in_parent_chain(node: Node, possible_ancestor: Node) -> bool:
+	var check: Node = node
+	while is_instance_valid(check):
+		if check == possible_ancestor:
+			return true
+		check = check.get_parent()
+	return false
+
+func _find_or_create_hit_root(root: Node3D, proxy_name: String, radius: float) -> Node:
+	var existing := _find_hit_root(root)
+	if is_instance_valid(existing):
+		return existing
+
+	var proxy := StaticBody3D.new()
+	proxy.name = proxy_name
+	var shape := CollisionShape3D.new()
+	var sphere := SphereShape3D.new()
+	sphere.radius = radius
+	shape.shape = sphere
+	proxy.add_child(shape)
+	root.add_child(proxy)
+	proxy.owner = root.owner
+	shape.owner = root.owner
+
+	if root == _active_target:
+		_active_target_created_proxy = proxy
+	elif root == _active_light:
+		_active_light_created_proxy = proxy
+
+	return proxy
+
+func _find_hit_root(root: Node) -> Node:
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var current: Node = stack.pop_back()
+		if current is StaticBody3D or current is Area3D:
+			for child in current.get_children():
+				if child is CollisionShape3D:
+					return current
+		for child in current.get_children():
+			stack.append(child)
+	return null
 
 func clear_anomaly() -> void:
 	if is_instance_valid(_active_target):
@@ -288,12 +351,21 @@ func clear_anomaly() -> void:
 	if is_instance_valid(_active_musicbox_audio):
 		_active_musicbox_audio.stop()
 
+	if is_instance_valid(_active_target_created_proxy):
+		_active_target_created_proxy.queue_free()
+	if is_instance_valid(_active_light_created_proxy):
+		_active_light_created_proxy.queue_free()
+
 	_active_target = null
 	_active_target_original_scale = Vector3.ONE
 	_active_target_original_visibility.clear()
+	_active_target_hit_root = null
+	_active_target_created_proxy = null
 	_active_light = null
 	_active_light_original_energy = 1.0
 	_next_flicker_tick = 0.0
+	_active_light_hit_root = null
+	_active_light_created_proxy = null
 	_active_modification = ""
 	_active_mannequin_swap = false
 	_active_mannequin2 = null
