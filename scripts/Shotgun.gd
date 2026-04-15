@@ -10,6 +10,9 @@ signal ammo_changed(current: int, max_ammo: int)
 @export var fire_range: float = 25.0
 @export var reload_time: float = 0.9
 @export var fire_rate: float = 0.2
+@export var show_shot_tracers: bool = true
+@export var tracer_duration: float = 0.08
+@export var tracer_color: Color = Color(1.0, 0.95, 0.55, 0.85)
 
 # ── Sway ───────────────────────────────
 @export var idle_sway_x_amplitude: float = 0.01
@@ -94,9 +97,15 @@ func _fire() -> void:
 	var space_state: PhysicsDirectSpaceState3D = get_viewport().get_camera_3d().get_world_3d().direct_space_state
 
 	for i in pellet_count:
-		var hit: Node = _cast_pellet(space_state)
+		var pellet_result := _cast_pellet(space_state)
+		var hit: Node = pellet_result.get("collider", null) as Node
 		if hit and hit not in hit_nodes:
 			hit_nodes.append(hit)
+		if show_shot_tracers:
+			_draw_shot_tracer(
+				pellet_result.get("from", camera.global_position),
+				pellet_result.get("to", camera.global_position)
+			)
 
 	emit_signal("fired", hit_nodes)
 
@@ -111,9 +120,9 @@ func _fire() -> void:
 
 # ──────────────────────────────────────
 
-func _cast_pellet(space_state: PhysicsDirectSpaceState3D) -> Node:
+func _cast_pellet(space_state: PhysicsDirectSpaceState3D) -> Dictionary:
 	if not camera:
-		return null
+		return {}
 
 	var spread_rad: float = deg_to_rad(spread_degrees)
 
@@ -132,20 +141,31 @@ func _cast_pellet(space_state: PhysicsDirectSpaceState3D) -> Node:
 	).normalized()
 
 	var origin: Vector3 = camera.global_position
+	var ray_to: Vector3 = origin + direction * fire_range
 
 	var query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(
 		origin,
-		origin + direction * fire_range
+		ray_to
 	)
-
+	query.exclude = [self]
+	if is_instance_valid(_player_body):
+		query.exclude.append(_player_body)
 	query.collide_with_areas = true
 
 	var result: Dictionary = space_state.intersect_ray(query)
 
 	if result and result.has("collider"):
-		return result["collider"]
+		return {
+			"collider": result["collider"],
+			"from": origin,
+			"to": result.get("position", ray_to)
+		}
 
-	return null
+	return {
+		"collider": null,
+		"from": origin,
+		"to": ray_to
+	}
 
 # ──────────────────────────────────────
 
@@ -228,6 +248,29 @@ func _trigger_muzzle_flash() -> void:
 
 func _play_empty_click() -> void:
 	print("[Shotgun] *click* – leer!")
+
+func _draw_shot_tracer(from: Vector3, to: Vector3) -> void:
+	var mesh := ImmediateMesh.new()
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.albedo_color = tracer_color
+	material.emission_enabled = true
+	material.emission = tracer_color
+	material.no_depth_test = true
+
+	mesh.surface_begin(Mesh.PRIMITIVE_LINES, material)
+	mesh.surface_add_vertex(from)
+	mesh.surface_add_vertex(to)
+	mesh.surface_end()
+
+	var tracer := MeshInstance3D.new()
+	tracer.mesh = mesh
+	get_tree().current_scene.add_child(tracer)
+
+	await get_tree().create_timer(tracer_duration).timeout
+	if is_instance_valid(tracer):
+		tracer.queue_free()
 
 func force_reload() -> void:
 	current_ammo = max_ammo

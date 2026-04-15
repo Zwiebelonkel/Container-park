@@ -40,11 +40,6 @@ func _ready() -> void:
 		push_error("[ShootingSystem] AnomalyManager nicht gefunden: %s" % anomaly_manager_path)
 		return
 
-	if _shotgun and _shotgun.has_signal("fired"):
-		_shotgun.fired.connect(_on_shotgun_fired)
-	else:
-		push_warning("[ShootingSystem] Kein Shotgun oder kein 'fired'-Signal!")
-
 # ─── Schuss-Handler ────────────────────────────────────────────────────────────
 func _on_shotgun_fired(hit_nodes: Array) -> void:
 	if not _anomaly_manager:
