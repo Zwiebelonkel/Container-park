@@ -44,6 +44,7 @@ var _active_mannequin2: Node3D = null
 var _mannequin_scare_player: AudioStreamPlayer3D = null
 var _mannequin_scare_played: bool = false
 var _active_musicbox_audio: AudioStreamPlayer3D = null
+var _scene_lights_before_musicbox: Dictionary = {}
 
 func _ready() -> void:
 	set_process(false)
@@ -298,6 +299,7 @@ func _apply_special_hide_rules(target: Node3D) -> void:
 
 func _apply_special_show_rules(target: Node3D) -> void:
 	if target.name.to_lower() == "musicbox":
+		_disable_all_scene_lights_for_musicbox()
 		_active_musicbox_audio = target.find_child("music", true, false) as AudioStreamPlayer3D
 		if is_instance_valid(_active_musicbox_audio):
 			if _active_musicbox_audio.stream is AudioStreamMP3:
@@ -312,22 +314,67 @@ func _try_trigger_mannequin_scare() -> void:
 	if not is_instance_valid(camera):
 		return
 
-	var to_target := (_active_mannequin2.global_position - camera.global_position).normalized()
+	var target_focus: Vector3 = _get_node_focus_position(_active_mannequin2)
+	if not camera.is_position_in_frustum(target_focus):
+		return
+
+	var to_target := (target_focus - camera.global_position).normalized()
 	var look_dir := -camera.global_basis.z.normalized()
 	if look_dir.dot(to_target) < mannequin_look_dot_threshold:
 		return
 
-	var space_state := camera.get_world_3d().direct_space_state
-	var query := PhysicsRayQueryParameters3D.create(camera.global_position, _active_mannequin2.global_position)
-	query.collide_with_areas = true
-	var hit := space_state.intersect_ray(query)
-	if hit and hit.has("collider"):
-		var collider := hit["collider"] as Node
-		if collider and not (_active_mannequin2 == collider or _active_mannequin2.is_ancestor_of(collider)):
-			return
-
 	_mannequin_scare_player.play()
 	_mannequin_scare_played = true
+
+func _get_node_focus_position(node: Node3D) -> Vector3:
+	if not is_instance_valid(node):
+		return Vector3.ZERO
+
+	var stack: Array[Node] = [node]
+	while not stack.is_empty():
+		var current := stack.pop_back()
+		if current is VisualInstance3D:
+			var visual := current as VisualInstance3D
+			var aabb := visual.get_aabb()
+			return visual.global_transform * aabb.get_center()
+		for child in current.get_children():
+			stack.append(child)
+
+	return node.global_position
+
+func _disable_all_scene_lights_for_musicbox() -> void:
+	if not _scene_lights_before_musicbox.is_empty():
+		return
+
+	for light in get_tree().get_nodes_in_group(&"anomaly_lights"):
+		if light is Light3D and is_instance_valid(light):
+			_scene_lights_before_musicbox[light] = {
+				"visible": light.visible,
+				"light_energy": light.light_energy
+			}
+			light.visible = false
+			light.light_energy = 0.0
+
+	for light in get_tree().current_scene.find_children("*", "Light3D", true, false):
+		if not (light is Light3D):
+			continue
+		if _scene_lights_before_musicbox.has(light):
+			continue
+		_scene_lights_before_musicbox[light] = {
+			"visible": light.visible,
+			"light_energy": light.light_energy
+		}
+		light.visible = false
+		light.light_energy = 0.0
+
+func _restore_scene_lights_after_musicbox() -> void:
+	for light in _scene_lights_before_musicbox.keys():
+		if not is_instance_valid(light):
+			continue
+		var state: Dictionary = _scene_lights_before_musicbox[light]
+		light.visible = state.get("visible", true)
+		light.light_energy = state.get("light_energy", 1.0)
+	_scene_lights_before_musicbox.clear()
 
 func handle_shot_hit_nodes(hit_nodes: Array) -> bool:
 	if not has_active_anomaly():
@@ -420,6 +467,7 @@ func clear_anomaly() -> void:
 
 	if is_instance_valid(_active_musicbox_audio):
 		_active_musicbox_audio.stop()
+	_restore_scene_lights_after_musicbox()
 
 	if is_instance_valid(_active_target_created_proxy):
 		_active_target_created_proxy.queue_free()
