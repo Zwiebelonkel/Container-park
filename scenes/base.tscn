@@ -79,8 +79,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4902, 5.61128, 26.981)
 [node name="AnomalyManager" type="Node" parent="."]
 script = ExtResource("4_anomalymgr")
 anomaly_chance_per_segment = 1.0
-scale_up_factor = 2.86
-scale_down_factor = 0.54
+scale_up_factor = 2.135
+scale_down_factor = 0.67
 
 [node name="GameUI" type="CanvasLayer" parent="."]
 script = ExtResource("5_gameui")

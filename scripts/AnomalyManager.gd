@@ -119,21 +119,43 @@ func _apply_random_anomaly(segment: Node3D) -> bool:
 	var light_candidates: Array[Light3D] = _collect_anomaly_lights_in_segment(segment)
 	var candidates: Array[Dictionary] = []
 
+	# 🔥 Objekte sammeln (inkl. hidden-Status)
 	for obj in object_candidates:
-		if _is_visually_hidden(obj):
-			continue
-		candidates.append({"kind": "object", "node": obj})
+		candidates.append({
+			"kind": "object",
+			"node": obj,
+			"hidden": not obj.visible,
+			"show_only": obj.is_in_group("show_only")
+		})
+
+	# Lichter bleiben unverändert
 	for light in light_candidates:
-		candidates.append({"kind": "light", "node": light})
+		candidates.append({
+			"kind": "light",
+			"node": light
+		})
 
 	if candidates.is_empty():
 		return false
 
 	var pick: Dictionary = candidates[randi_range(0, candidates.size() - 1)]
+
+	# 👉 Licht-Anomalie
 	if pick.get("kind") == "light":
 		return _start_light_flicker(pick.get("node") as Light3D)
-	return _apply_random_object_modification(pick.get("node") as Node3D)
 
+	# 👉 Objekt-Anomalie
+	var target: Node3D = pick.get("node")
+	var is_hidden: bool = pick.get("hidden", false)
+	var is_show_only: bool = target.is_in_group("show_only")
+	
+	print("ACTIVE SEGMENT:", segment.name)
+	print("TARGET OBJECT:", target.name)
+	print("TARGET PARENT:", target.get_parent().name)
+
+	return _apply_random_object_modification(target, is_hidden, is_show_only)
+	
+	
 func _start_light_flicker(light: Light3D) -> bool:
 	if not is_instance_valid(light):
 		return false
@@ -147,44 +169,76 @@ func _start_light_flicker(light: Light3D) -> bool:
 	print("[AnomalyManager] Anomalie '%s' auf Licht '%s' angewendet." % [_active_modification, _active_light.name])
 	return true
 
-func _apply_random_object_modification(target: Node3D) -> bool:
+func _apply_random_object_modification(
+	target: Node3D,
+	is_hidden_by_default: bool,
+	is_show_only: bool
+) -> bool:
 	if not is_instance_valid(target):
 		return false
 
+	# ─── Setup ─────────────────────────────────────────────
 	_active_target = target
 	_active_target_original_scale = _active_target.scale
 	_active_target_original_visibility = _capture_visual_visibility(_active_target)
-	var is_hidden_by_default := _is_visually_hidden(_active_target)
+
 	var modifications: Array[String] = []
 
-	if is_hidden_by_default:
-	# Versteckte Objekte dürfen NUR erscheinen
+	# ─── Auswahl der möglichen Mods ────────────────────────
+	if is_show_only:
+		# 🔥 Spezial-Objekte (z.B. mannequin2)
 		modifications = [MOD_SHOW]
+
+	elif is_hidden_by_default:
+		# 🔥 normale hidden Objekte (z.B. musicBox)
+		modifications = [MOD_SHOW]
+
 	else:
+		# 🔥 normale sichtbare Objekte
 		modifications = [MOD_SCALE_UP, MOD_SCALE_DOWN, MOD_HIDE]
 
+	# ─── Zufällige Auswahl ─────────────────────────────────
+	if modifications.is_empty():
+		return false
+
 	_active_modification = modifications[randi_range(0, modifications.size() - 1)]
+
+	# ─── Hitbox / Proxy ────────────────────────────────────
 	if _active_modification == MOD_HIDE:
-		# Bei versteckten Objekten muss das Korrigieren weiterhin möglich sein:
-		# deshalb immer einen zusätzlichen, gut treffbaren Proxy erzeugen.
+		# versteckte Objekte brauchen großen Proxy zum Treffen
 		_active_target_hit_root = _create_hit_proxy(_active_target, "ShotProxyHiddenObject", 1.8)
 	else:
 		_active_target_hit_root = _find_or_create_hit_root(_active_target, "ShotProxyObject", 1.4)
 
+	# ─── Anwendung der Anomalie ────────────────────────────
 	match _active_modification:
+
 		MOD_HIDE:
 			_apply_hidden_state(_active_target, false)
 			_apply_special_hide_rules(_active_target)
+
+		MOD_SHOW:
+			_apply_hidden_state(_active_target, true)
+			_apply_special_show_rules(_active_target)
+
 		MOD_SCALE_UP:
 			_active_target.scale = _active_target_original_scale * scale_up_factor
+
 		MOD_SCALE_DOWN:
 			_active_target.scale = _active_target_original_scale * scale_down_factor
 
+	# ─── Laufzeit / Signals ────────────────────────────────
 	set_process(is_instance_valid(_active_light) or _active_mannequin_swap)
-	emit_signal("anomaly_spawned", _active_modification)
-	print("[AnomalyManager] Anomalie '%s' auf Objekt '%s' angewendet." % [_active_modification, _active_target.name])
-	return true
 
+	emit_signal("anomaly_spawned", _active_modification)
+
+	print("[AnomalyManager] Anomalie '%s' auf Objekt '%s' angewendet." % [
+		_active_modification,
+		_active_target.name
+	])
+
+	return true
+	
 func _collect_anomaly_objects_in_segment(segment: Node3D) -> Array[Node3D]:
 	var result: Array[Node3D] = []
 	for node in get_tree().get_nodes_in_group(anomaly_object_group):
@@ -211,6 +265,7 @@ func _capture_visual_visibility(root: Node3D) -> Dictionary:
 	return state
 
 func _apply_hidden_state(root: Node3D, visible: bool) -> void:
+	root.visible = visible  # ← das fehlte
 	var stack: Array[Node] = [root]
 	while not stack.is_empty():
 		var current: Node = stack.pop_back()

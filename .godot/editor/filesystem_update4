@@ -1,13 +1,11 @@
-res://scenes/player.tscn
+res://scenes/base.tscn
 res://assets/shaders/ps1.gdshader
 res://assets/shaders/CRT.gdshader
 res://assets/shaders/sky2.gdshader
+res://scripts/AnomalyManager.gd
+res://scenes/player.tscn
 res://ui/mainMenu.tscn
 res://assets/3d/ship/ship.tscn
 res://assets/3d/container/container.tscn
-res://scenes/base.tscn
 res://ui/optionsPanel.tscn
-res://scripts/AnomalyManager.gd
-res://scripts/GameManager.gd
-res://ui/GameUI.gd
 res://scripts/ShootingSystem.gd

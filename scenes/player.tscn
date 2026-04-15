@@ -125,3 +125,7 @@ mouse_filter = 2
 stream = ExtResource("5_qlg0r")
 volume_db = -0.36
 pitch_scale = 0.91
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_energy = 11.505
+omni_range = 4096.0

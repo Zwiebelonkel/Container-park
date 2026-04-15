@@ -35,49 +35,26 @@ func _ready() -> void:
 		_shotgun.fired.connect(_on_shotgun_fired)
 	else:
 		push_warning("[ShootingSystem] Keine Schrotflinte gefunden oder kein 'fired'-Signal!")
+		
+	if not _anomaly_manager:
+		push_error("[ShootingSystem] AnomalyManager nicht gefunden: %s" % anomaly_manager_path)
+		return
+
+	if _shotgun and _shotgun.has_signal("fired"):
+		_shotgun.fired.connect(_on_shotgun_fired)
+	else:
+		push_warning("[ShootingSystem] Kein Shotgun oder kein 'fired'-Signal!")
 
 # ─── Schuss-Handler ────────────────────────────────────────────────────────────
 func _on_shotgun_fired(hit_nodes: Array) -> void:
-	var camera := get_viewport().get_camera_3d()
-	if not camera:
+	if not _anomaly_manager:
 		return
 
-	var from := camera.global_position
-	var to := from + (-camera.global_basis.z * 50.0)
-
-	_draw_shot_ray(from, to)
-	var anomaly_hit: BaseAnomaly = null
-
-	for node in hit_nodes:
-		if not is_instance_valid(node):
-			continue
-
-		# Pruefen ob der getroffene Node (oder sein Parent) eine Anomalie ist
-		var anomaly := _find_anomaly_from_collider(node)
-
-		if anomaly:
-			if not anomaly_hit:  # Nur erste Anomalie pro Schuss zaehlen
-				anomaly_hit = anomaly
-		else:
-			# Normales Objekt → visueller Einschlag-Effekt
-			_spawn_impact_effect(node)
-			emit_signal("normal_object_shot", node)
-
-	# Anomalie verarbeiten
-	if anomaly_hit:
-		var destroyed := anomaly_hit.on_shot()
-		if destroyed:
-			emit_signal("anomaly_shot", anomaly_hit)
-			_on_anomaly_eliminated()
-		else:
-			# Treffer aber noch nicht behoben (requires_multiple_hits > 1)
-			print("[ShootingSystem] Anomalie getroffen – braucht noch %d Treffer" % \
-				(anomaly_hit.requires_multiple_hits - anomaly_hit._hits_received))
-	elif _anomaly_manager and _anomaly_manager.has_method("handle_shot_hit_nodes"):
-		var corrected := _anomaly_manager.call("handle_shot_hit_nodes", hit_nodes)
-		if corrected:
-			print("[ShootingSystem] ✅ Segment-Anomalie durch Schuss korrigiert!")
-
+	var corrected: bool = _anomaly_manager.handle_shot_hit_nodes(hit_nodes)
+	if corrected:
+		print("[ShootingSystem] ✅ Anomalie durch Schuss korrigiert!")
+		
+		
 # ─── Anomalie-Auflosung ────────────────────────────────────────────────────────
 func _on_anomaly_eliminated() -> void:
 	print("[ShootingSystem] ✅ Anomalie beseitigt!")
