@@ -122,6 +122,14 @@ anomaly_manager_path = NodePath("../../../AnomalyManager")
 transform = Transform3D(0.999979, 0, -3.30402e-13, 0, 1, 0, 3.30402e-13, 0, 0.999979, -6.60231, -1.82821, 0)
 shape = SubResource("BoxShape3D_room_exit")
 
+[node name="BacktrackBlocker" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -83.1428, 18.9866, -9.20885)
+
+[node name="BacktrackBlockerShape" type="CollisionShape3D" parent="BacktrackBlocker"]
+disabled = true
+transform = Transform3D(0.999979, 0, -3.30402e-13, 0, 1, 0, 3.30402e-13, 0, 0.999979, -6.60231, -1.82821, 0)
+shape = SubResource("BoxShape3D_room_exit")
+
 [node name="RoomEntry" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.34471, 7.80708, 33.3899)
 
