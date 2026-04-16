@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=3 uid="uid://bu0606082uyxb"]
+
+[ext_resource type="PackedScene" uid="uid://dyle1425w86ja" path="res://assets/3d/stairs/scene.gltf" id="1_sf7nf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sf7nf"]
+size = Vector3(0.306274, 1, 0.245361)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hjdg2"]
+size = Vector3(0.30777, 1, 0.174438)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7cpy1"]
+size = Vector3(0.312088, 1, 0.160461)
+
+[node name="stairs" type="Node3D"]
+transform = Transform3D(1.6, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_sf7nf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00266755, 0, -2.12472)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.154968, 0, 0.127075)
+shape = SubResource("BoxShape3D_sf7nf")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.327896, -2.6077e-08, 0.321716)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.514123, -5.21541e-08, 0.480086)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.701299, -7.82311e-08, 0.638996)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.88659, -1.04308e-07, 0.798535)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.07251, -1.30385e-07, 0.958074)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D7" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.26089, -1.56462e-07, 1.11655)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D8" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.44698, -1.82539e-07, 1.27626)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D9" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.63306, -2.10479e-07, 1.43598)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D10" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.81982, -2.36556e-07, 1.59435)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D11" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.00574, -2.62633e-07, 1.75326)
+shape = SubResource("BoxShape3D_hjdg2")
+
+[node name="CollisionShape3D12" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.19445, -2.8871e-07, 1.92042)
+shape = SubResource("BoxShape3D_7cpy1")
+
+[editable path="Sketchfab_Scene"]

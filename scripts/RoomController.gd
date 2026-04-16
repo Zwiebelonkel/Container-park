@@ -212,11 +212,12 @@ func _find_backtrack_blocker(segment: Node3D) -> CollisionShape3D:
 
 func _set_active_backtrack_blocker(new_blocker: CollisionShape3D) -> void:
 	if is_instance_valid(_active_backtrack_blocker):
-		_active_backtrack_blocker.disabled = true
+		_active_backtrack_blocker.set_deferred("disabled", true)
 
 	_active_backtrack_blocker = new_blocker
+	
 	if is_instance_valid(_active_backtrack_blocker):
-		_active_backtrack_blocker.disabled = false
+		_active_backtrack_blocker.set_deferred("disabled", false)
 
 func _shift_segments_once() -> void:
 	if _loop_segments.size() < 3:

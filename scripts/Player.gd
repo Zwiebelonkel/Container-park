@@ -27,7 +27,7 @@ extends CharacterBody3D
 
 # ── State ────────────────────────────────────────────────────
 var _can_move: bool = true
-var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity") * 2.5
+var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity") * 4
 var _headbob_time: float = 0.0
 var _camera_base_local_position: Vector3
 var _head_base_y: float = 0.0
