@@ -40,6 +40,7 @@ var _active_light_created_proxy: Node = null
 
 var _active_modification: String = ""
 var _active_mannequin_swap: bool = false
+var _active_mannequin_primary: Node3D = null
 var _active_mannequin2: Node3D = null
 var _mannequin_scare_player: AudioStreamPlayer3D = null
 var _mannequin_scare_played: bool = false
@@ -286,18 +287,36 @@ func _is_visually_hidden(root: Node3D) -> bool:
 	return true
 
 func _apply_special_hide_rules(target: Node3D) -> void:
-	if target.name.to_lower() != "mannequin":
+	if target.name.to_lower() == "mannequin":
+		var mannequin2 := target.get_parent().find_child("mannequin2", false, false)
+		if mannequin2 is Node3D:
+			_active_mannequin_swap = true
+			_active_mannequin_primary = target
+			_active_mannequin2 = mannequin2
+			_apply_hidden_state(_active_mannequin2, true)
+			_mannequin_scare_player = _active_mannequin2.find_child("Scare_HI", true, false) as AudioStreamPlayer3D
+			_mannequin_scare_played = false
 		return
 
-	var mannequin2 := target.get_parent().find_child("mannequin2", false, false)
-	if mannequin2 is Node3D:
+	if target.name.to_lower() == "mannequin2":
 		_active_mannequin_swap = true
-		_active_mannequin2 = mannequin2
-		_apply_hidden_state(_active_mannequin2, true)
+		_active_mannequin2 = target
+		_active_mannequin_primary = target.get_parent().find_child("mannequin", false, false) as Node3D
+		if is_instance_valid(_active_mannequin_primary):
+			_apply_hidden_state(_active_mannequin_primary, true)
 		_mannequin_scare_player = _active_mannequin2.find_child("Scare_HI", true, false) as AudioStreamPlayer3D
 		_mannequin_scare_played = false
 
 func _apply_special_show_rules(target: Node3D) -> void:
+	if target.name.to_lower() == "mannequin2":
+		_active_mannequin_swap = true
+		_active_mannequin2 = target
+		_active_mannequin_primary = target.get_parent().find_child("mannequin", false, false) as Node3D
+		if is_instance_valid(_active_mannequin_primary):
+			_apply_hidden_state(_active_mannequin_primary, false)
+		_mannequin_scare_player = _active_mannequin2.find_child("Scare_HI", true, false) as AudioStreamPlayer3D
+		_mannequin_scare_played = false
+
 	if target.name.to_lower() == "musicbox":
 		_disable_all_scene_lights_for_musicbox()
 		_active_musicbox_audio = target.find_child("music", true, false) as AudioStreamPlayer3D
@@ -464,6 +483,8 @@ func clear_anomaly() -> void:
 
 	if is_instance_valid(_active_mannequin2):
 		_apply_hidden_state(_active_mannequin2, false)
+	if is_instance_valid(_active_mannequin_primary):
+		_apply_hidden_state(_active_mannequin_primary, true)
 
 	if is_instance_valid(_active_musicbox_audio):
 		_active_musicbox_audio.stop()
@@ -486,6 +507,7 @@ func clear_anomaly() -> void:
 	_active_light_created_proxy = null
 	_active_modification = ""
 	_active_mannequin_swap = false
+	_active_mannequin_primary = null
 	_active_mannequin2 = null
 	_mannequin_scare_player = null
 	_mannequin_scare_played = false

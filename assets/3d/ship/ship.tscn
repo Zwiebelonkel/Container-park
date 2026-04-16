@@ -122,6 +122,14 @@ anomaly_manager_path = NodePath("../../../AnomalyManager")
 transform = Transform3D(0.999979, 0, -3.30402e-13, 0, 1, 0, 3.30402e-13, 0, 0.999979, -6.60231, -1.82821, 0)
 shape = SubResource("BoxShape3D_room_exit")
 
+[node name="BacktrackBlocker" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -83.1428, 18.9866, -9.20885)
+
+[node name="BacktrackBlockerShape" type="CollisionShape3D" parent="BacktrackBlocker"]
+disabled = true
+transform = Transform3D(0.999979, 0, -3.30402e-13, 0, 1, 0, 3.30402e-13, 0, 0.999979, -6.60231, -1.82821, 0)
+shape = SubResource("BoxShape3D_room_exit")
+
 [node name="RoomEntry" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.34471, 7.80708, 33.3899)
 
@@ -213,6 +221,7 @@ transform = Transform3D(-5.61292, 0, -3.19792, 0, 6.46, 0, 3.19792, 0, -5.61292,
 
 [node name="mannequin2" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("10_cuepq")]
 transform = Transform3D(-0.0562591, 0, -6.45975, 3.72545, 5.27746, -0.0324456, 5.27725, -3.7256, -0.0459605, 71.2954, 0.67665, -2.41113)
+visible = false
 
 [node name="Skeleton3D" parent="mannequin2/Sketchfab_model/e34f23c0366b4a1ca05fa836e6969947_fbx/Object_2/RootNode/Mannequin/Armature/Object_6" index="0"]
 bones/1/position = Vector3(0.212616, 0.166848, 0.660438)

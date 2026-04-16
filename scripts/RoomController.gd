@@ -25,7 +25,9 @@ var _is_paused: bool = false
 
 var _loop_segments: Array[Node3D] = []
 var _room_exits: Array[Area3D] = []
+var _room_entries: Array[Area3D] = []
 var _active_shift_exit: Area3D
+var _active_backtrack_blocker: CollisionShape3D = null
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -33,6 +35,8 @@ func _ready() -> void:
 	_setup_pause_menu()
 	_collect_loop_segments()
 	_collect_room_exits()
+	_collect_room_entries()
+	_connect_room_entries()
 	_refresh_shift_exit_connection()
 	_sync_anomaly_manager_segments()
 	if GameManager:
@@ -130,6 +134,21 @@ func _collect_loop_segments() -> void:
 	if front_segment is Node3D:
 		_loop_segments.append(front_segment)
 
+func _collect_room_entries() -> void:
+	_room_entries.clear()
+	for segment in _loop_segments:
+		var entry_node := _find_room_entry(segment)
+		if entry_node:
+			_room_entries.append(entry_node)
+
+func _connect_room_entries() -> void:
+	for entry in _room_entries:
+		if not is_instance_valid(entry):
+			continue
+		var callback := Callable(self, "_on_room_entry_body_entered").bind(entry)
+		if not entry.body_entered.is_connected(callback):
+			entry.body_entered.connect(callback)
+
 func _refresh_shift_exit_connection() -> void:
 	if _active_shift_exit and _active_shift_exit.body_entered.is_connected(_on_room_exit_body_entered):
 		_active_shift_exit.body_entered.disconnect(_on_room_exit_body_entered)
@@ -152,6 +171,52 @@ func _find_room_exit(segment: Node3D) -> Area3D:
 	if exit_node is Area3D:
 		return exit_node
 	return null
+
+func _find_room_entry(segment: Node3D) -> Area3D:
+	if not segment:
+		return null
+	var entry_node := segment.find_child("RoomEntry", true, false)
+	if entry_node is Area3D:
+		return entry_node
+	return null
+
+func _on_room_entry_body_entered(body: Node, entry: Area3D) -> void:
+	if not body.is_in_group("player"):
+		return
+
+	var segment := _resolve_segment_for_entry(entry)
+	if not is_instance_valid(segment):
+		return
+
+	var segment_index := _loop_segments.find(segment)
+	if segment_index <= 0:
+		return
+
+	var previous_segment: Node3D = _loop_segments[segment_index - 1]
+	var blocker := _find_backtrack_blocker(previous_segment)
+	_set_active_backtrack_blocker(blocker)
+
+func _resolve_segment_for_entry(entry: Area3D) -> Node3D:
+	for segment in _loop_segments:
+		if is_instance_valid(segment) and segment.is_ancestor_of(entry):
+			return segment
+	return null
+
+func _find_backtrack_blocker(segment: Node3D) -> CollisionShape3D:
+	if not is_instance_valid(segment):
+		return null
+	var blocker := segment.find_child("BacktrackBlockerShape", true, false)
+	if blocker is CollisionShape3D:
+		return blocker
+	return null
+
+func _set_active_backtrack_blocker(new_blocker: CollisionShape3D) -> void:
+	if is_instance_valid(_active_backtrack_blocker):
+		_active_backtrack_blocker.disabled = true
+
+	_active_backtrack_blocker = new_blocker
+	if is_instance_valid(_active_backtrack_blocker):
+		_active_backtrack_blocker.disabled = false
 
 func _shift_segments_once() -> void:
 	if _loop_segments.size() < 3:
@@ -180,6 +245,8 @@ func _shift_segments_once() -> void:
 	# Reihenfolge rotieren: [back, mid, front] -> [mid, front, back]
 	_loop_segments.pop_front()
 	_loop_segments.append(first)
+	_collect_room_entries()
+	_connect_room_entries()
 
 	# Nach dem Shift ist ein neues Segment in der Mitte -> neuen Trigger verbinden
 	_refresh_shift_exit_connection()
