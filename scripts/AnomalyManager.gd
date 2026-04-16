@@ -260,6 +260,8 @@ func _capture_visual_visibility(root: Node3D) -> Dictionary:
 	var stack: Array[Node] = [root]
 	while not stack.is_empty():
 		var current: Node = stack.pop_back()
+		if current is Node3D:
+			state[current] = current.visible
 		if current is VisualInstance3D:
 			state[current] = current.visible
 		for child in current.get_children():
@@ -519,6 +521,9 @@ func clear_anomaly() -> void:
 
 	if is_instance_valid(_active_musicbox_audio):
 		_active_musicbox_audio.stop()
+	var music_bus_index := AudioServer.get_bus_index("Music")
+	if music_bus_index != -1:
+		AudioServer.set_bus_mute(music_bus_index, false)
 	_restore_scene_lights_after_musicbox()
 
 	if is_instance_valid(_active_target_created_proxy):
