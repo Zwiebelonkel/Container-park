@@ -7,7 +7,7 @@ signal ammo_changed(current: int, max_ammo: int)
 @export var max_ammo: int = 6
 @export var pellet_count: int = 8
 @export var spread_degrees: float = 4.5
-@export var fire_range: float = 25.0
+@export var fire_range: float = 60.0
 @export var reload_time: float = 0.9
 @export var fire_rate: float = 0.2
 @export var show_shot_tracers: bool = true

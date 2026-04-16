@@ -7,6 +7,7 @@ extends Node3D
 @onready var player: CharacterBody3D = $Player
 @onready var player_start: Marker3D = $PlayerStart
 @onready var anomaly_manager: Node = $AnomalyManager
+@onready var shotgun: Node = $Player/Head/Camera3D/Shotgun
 
 var _transition_overlay: ColorRect
 var _is_transitioning: bool = false
@@ -33,6 +34,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_setup_transition_overlay()
 	_setup_pause_menu()
+	_connect_shotgun()
 	_collect_loop_segments()
 	_collect_room_exits()
 	_collect_room_entries()
@@ -43,6 +45,36 @@ func _ready() -> void:
 		GameManager.round_ended.connect(_on_round_ended)
 	await get_tree().process_frame
 	GameManager.start_game()
+
+func _connect_shotgun() -> void:
+	if not is_instance_valid(shotgun):
+		push_warning("[RoomController] Shotgun nicht gefunden – Schüsse können keine Anomalien korrigieren.")
+		return
+	if not shotgun.has_signal("fired"):
+		push_warning("[RoomController] Shotgun hat kein 'fired'-Signal.")
+		return
+	if not shotgun.fired.is_connected(_on_shotgun_fired):
+		shotgun.fired.connect(_on_shotgun_fired)
+
+func _on_shotgun_fired(hit_nodes: Array) -> void:
+	if not is_instance_valid(anomaly_manager) or not anomaly_manager.has_method("handle_shot_hit_nodes"):
+		push_warning("[RoomController] AnomalyManager.handle_shot_hit_nodes fehlt.")
+		return
+
+	var corrected: bool = anomaly_manager.call("handle_shot_hit_nodes", hit_nodes)
+	if corrected:
+		print("[RoomController] ✅ Anomalie durch Schuss korrigiert!")
+		return
+
+	if hit_nodes.is_empty():
+		print("[RoomController] ❌ Schuss ohne Treffer (nichts im Raycast gefunden).")
+		return
+
+	var names: PackedStringArray = []
+	for node in hit_nodes:
+		if is_instance_valid(node):
+			names.append(node.name)
+	print("[RoomController] ⚠️ Treffer erkannt, aber keine aktive Anomalie getroffen: %s" % ", ".join(names))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
