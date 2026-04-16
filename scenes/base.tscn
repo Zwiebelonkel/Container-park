@@ -60,9 +60,11 @@ visible = false
 omni_range = 4096.0
 omni_attenuation = -0.905
 
-[node name="SpotLight3D" parent="Player/Head/Camera3D" index="1"]
-spot_range = 40.3236
-spot_angle = 27.891
+[node name="shot" parent="Player" index="3"]
+bus = &"SFX"
+
+[node name="OmniLight3D" parent="Player" index="4"]
+transform = Transform3D(0.257069, 0, 0, 0, 0.257069, 0, 0, 0, 0.257069, 0, 1.44632, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_pvqg0")
@@ -169,9 +171,11 @@ grow_vertical = 2
 stream = ExtResource("7_hh5oj")
 pitch_scale = 0.82
 autoplay = true
+bus = &"Music"
 
 [node name="waves" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_vqfsp")
 autoplay = true
+bus = &"Music"
 
 [editable path="Player"]

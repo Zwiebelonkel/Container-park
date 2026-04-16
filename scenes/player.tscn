@@ -92,13 +92,13 @@ transform = Transform3D(1.33865, -0.0592531, 0.0107483, 0.012065, 0.0295599, -1.
 mesh = SubResource("CylinderMesh_fjrip")
 skeleton = NodePath("../..")
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Head/Camera3D"]
+[node name="flashlight" type="SpotLight3D" parent="Head/Camera3D"]
 light_color = Color(1, 1, 0.756863, 1)
-light_energy = 5.835
+light_energy = 16.0
 light_indirect_energy = 1.1
 light_volumetric_fog_energy = 0.0
 shadow_enabled = true
-spot_range = 9.28892
+spot_range = 49.434
 spot_angle = 27.72
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -127,5 +127,6 @@ volume_db = -0.36
 pitch_scale = 0.91
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
+visible = false
 light_energy = 11.505
 omni_range = 4096.0

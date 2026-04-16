@@ -296,10 +296,17 @@ func _apply_special_hide_rules(target: Node3D) -> void:
 		_apply_hidden_state(_active_mannequin2, true)
 		_mannequin_scare_player = _active_mannequin2.find_child("Scare_HI", true, false) as AudioStreamPlayer3D
 		_mannequin_scare_played = false
-
+		
 func _apply_special_show_rules(target: Node3D) -> void:
 	if target.name.to_lower() == "musicbox":
+	
+	# 🔥 Music Bus muten
+		var bus_index := AudioServer.get_bus_index("Music")
+		if bus_index != -1:
+			AudioServer.set_bus_mute(bus_index, true)
+
 		_disable_all_scene_lights_for_musicbox()
+
 		_active_musicbox_audio = target.find_child("music", true, false) as AudioStreamPlayer3D
 		if is_instance_valid(_active_musicbox_audio):
 			if _active_musicbox_audio.stream is AudioStreamMP3:
@@ -332,7 +339,7 @@ func _get_node_focus_position(node: Node3D) -> Vector3:
 
 	var stack: Array[Node] = [node]
 	while not stack.is_empty():
-		var current := stack.pop_back()
+		var current : Node = stack.pop_back()
 		if current is VisualInstance3D:
 			var visual := current as VisualInstance3D
 			var aabb := visual.get_aabb()
@@ -341,32 +348,56 @@ func _get_node_focus_position(node: Node3D) -> Vector3:
 			stack.append(child)
 
 	return node.global_position
+	
+func _is_flashlight(light: Node) -> bool:
+	var n: String = light.name.to_lower()
+	return n.contains("flashlight")
 
 func _disable_all_scene_lights_for_musicbox() -> void:
 	if not _scene_lights_before_musicbox.is_empty():
 		return
 
+	# ─── Gruppe: anomaly_lights ─────────────────────────────
 	for light in get_tree().get_nodes_in_group(&"anomaly_lights"):
-		if light is Light3D and is_instance_valid(light):
-			_scene_lights_before_musicbox[light] = {
-				"visible": light.visible,
-				"light_energy": light.light_energy
-			}
-			light.visible = false
-			light.light_energy = 0.0
-
-	for light in get_tree().current_scene.find_children("*", "Light3D", true, false):
 		if not (light is Light3D):
 			continue
-		if _scene_lights_before_musicbox.has(light):
+		if not is_instance_valid(light):
 			continue
+
+		# 🔥 Flashlight überspringen
+		if _is_flashlight(light):
+			continue
+
 		_scene_lights_before_musicbox[light] = {
 			"visible": light.visible,
 			"light_energy": light.light_energy
 		}
+
 		light.visible = false
 		light.light_energy = 0.0
 
+	# ─── Alle anderen Lichter ───────────────────────────────
+	for light in get_tree().current_scene.find_children("*", "Light3D", true, false):
+		if not (light is Light3D):
+			continue
+		if not is_instance_valid(light):
+			continue
+
+		# 🔥 Flashlight überspringen
+		if _is_flashlight(light):
+			continue
+
+		if _scene_lights_before_musicbox.has(light):
+			continue
+
+		_scene_lights_before_musicbox[light] = {
+			"visible": light.visible,
+			"light_energy": light.light_energy
+		}
+
+		light.visible = false
+		light.light_energy = 0.0
+		
 func _restore_scene_lights_after_musicbox() -> void:
 	for light in _scene_lights_before_musicbox.keys():
 		if not is_instance_valid(light):
