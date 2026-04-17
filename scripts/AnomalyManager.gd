@@ -17,7 +17,7 @@ signal anomaly_shot_down()
 @export var mannequin_look_dot_threshold: float = 0.92
 @export var ghost_look_dot_threshold: float = 0.9
 @export var ghost_scene: PackedScene = preload("res://assets/3d/ghost/ghost.tscn")
-@export var ghost_scare_audio: AudioStream = preload("res://assets/audio/scare_high.mp3")
+@export var ghost_scare_audio: AudioStream = preload("res://assets/audio/scare_mid.mp3")
 
 const MOD_HIDE := "hide"
 const MOD_SHOW := "show"
@@ -304,6 +304,9 @@ func _on_ghost_area_body_entered(body: Node) -> void:
 	_active_target_original_visibility = _capture_visual_visibility(_active_ghost_instance)
 	_active_target_hit_root = _find_or_create_hit_root(_active_ghost_instance, "ShotProxyGhost", 1.6)
 	_ghost_scare_played = false
+	var bus_index := AudioServer.get_bus_index("Music")
+	if bus_index != -1:
+		AudioServer.set_bus_mute(bus_index, true)
 
 	_ghost_scare_player = AudioStreamPlayer3D.new()
 	_ghost_scare_player.name = "Scare_HI"
@@ -522,6 +525,20 @@ func _restore_scene_lights_after_musicbox() -> void:
 		light.visible = state.get("visible", true)
 		light.light_energy = state.get("light_energy", 1.0)
 	_scene_lights_before_musicbox.clear()
+	_restore_music_bus()
+	
+func _restore_music_bus():
+	# Nur aktivieren wenn KEINE MusicBox läuft
+	if has_node("/root/AnomalyManager"):
+		var manager = get_node("/root/AnomalyManager")
+		if manager.has_method("has_active_anomaly"):
+			# wenn MusicBox aktiv → NICHT unmuten
+			if manager._active_musicbox_audio:
+				return
+	
+	var music_bus_index := AudioServer.get_bus_index("Music")
+	if music_bus_index != -1:
+		AudioServer.set_bus_mute(music_bus_index, false)
 
 func handle_shot_hit_nodes(hit_nodes: Array) -> bool:
 	if not has_active_anomaly():
@@ -614,7 +631,7 @@ func _get_visual_bounds_center_and_radius(root: Node3D) -> Dictionary:
 
 	var world_center_merged := (min_corner + max_corner) * 0.5
 	var local_center := root.to_local(world_center_merged)
-	var radius := max((max_corner - min_corner).length() * 0.5, 0.35)
+	var radius : float = max((max_corner - min_corner).length() * 0.5, 0.35)
 	return {
 		"center": local_center,
 		"radius": radius

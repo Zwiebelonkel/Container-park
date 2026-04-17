@@ -12,7 +12,7 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_40w10"]
 shader = ExtResource("2_baglu")
-shader_parameter/time_of_day = 0.519
+shader_parameter/time_of_day = 1.0
 shader_parameter/day_zenith = Color(0.18, 0.48, 0.9, 1)
 shader_parameter/day_horizon = Color(0.72, 0.9, 1, 1)
 shader_parameter/sunset_zenith = Color(0.25, 0.12, 0.28, 1)
@@ -20,12 +20,12 @@ shader_parameter/sunset_horizon = Color(1, 0.45, 0.1, 1)
 shader_parameter/sunset_glow = Color(1, 0.7, 0.2, 1)
 shader_parameter/night_zenith = Color(0.01, 0.02, 0.08, 1)
 shader_parameter/night_horizon = Color(0.04, 0.06, 0.18, 1)
-shader_parameter/sun_size = 0.021
+shader_parameter/sun_size = 0.025
 shader_parameter/sun_glow_power = 4.5
 shader_parameter/moon_size = 0.018
 shader_parameter/cloud_speed = 0.015
 shader_parameter/cloud_scale = 1.1
-shader_parameter/cloud_density = 0.519
+shader_parameter/cloud_density = 0.5
 shader_parameter/horizon_fog_strength = 0.55
 shader_parameter/horizon_fog_color = Color(0.08, 0.1, 0.2, 1)
 
@@ -67,6 +67,9 @@ visible = false
 omni_range = 4096.0
 omni_attenuation = -0.905
 
+[node name="ColorRect" parent="Player/CanvasLayer" index="1"]
+visible = false
+
 [node name="shot" parent="Player" index="3"]
 bus = &"SFX"
 
@@ -79,7 +82,7 @@ environment = SubResource("Environment_pvqg0")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.781959, 0.613488, -0.110329, -0.532014, 0.749099, 0.394731, 0.32481, -0.249966, 0.912149, 0, 10.6526, 0)
 light_color = Color(1, 1, 0.858824, 1)
-light_energy = 0.192
+light_energy = 0.0
 shadow_enabled = true
 
 [node name="PlayerStart" type="Marker3D" parent="."]

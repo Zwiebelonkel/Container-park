@@ -3,12 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://bve0lpqib302k" path="res://assets/3d/ghost/scene.gltf" id="1_u73sw"]
 
 [node name="ghost" type="Node3D"]
-transform = Transform3D(0.655, 0, 0, 0, 0.655, 0, 0, 0, 0.655, 0, 0, 0)
+transform = Transform3D(0.415, 0, 0, 0, 0.415, 0, 0, 0, 0.415, 0, 0, 0)
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("1_u73sw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.09861, 0, -2.81443)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="."]
+[node name="light" type="SpotLight3D" parent="."]
 transform = Transform3D(1.52672, 0, 0, 0, 0.471554, 1.45207, 0, -1.45207, 0.471554, 0, 13.9361, 0.135056)
 light_color = Color(1, 0.286275, 0.294118, 1)
 light_energy = 16.0
