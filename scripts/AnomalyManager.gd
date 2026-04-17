@@ -9,6 +9,9 @@ signal anomaly_shot_down()
 @export var anomaly_light_group: StringName = &"anomaly_lights"
 @export var scale_up_factor: float = 1.25
 @export var scale_down_factor: float = 0.75
+@export var hit_proxy_min_radius: float = 0.3
+@export var hit_proxy_max_radius: float = 1.25
+@export var hit_proxy_radius_padding: float = 0.08
 @export var flicker_interval_min: float = 0.05
 @export var flicker_interval_max: float = 0.2
 @export var flicker_energy_min_multiplier: float = 0.2
@@ -97,7 +100,7 @@ func _ensure_plans_for_segments() -> void:
 		if not is_instance_valid(segment):
 			continue
 		if not _segment_has_planned_anomaly.has(segment):
-			_segment_has_planned_anomaly[segment] = randf() < anomaly_chance_per_segment
+			_segment_has_planned_anomaly[segment] = _roll_anomaly_plan()
 
 func _update_active_segment() -> void:
 	if _segment_order.size() < 2:
@@ -121,12 +124,16 @@ func _activate_for_segment(segment: Node3D) -> void:
 		GameManager.set_current_round_has_anomaly(false)
 		return
 
-	var has_planned_anomaly: bool = _segment_has_planned_anomaly.get(segment, false)
+	var has_planned_anomaly: bool = _roll_anomaly_plan()
+	_segment_has_planned_anomaly[segment] = has_planned_anomaly
 	if has_planned_anomaly:
 		has_planned_anomaly = _apply_random_anomaly(segment)
 		_segment_has_planned_anomaly[segment] = has_planned_anomaly
 
 	GameManager.set_current_round_has_anomaly(has_planned_anomaly)
+
+func _roll_anomaly_plan() -> bool:
+	return randf() < clampf(anomaly_chance_per_segment, 0.0, 1.0)
 
 func _apply_random_anomaly(segment: Node3D) -> bool:
 	var object_candidates: Array[Node3D] = _collect_anomaly_objects_in_segment(segment)
@@ -187,7 +194,7 @@ func _start_light_flicker(light: Light3D) -> bool:
 		return false
 	_active_light = light
 	_active_light_original_energy = light.light_energy
-	_active_light_hit_root = _find_or_create_hit_root(_active_light, "ShotProxyLight", 1.2)
+	_active_light_hit_root = _find_or_create_hit_root(_active_light, "ShotProxyLight", 0.35)
 	_active_modification = MOD_LIGHT_FLICKER
 	_next_flicker_tick = 0.0
 	set_process(true)
@@ -232,9 +239,9 @@ func _apply_random_object_modification(
 	# ─── Hitbox / Proxy ────────────────────────────────────
 	if _active_modification == MOD_HIDE:
 		# versteckte Objekte brauchen großen Proxy zum Treffen
-		_active_target_hit_root = _create_hit_proxy(_active_target, "ShotProxyHiddenObject", 1.8)
+		_active_target_hit_root = _create_hit_proxy(_active_target, "ShotProxyHiddenObject", 0.8)
 	else:
-		_active_target_hit_root = _find_or_create_hit_root(_active_target, "ShotProxyObject", 1.4)
+		_active_target_hit_root = _find_or_create_hit_root(_active_target, "ShotProxyObject", 0.45)
 
 	# ─── Anwendung der Anomalie ────────────────────────────
 	match _active_modification:
@@ -302,7 +309,7 @@ func _on_ghost_area_body_entered(body: Node) -> void:
 	_active_target = _active_ghost_instance
 	_active_target_original_scale = _active_ghost_instance.scale
 	_active_target_original_visibility = _capture_visual_visibility(_active_ghost_instance)
-	_active_target_hit_root = _find_or_create_hit_root(_active_ghost_instance, "ShotProxyGhost", 1.6)
+	_active_target_hit_root = _find_or_create_hit_root(_active_ghost_instance, "ShotProxyGhost", 0.6)
 	_ghost_scare_played = false
 	var bus_index := AudioServer.get_bus_index("Music")
 	if bus_index != -1:
@@ -631,7 +638,9 @@ func _get_visual_bounds_center_and_radius(root: Node3D) -> Dictionary:
 
 	var world_center_merged := (min_corner + max_corner) * 0.5
 	var local_center := root.to_local(world_center_merged)
-	var radius : float = max((max_corner - min_corner).length() * 0.5, 0.35)
+	var size := max_corner - min_corner
+	var radius: float = max(size.x, max(size.y, size.z)) * 0.5 + hit_proxy_radius_padding
+	radius = clampf(radius, hit_proxy_min_radius, hit_proxy_max_radius)
 	return {
 		"center": local_center,
 		"radius": radius
@@ -651,6 +660,7 @@ func _create_hit_proxy(root: Node3D, proxy_name: String, radius: float) -> Stati
 	var bounds := _get_visual_bounds_center_and_radius(root)
 	var proxy_center: Vector3 = bounds.get("center", Vector3.ZERO)
 	var proxy_radius: float = max(radius, float(bounds.get("radius", radius)))
+	proxy_radius = clampf(proxy_radius, hit_proxy_min_radius, hit_proxy_max_radius)
 
 	var proxy := StaticBody3D.new()
 	proxy.name = proxy_name
@@ -741,9 +751,6 @@ func clear_anomaly() -> void:
 	emit_signal("anomaly_cleared")
 
 func on_anomaly_shot() -> void:
-	if _active_segment and _segment_has_planned_anomaly.has(_active_segment):
-		_segment_has_planned_anomaly[_active_segment] = false
-
 	var was_ghost_scare := _active_modification == MOD_GHOST_SCARE
 	clear_anomaly()
 	if was_ghost_scare:
