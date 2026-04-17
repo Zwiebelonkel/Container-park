@@ -15,12 +15,16 @@ signal anomaly_shot_down()
 @export var flicker_energy_max_multiplier: float = 1.3
 @export var flicker_off_chance: float = 0.15
 @export var mannequin_look_dot_threshold: float = 0.92
+@export var ghost_look_dot_threshold: float = 0.9
+@export var ghost_scene: PackedScene = preload("res://assets/3d/ghost/ghost.tscn")
+@export var ghost_scare_audio: AudioStream = preload("res://assets/audio/scare_high.mp3")
 
 const MOD_HIDE := "hide"
 const MOD_SHOW := "show"
 const MOD_SCALE_UP := "scale_up"
 const MOD_SCALE_DOWN := "scale_down"
 const MOD_LIGHT_FLICKER := "light_flicker"
+const MOD_GHOST_SCARE := "ghostscare"
 
 var _segment_order: Array[Node3D] = []
 var _segment_has_planned_anomaly: Dictionary = {}
@@ -44,6 +48,11 @@ var _active_mannequin_primary: Node3D = null
 var _active_mannequin2: Node3D = null
 var _mannequin_scare_player: AudioStreamPlayer3D = null
 var _mannequin_scare_played: bool = false
+var _active_ghost_area: Area3D = null
+var _active_ghost_spawn: Marker3D = null
+var _active_ghost_instance: Node3D = null
+var _ghost_scare_player: AudioStreamPlayer3D = null
+var _ghost_scare_played: bool = false
 var _active_musicbox_audio: AudioStreamPlayer3D = null
 var _scene_lights_before_musicbox: Dictionary = {}
 
@@ -67,6 +76,9 @@ func _process(delta: float) -> void:
 
 	if _active_mannequin_swap and is_instance_valid(_active_mannequin2) and is_instance_valid(_mannequin_scare_player):
 		_try_trigger_mannequin_scare()
+
+	if is_instance_valid(_active_ghost_instance):
+		_try_trigger_ghost_scare()
 
 func set_segment_order(segments: Array[Node3D]) -> void:
 	_segment_order = segments.duplicate()
@@ -137,10 +149,22 @@ func _apply_random_anomaly(segment: Node3D) -> bool:
 			"node": light
 		})
 
+	var ghost_area := segment.find_child("ghostArea", true, false)
+	var ghost_spawn := segment.find_child("ghostSpawn", true, false)
+	if ghost_area is Area3D and ghost_spawn is Marker3D and ghost_scene != null:
+		candidates.append({
+			"kind": "ghost_scare",
+			"area": ghost_area,
+			"spawn": ghost_spawn
+		})
+
 	if candidates.is_empty():
 		return false
 
 	var pick: Dictionary = candidates[randi_range(0, candidates.size() - 1)]
+
+	if pick.get("kind") == "ghost_scare":
+		return _start_ghost_scare(pick.get("area") as Area3D, pick.get("spawn") as Marker3D)
 
 	# 👉 Licht-Anomalie
 	if pick.get("kind") == "light":
@@ -240,7 +264,56 @@ func _apply_random_object_modification(
 	])
 
 	return true
-	
+
+func _start_ghost_scare(ghost_area: Area3D, ghost_spawn: Marker3D) -> bool:
+	if not is_instance_valid(ghost_area) or not is_instance_valid(ghost_spawn) or ghost_scene == null:
+		return false
+
+	_active_ghost_area = ghost_area
+	_active_ghost_spawn = ghost_spawn
+	if not _active_ghost_area.body_entered.is_connected(_on_ghost_area_body_entered):
+		_active_ghost_area.body_entered.connect(_on_ghost_area_body_entered)
+
+	_active_modification = MOD_GHOST_SCARE
+	set_process(true)
+	emit_signal("anomaly_spawned", _active_modification)
+	print("[AnomalyManager] Anomalie '%s' vorbereitet an '%s'." % [_active_modification, _active_ghost_area.name])
+	return true
+
+func _on_ghost_area_body_entered(body: Node) -> void:
+	if _active_modification != MOD_GHOST_SCARE:
+		return
+	if not is_instance_valid(body) or not body.is_in_group("player"):
+		return
+	if is_instance_valid(_active_ghost_instance):
+		return
+	if not is_instance_valid(_active_ghost_spawn) or ghost_scene == null:
+		return
+
+	var instance := ghost_scene.instantiate()
+	if not (instance is Node3D):
+		instance.queue_free()
+		return
+
+	_active_ghost_instance = instance as Node3D
+	_active_ghost_instance.transform = _active_ghost_spawn.transform
+	_active_ghost_spawn.get_parent().add_child(_active_ghost_instance)
+	_active_ghost_instance.owner = _active_ghost_spawn.owner
+	_active_target = _active_ghost_instance
+	_active_target_original_scale = _active_ghost_instance.scale
+	_active_target_original_visibility = _capture_visual_visibility(_active_ghost_instance)
+	_active_target_hit_root = _find_or_create_hit_root(_active_ghost_instance, "ShotProxyGhost", 1.6)
+	_ghost_scare_played = false
+
+	_ghost_scare_player = AudioStreamPlayer3D.new()
+	_ghost_scare_player.name = "Scare_HI"
+	_ghost_scare_player.stream = ghost_scare_audio
+	_ghost_scare_player.bus = &"SFX"
+	_ghost_scare_player.max_distance = 40.0
+	_ghost_scare_player.unit_size = 8.0
+	_active_ghost_instance.add_child(_ghost_scare_player)
+	_ghost_scare_player.owner = _active_ghost_instance.owner
+
 func _collect_anomaly_objects_in_segment(segment: Node3D) -> Array[Node3D]:
 	var result: Array[Node3D] = []
 	for node in get_tree().get_nodes_in_group(anomaly_object_group):
@@ -353,6 +426,28 @@ func _try_trigger_mannequin_scare() -> void:
 
 	_mannequin_scare_player.play()
 	_mannequin_scare_played = true
+
+func _try_trigger_ghost_scare() -> void:
+	if _ghost_scare_played:
+		return
+	if not is_instance_valid(_active_ghost_instance) or not is_instance_valid(_ghost_scare_player):
+		return
+
+	var camera := get_viewport().get_camera_3d()
+	if not is_instance_valid(camera):
+		return
+
+	var target_focus: Vector3 = _get_node_focus_position(_active_ghost_instance)
+	if not camera.is_position_in_frustum(target_focus):
+		return
+
+	var to_target := (target_focus - camera.global_position).normalized()
+	var look_dir := -camera.global_basis.z.normalized()
+	if look_dir.dot(to_target) < ghost_look_dot_threshold:
+		return
+
+	_ghost_scare_player.play()
+	_ghost_scare_played = true
 
 func _get_node_focus_position(node: Node3D) -> Vector3:
 	if not is_instance_valid(node):
@@ -530,6 +625,10 @@ func clear_anomaly() -> void:
 		_active_target_created_proxy.queue_free()
 	if is_instance_valid(_active_light_created_proxy):
 		_active_light_created_proxy.queue_free()
+	if is_instance_valid(_active_ghost_area) and _active_ghost_area.body_entered.is_connected(_on_ghost_area_body_entered):
+		_active_ghost_area.body_entered.disconnect(_on_ghost_area_body_entered)
+	if is_instance_valid(_active_ghost_instance):
+		_active_ghost_instance.queue_free()
 
 	_active_target = null
 	_active_target_original_scale = Vector3.ONE
@@ -547,6 +646,11 @@ func clear_anomaly() -> void:
 	_active_mannequin2 = null
 	_mannequin_scare_player = null
 	_mannequin_scare_played = false
+	_active_ghost_area = null
+	_active_ghost_spawn = null
+	_active_ghost_instance = null
+	_ghost_scare_player = null
+	_ghost_scare_played = false
 	_active_musicbox_audio = null
 	set_process(false)
 
@@ -560,4 +664,8 @@ func on_anomaly_shot() -> void:
 	emit_signal("anomaly_shot_down")
 
 func has_active_anomaly() -> bool:
-	return _active_modification != "" and (is_instance_valid(_active_target) or is_instance_valid(_active_light))
+	return _active_modification != "" and (
+		is_instance_valid(_active_target)
+		or is_instance_valid(_active_light)
+		or (_active_modification == MOD_GHOST_SCARE and is_instance_valid(_active_ghost_area))
+	)
