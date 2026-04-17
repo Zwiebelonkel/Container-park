@@ -1,7 +1,41 @@
-[gd_scene load_steps=3 format=3 uid="uid://chj34b6jj8dtc"]
+[gd_scene load_steps=7 format=3 uid="uid://chj34b6jj8dtc"]
 
 [ext_resource type="Script" uid="uid://gprulcl2i8px" path="res://scripts/mainmenu.gd" id="1_owd2l"]
 [ext_resource type="PackedScene" uid="uid://dtipbknvtg5co" path="res://ui/optionsPanel.tscn" id="2_opts"]
+
+[sub_resource type="Gradient" id="Gradient_bg"]
+colors = PackedColorArray(0.0196078, 0.027451, 0.0470588, 1, 0.0509804, 0.0980392, 0.164706, 1)
+offsets = PackedFloat32Array(0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bg"]
+gradient = SubResource("Gradient_bg")
+fill = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menu"]
+bg_color = Color(0.054902, 0.0745098, 0.113725, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.443137, 0.658824, 1, 0.85)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+bg_color = Color(0.262745, 0.509804, 1, 0.24)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.588235, 0.788235, 1, 0.68)
+corner_radius_top_left = 999
+corner_radius_top_right = 999
+corner_radius_bottom_right = 999
+corner_radius_bottom_left = 999
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -12,14 +46,35 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_owd2l")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.06, 0.07, 0.1, 1)
+texture = SubResource("GradientTexture2D_bg")
+expand_mode = 1
+
+[node name="BuildBadge" type="PanelContainer" parent="."]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -170.0
+offset_top = 18.0
+offset_right = -20.0
+offset_bottom = 52.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="BadgeLabel" type="Label" parent="BuildBadge"]
+layout_mode = 2
+text = "vibe build • april 2026"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -30,8 +85,9 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="Panel" parent="CenterContainer"]
-custom_minimum_size = Vector2(340, 280)
+custom_minimum_size = Vector2(460, 360)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_menu")
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/Panel"]
 layout_mode = 1
@@ -40,10 +96,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 34
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 34
+theme_override_constants/margin_bottom = 30
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Panel/MarginContainer"]
 layout_mode = 2
@@ -53,18 +109,38 @@ theme_override_constants/separation = 16
 layout_mode = 2
 text = "Container Park"
 horizontal_alignment = 1
+theme_override_font_sizes/font_size = 44
+
+[node name="Subtitle" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Finde die Anomalie, halte die Serie am Leben."
+horizontal_alignment = 1
+modulate = Color(0.792157, 0.862745, 1, 0.82)
+
+[node name="Spacer" type="Control" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
 
 [node name="Start" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-text = "Start"
+text = "Spiel starten"
 
 [node name="Options" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-text = "Options"
+text = "Optionen"
 
 [node name="Quit" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-text = "Quit"
+text = "Beenden"
+
+[node name="Hint" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "ESC im Spiel öffnet das Pause-Menü"
+horizontal_alignment = 1
+modulate = Color(0.658824, 0.74902, 0.901961, 0.78)
 
 [node name="OptionsPanel" parent="." instance=ExtResource("2_opts")]
 layout_mode = 1
@@ -73,10 +149,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -210.0
-offset_top = -160.0
-offset_right = 210.0
-offset_bottom = 160.0
+offset_left = -250.0
+offset_top = -200.0
+offset_right = 250.0
+offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
 
