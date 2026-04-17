@@ -106,8 +106,7 @@ spot_range = 49.434
 spot_angle = 27.72
 
 [node name="ghost" parent="Head/Camera3D" instance=ExtResource("4_smehm")]
-transform = Transform3D(0.175, 0, 0, 0, 0.174532, -0.0127862, 0, 0.0127862, 0.174532, 0.224768, -1.78032, -0.000143766)
-visible = false
+transform = Transform3D(0.6, 0, 0, 0, 0.598396, -0.0438385, 0, 0.0438385, 0.598396, -0.109661, -5.43057, 0.163958)
 script = ExtResource("5_ur7pv")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

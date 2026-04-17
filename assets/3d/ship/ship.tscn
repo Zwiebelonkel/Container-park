@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=4 uid="uid://00xsnpo38nw4"]
+[gd_scene load_steps=56 format=4 uid="uid://00xsnpo38nw4"]
 
 [ext_resource type="PackedScene" uid="uid://bd2pym1leqyri" path="res://assets/3d/ship/ship.glb" id="1_la6qk"]
 [ext_resource type="PackedScene" uid="uid://cfimwrldvrmjx" path="res://assets/3d/container/container.tscn" id="2_qfyhj"]
@@ -16,7 +16,6 @@
 [ext_resource type="PackedScene" uid="uid://c2e76nm5vfmt6" path="res://assets/3d/sedan/scene.gltf" id="13_lnal4"]
 [ext_resource type="PackedScene" uid="uid://b6jge6sxlkjm1" path="res://assets/3d/waschingmaschine/scene.gltf" id="13_oohmo"]
 [ext_resource type="AudioStream" uid="uid://bc2r7igx8sisr" path="res://assets/audio/scare_high.mp3" id="13_scare"]
-[ext_resource type="Script" uid="uid://c3wh52n1yb4cx" path="res://scripts/bounce.gd" id="14_8pf7b"]
 [ext_resource type="PackedScene" uid="uid://bu0606082uyxb" path="res://assets/3d/stairs/stairs.tscn" id="15_l4i4r"]
 [ext_resource type="Shader" uid="uid://bo45ycgh051gy" path="res://assets/shaders/shader_water.gdshader" id="17_nc0fd"]
 [ext_resource type="PackedScene" uid="uid://bsals7ao2thjd" path="res://assets/3d/toilet-paper/scene.gltf" id="18_b4mjg"]
@@ -24,9 +23,6 @@
 [ext_resource type="PackedScene" uid="uid://csxtchs1dyaxm" path="res://assets/3d/fireextinguisher/scene.gltf" id="20_8pf7b"]
 [ext_resource type="PackedScene" uid="uid://csbnig467pu1y" path="res://assets/3d/metaldoor/scene.gltf" id="21_vdy35"]
 [ext_resource type="PackedScene" uid="uid://cwsfcg7ou8u1p" path="res://assets/3d/shit/scene.gltf" id="24_vdy35"]
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_mw7ba"]
-data = PackedVector3Array(187.408, 1.0756, 0.8768, 104.206, 1, 1, 104.206, 1.0756, 0.8768, 187.408, 1.0756, 0.8768, 187.408, 1, 1, 104.206, 1, 1, 104.206, -1, -1, 187.408, 1, -1, 104.206, 1, -1, 104.206, -1, -1, 187.408, -1, -1, 187.408, 1, -1, 187.408, -1, 0, 187.408, 1, -1, 187.408, -1, -1, 187.408, 1, -1, 187.408, -1, 0, 187.408, 0.5849, 0, 187.408, -1, 1, 187.408, 0.5849, 0, 187.408, -1, 0, 187.408, 1, -1, 187.408, 0.5849, 0, 187.408, 1.0756, -0.8768, 187.408, 0.5849, 0, 187.408, -1, 1, 187.408, 1, 1, 187.408, 0.5849, 0, 187.408, 1, 1, 187.408, 1.0756, 0.8768, 187.408, 1.0756, -0.8768, 187.408, 0.5849, 0, 187.408, 1.2726, -0.3209, 187.408, 1.2726, -0.3209, 187.408, 0.5849, 0, 187.408, 1.2726, 0.3209, 187.408, 1.2726, 0.3209, 187.408, 0.5849, 0, 187.408, 1.0756, 0.8768, 187.408, -1, 1, 104.206, 1, 1, 187.408, 1, 1, 187.408, -1, 1, 104.206, -1, 1, 104.206, 1, 1, 104.206, -1, 0, 187.408, -1, 1, 187.408, -1, 0, 104.206, -1, 0, 104.206, -1, 1, 187.408, -1, 1, 104.206, -1, -1, 104.206, -1, 0, 187.408, -1, 0, 104.206, -1, -1, 187.408, -1, 0, 187.408, -1, -1, 104.206, -1, 0, 104.206, 1, 1, 104.206, -1, 1, 104.206, 1, 1, 104.206, -1, 0, 104.206, 0.5849, 0, 104.206, -1, -1, 104.206, 0.5849, 0, 104.206, -1, 0, 104.206, 1, 1, 104.206, 0.5849, 0, 104.206, 1.0756, 0.8768, 104.206, 0.5849, 0, 104.206, -1, -1, 104.206, 1, -1, 104.206, 0.5849, 0, 104.206, 1, -1, 104.206, 1.0756, -0.8768, 104.206, 1.0756, 0.8768, 104.206, 0.5849, 0, 104.206, 1.2726, 0.3209, 104.206, 1.2726, 0.3209, 104.206, 0.5849, 0, 104.206, 1.2726, -0.3209, 104.206, 1.2726, -0.3209, 104.206, 0.5849, 0, 104.206, 1.0756, -0.8768, 104.206, 1.0756, 0.8768, 187.408, 1.2726, 0.3209, 187.408, 1.0756, 0.8768, 104.206, 1.0756, 0.8768, 104.206, 1.2726, 0.3209, 187.408, 1.2726, 0.3209, 104.206, 1.2726, 0.3209, 187.408, 1.2726, -0.3209, 187.408, 1.2726, 0.3209, 104.206, 1.2726, 0.3209, 104.206, 1.2726, -0.3209, 187.408, 1.2726, -0.3209, 104.206, 1.2726, -0.3209, 187.408, 1.0756, -0.8768, 187.408, 1.2726, -0.3209, 104.206, 1.2726, -0.3209, 104.206, 1.0756, -0.8768, 187.408, 1.0756, -0.8768, 187.408, 1, -1, 104.206, 1.0756, -0.8768, 104.206, 1, -1, 187.408, 1, -1, 187.408, 1.0756, -0.8768, 104.206, 1.0756, -0.8768)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7juku"]
 albedo_texture = ExtResource("2_u4tj7")
@@ -242,9 +238,6 @@ subdivide_width = 300
 subdivide_depth = 300
 
 [node name="Node3D" type="Node3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("ConcavePolygonShape3D_mw7ba")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -508,23 +501,20 @@ spot_angle = 49.21
 spot_angle_attenuation = 0.659754
 
 [node name="shelves" parent="." groups=["anomaly_objects"] instance=ExtResource("8_oj46n")]
-transform = Transform3D(4.44202e-08, 0, -3.725, 0, 3.725, 0, 3.725, 0, 4.44202e-08, 80.1388, 12.2531, -12.3938)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 80.1388, 12.2531, -12.3938)
 
 [node name="shelves2" parent="." groups=["anomaly_objects"] instance=ExtResource("8_oj46n")]
-transform = Transform3D(4.44202e-08, 0, -3.725, 0, 3.725, 0, 3.725, 0, 4.44202e-08, -54.0188, 12.2531, -8.01424)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -54.0188, 12.2531, -8.01424)
 
 [node name="floorsign" parent="." groups=["anomaly_objects"] instance=ExtResource("9_i74pi")]
-transform = Transform3D(-0.555087, 0, 3.94615, 0, 3.985, 0, -3.94615, 0, -0.555087, 56.5857, 0.855992, -14.642)
+transform = Transform3D(-0.139294, 0, 0.990251, 0, 1, 0, -0.990251, 0, -0.139294, 56.5857, 0.855992, -14.642)
 
 [node name="mannequin" parent="." groups=["anomaly_objects"] instance=ExtResource("10_cuepq")]
-transform = Transform3D(-5.61292, 0, -3.19792, 0, 6.46, 0, 3.19792, 0, -5.61292, 5.02064, 1.27826, -9.35246)
+transform = Transform3D(-5.72743, 0, -0.976026, 0, 5.81, 0, 0.976026, 0, -5.72743, 5.85289, 1.27826, -10.3397)
 
 [node name="mannequin2" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("10_cuepq")]
-transform = Transform3D(-0.0562591, 0, -6.45975, 3.72545, 5.27746, -0.0324456, 5.27725, -3.7256, -0.0459605, 66.7291, 0.67665, -5.26876)
+transform = Transform3D(-0.0505114, 7.56234e-08, -5.79978, 3.34484, 4.73827, -0.0291308, 4.73809, -3.34496, -0.041265, 66.7291, 0.67665, -5.26876)
 visible = false
-
-[node name="AnimationPlayer" parent="mannequin2" index="1"]
-speed_scale = 1.482
 
 [node name="Scare_HI" type="AudioStreamPlayer3D" parent="mannequin2"]
 stream = ExtResource("13_scare")
@@ -532,14 +522,14 @@ unit_size = 8.0
 max_distance = 35.0
 
 [node name="Vendingmaschine" parent="." groups=["anomaly_objects"] instance=ExtResource("4_uv0cr")]
-transform = Transform3D(2.98296, 0, 3.06926, 0, 4.28, 0, -3.06926, 0, 2.98296, -79.2031, 13.3523, -26.4979)
+transform = Transform3D(0.696953, 0, 0.717117, 0, 1, 0, -0.717117, 0, 0.696953, -79.2031, 13.3523, -26.4979)
 
 [node name="Vendingmaschine2" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("4_uv0cr")]
-transform = Transform3D(-1.87085e-07, 0, 4.28, 0, 4.28, 0, -4.28, 0, -1.87085e-07, -81.156, 13.3523, 26.074)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -81.156, 13.3523, 26.074)
 visible = false
 
 [node name="Barrels" parent="." groups=["anomaly_objects"] instance=ExtResource("5_2k72t")]
-transform = Transform3D(3.58611, 0, 0.52955, 0, 3.625, 0, -0.52955, 0, 3.58611, -43.4788, 3.10207, -1.37515)
+transform = Transform3D(0.989272, 0, 0.146083, 0, 1, 0, -0.146083, 0, 0.989272, -43.4788, 3.10207, -1.37515)
 
 [node name="chair" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("12_cuepq")]
 transform = Transform3D(-0.946097, 0, -0.71353, 0, 1.185, 0, 0.71353, 0, -0.946097, 4.59457, 15.112, 0.859641)
@@ -551,10 +541,6 @@ transform = Transform3D(0.286276, 0, 1.1499, 0, 1.185, 0, -1.1499, 0, 0.286276, 
 [node name="sedan" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("13_lnal4")]
 transform = Transform3D(3.9333, 0, -5.14342, 0, 6.475, 0, 5.14342, 0, 3.9333, -71.1887, 16.2432, 5.97438)
 visible = false
-script = ExtResource("14_8pf7b")
-bounce_height = 0.835
-bounce_speed = 14.845
-enable_rotation = false
 
 [node name="waschingmaschine" parent="." groups=["anomaly_objects"] instance=ExtResource("13_oohmo")]
 transform = Transform3D(-5.52636, 0, -4.92883, 0, 7.405, 0, 4.92883, 0, -5.52636, 60.5974, 1.25286, -22.0584)
@@ -627,20 +613,20 @@ visible = false
 mesh = SubResource("PlaneMesh_5smfn")
 
 [node name="toiletpaper" parent="." groups=["anomaly_objects"] instance=ExtResource("18_b4mjg")]
-transform = Transform3D(10.075, 0, 0, 0, 10.075, 0, 0, 0, 10.075, -45.947, 7.27329, -3.34472)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45.947, 7.27329, -3.34472)
 
 [node name="toilet" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("19_lnal4")]
 transform = Transform3D(-1.925, 0, -1.68289e-07, 0, 1.925, 0, 1.68289e-07, 0, -1.925, -2.13467, 0.79165, 6.64407)
 visible = false
 
 [node name="firelöscher" parent="." instance=ExtResource("20_8pf7b")]
-transform = Transform3D(0.99248, 0, 2.85226, 0, 3.02, 0, -2.85226, 0, 0.99248, -81.0945, 12.1978, 21.3935)
+transform = Transform3D(0.328636, 0, 0.944457, 0, 1, 0, -0.944457, 0, 0.328636, -81.0945, 12.1978, 21.3935)
 
 [node name="firelöscher2" parent="." groups=["anomaly_objects"] instance=ExtResource("20_8pf7b")]
-transform = Transform3D(0.99248, 0, 2.85226, 0, 3.02, 0, -2.85226, 0, 0.99248, -81.0945, 12.1978, 18.8294)
+transform = Transform3D(0.328636, 0, 0.944457, 0, 1, 0, -0.944457, 0, 0.328636, -81.0945, 12.1978, 18.8294)
 
 [node name="firelöscher3" parent="." instance=ExtResource("20_8pf7b")]
-transform = Transform3D(2.17701, 0, 2.09309, 0, 3.02, 0, -2.09309, 0, 2.17701, -80.061, 12.1978, 16.0104)
+transform = Transform3D(0.720866, 0, 0.693075, 0, 1, 0, -0.693075, 0, 0.720866, -80.061, 12.1978, 16.0104)
 
 [node name="door" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("21_vdy35")]
 transform = Transform3D(-5.47499, 0, 0.00936404, 0, 5.475, 0, -0.00936404, 0, -5.47499, -0.894699, 12.5153, 29.1104)
@@ -649,11 +635,7 @@ visible = false
 [node name="shit" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("24_vdy35")]
 transform = Transform3D(-0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, -0.5, -45.581, 4.215, -1.41193)
 visible = false
-script = ExtResource("14_8pf7b")
-bounce_height = 0.1
-enable_impulse = false
-rotate_x = false
-rotate_y = true
 
 [editable path="ship"]
+[editable path="mannequin"]
 [editable path="mannequin2"]

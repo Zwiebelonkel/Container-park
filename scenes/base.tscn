@@ -93,6 +93,12 @@ script = ExtResource("4_anomalymgr")
 anomaly_chance_per_segment = 1.0
 scale_up_factor = 1.575
 scale_down_factor = 0.67
+correction_fog_amount = 308
+correction_fog_lifetime = 2.035
+correction_fog_initial_velocity = 6.22
+correction_fog_scale_min = 1.89
+correction_fog_scale_max = 5.75
+correction_fog_gravity = Vector3(0, 0.885, 0)
 
 [node name="GameUI" type="CanvasLayer" parent="."]
 script = ExtResource("5_gameui")

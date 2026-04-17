@@ -103,3 +103,7 @@ func _process(delta: float) -> void:
 			rot.z += wave * rot_strength_z
 
 		rotation_degrees = rot
+		
+func reset_bounce():
+	_start_y = global_position.y
+	_start_rot = rotation_degrees

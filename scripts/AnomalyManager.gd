@@ -260,6 +260,8 @@ func _apply_random_object_modification(
 
 		MOD_SHOW:
 			_apply_hidden_state(_active_target, true)
+			if _active_target.has_method("reset_bounce"):
+				_active_target.call_deferred("reset_bounce")
 			_apply_special_show_rules(_active_target)
 
 		MOD_SCALE_UP:
@@ -687,7 +689,7 @@ func _create_hit_proxy(root: Node3D, proxy_name: String, radius: float) -> Stati
 	mesh.mesh = sphere_mesh
 
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(1, 0, 0, 0.3) # rot, transparent
+	mat.albedo_color = Color(1, 0, 0, 0) # rot, transparent
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 
@@ -705,6 +707,7 @@ func _create_hit_proxy(root: Node3D, proxy_name: String, radius: float) -> Stati
 		_active_light_created_proxy = proxy
 
 	return proxy
+	
 func _find_hit_root(root: Node) -> Node:
 	var stack: Array[Node] = [root]
 	while not stack.is_empty():
@@ -724,8 +727,9 @@ func _get_active_anomaly_world_position() -> Vector3:
 		return _active_light.global_position
 	if is_instance_valid(_active_ghost_area):
 		return _active_ghost_area.global_position
-	return global_position
-
+	
+	return Vector3.ZERO  # 🔥 FIX
+	
 func _spawn_correction_fog_effect(world_position: Vector3) -> void:
 	if not correction_fog_enabled:
 		return

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwjo2i0w5e8k0"
-path.s3tc="res://.godot/imported/T_Mannequin_baseColor.png-1b322bad5721b0f48b5e3ca7b281ad70.s3tc.ctex"
+uid="uid://hjf3gib4fons"
+path.s3tc="res://.godot/imported/Muh_Guy_Material_baseColor.png-40ce1c1be9ab02f0b57635a65085e562.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/3d/mannequin/textures/T_Mannequin_baseColor.png"
-dest_files=["res://.godot/imported/T_Mannequin_baseColor.png-1b322bad5721b0f48b5e3ca7b281ad70.s3tc.ctex"]
+source_file="res://assets/3d/mannequin/textures/Muh_Guy_Material_baseColor.png"
+dest_files=["res://.godot/imported/Muh_Guy_Material_baseColor.png-40ce1c1be9ab02f0b57635a65085e562.s3tc.ctex"]
 
 [params]
 
