@@ -13,6 +13,13 @@ extends CharacterBody3D
 @export var headbob_amplitude: float = 0.09
 @export var headbob_smoothing: float = 12.0
 @export var headbob_roll_degrees: float = 1.4
+@export var wave_sway_enabled: bool = true
+@export var wave_sway_interval_min: float = 2.2
+@export var wave_sway_interval_max: float = 4.8
+@export var wave_sway_hold_time: float = 1.1
+@export var wave_sway_tilt_min_degrees: float = 0.6
+@export var wave_sway_tilt_max_degrees: float = 2.0
+@export var wave_sway_smoothing: float = 4.5
 
 # ── Step-Up ───────────────────────────────────────────────────
 @export var step_height: float = 0.35
@@ -33,10 +40,15 @@ var _camera_base_local_position: Vector3
 var _head_base_y: float = 0.0
 var _visual_y_offset: float = 0.0
 var _in_step_area: bool = false
+var _wave_sway_timer: float = 0.0
+var _wave_sway_is_neutral: bool = true
+var _wave_sway_target_roll: float = 0.0
+var _wave_sway_current_roll: float = 0.0
 
 # ─────────────────────────────────────────────────────────────
 func _ready() -> void:
 	add_to_group("player")
+	randomize()
 	var areas := get_tree().get_nodes_in_group("stepArea")
 	for a in areas:
 		if a is Area3D:
@@ -45,6 +57,7 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	_camera_base_local_position = camera.position
 	_head_base_y = head.position.y
+	_wave_sway_timer = _random_wave_sway_interval()
 
 	floor_snap_length = 0.3
 	floor_max_angle = deg_to_rad(46)
@@ -207,7 +220,45 @@ func _update_headbob(delta: float) -> void:
 	camera.position = camera.position.lerp(target_position, delta * headbob_smoothing)
 
 	var target_roll: float = -sin(_headbob_time * 0.5) * headbob_roll_degrees * bob_factor
-	camera.rotation_degrees.z = lerp(camera.rotation_degrees.z, target_roll, delta * headbob_smoothing)
+	_update_wave_sway(delta)
+	camera.rotation_degrees.z = lerp(
+		camera.rotation_degrees.z,
+		target_roll + _wave_sway_current_roll,
+		delta * headbob_smoothing
+	)
+
+func _update_wave_sway(delta: float) -> void:
+	if not wave_sway_enabled:
+		_wave_sway_target_roll = 0.0
+		_wave_sway_current_roll = lerp(_wave_sway_current_roll, 0.0, delta * wave_sway_smoothing)
+		return
+
+	_wave_sway_timer -= delta
+	if _wave_sway_timer <= 0.0:
+		if _wave_sway_is_neutral:
+			_wave_sway_target_roll = _random_wave_sway_tilt()
+			_wave_sway_timer = max(wave_sway_hold_time, 0.05)
+		else:
+			_wave_sway_target_roll = 0.0
+			_wave_sway_timer = _random_wave_sway_interval()
+		_wave_sway_is_neutral = !_wave_sway_is_neutral
+
+	_wave_sway_current_roll = lerp(
+		_wave_sway_current_roll,
+		_wave_sway_target_roll,
+		delta * wave_sway_smoothing
+	)
+
+func _random_wave_sway_interval() -> float:
+	var min_interval: float = min(wave_sway_interval_min, wave_sway_interval_max)
+	var max_interval: float = max(wave_sway_interval_min, wave_sway_interval_max)
+	return randf_range(min_interval, max_interval)
+
+func _random_wave_sway_tilt() -> float:
+	var min_tilt: float = min(wave_sway_tilt_min_degrees, wave_sway_tilt_max_degrees)
+	var max_tilt: float = max(wave_sway_tilt_min_degrees, wave_sway_tilt_max_degrees)
+	var tilt: float = randf_range(min_tilt, max_tilt)
+	return tilt if randf() > 0.5 else -tilt
 
 # ── Public API ────────────────────────────────────────────────
 func freeze(frozen: bool) -> void:
