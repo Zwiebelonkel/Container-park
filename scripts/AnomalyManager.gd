@@ -558,6 +558,68 @@ func _is_in_parent_chain(node: Node, possible_ancestor: Node) -> bool:
 		check = check.get_parent()
 	return false
 
+
+func _get_player_ghost_feedback_node() -> Node:
+	var player := get_tree().get_first_node_in_group("player")
+	if not is_instance_valid(player):
+		return null
+	return player.find_child("ghost", true, false)
+
+func _play_player_ghost_feedback() -> void:
+	var feedback_node := _get_player_ghost_feedback_node()
+	if not is_instance_valid(feedback_node):
+		return
+
+	if feedback_node.has_method("play_scare_once"):
+		feedback_node.call("play_scare_once")
+		return
+
+	if feedback_node is Node3D:
+		(feedback_node as Node3D).visible = true
+		await get_tree().create_timer(0.8).timeout
+		if is_instance_valid(feedback_node):
+			(feedback_node as Node3D).visible = false
+
+func _get_visual_bounds_center_and_radius(root: Node3D) -> Dictionary:
+	var has_visual := false
+	var min_corner := Vector3.ZERO
+	var max_corner := Vector3.ZERO
+
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var current: Node = stack.pop_back()
+		if current is VisualInstance3D:
+			var visual := current as VisualInstance3D
+			var aabb := visual.get_aabb()
+			var world_center := visual.global_transform * aabb.get_center()
+			var extents := aabb.size * 0.5
+			var world_min := world_center - extents
+			var world_max := world_center + extents
+			if not has_visual:
+				min_corner = world_min
+				max_corner = world_max
+				has_visual = true
+			else:
+				min_corner = min_corner.min(world_min)
+				max_corner = max_corner.max(world_max)
+
+		for child in current.get_children():
+			stack.append(child)
+
+	if not has_visual:
+		return {
+			"center": Vector3.ZERO,
+			"radius": 1.0
+		}
+
+	var world_center_merged := (min_corner + max_corner) * 0.5
+	var local_center := root.to_local(world_center_merged)
+	var radius := max((max_corner - min_corner).length() * 0.5, 0.35)
+	return {
+		"center": local_center,
+		"radius": radius
+	}
+
 func _find_or_create_hit_root(root: Node3D, proxy_name: String, radius: float) -> Node:
 	var existing := _find_hit_root(root)
 	if is_instance_valid(existing):
@@ -569,11 +631,16 @@ func _create_hit_proxy(root: Node3D, proxy_name: String, radius: float) -> Stati
 	if not is_instance_valid(root):
 		return null
 
+	var bounds := _get_visual_bounds_center_and_radius(root)
+	var proxy_center: Vector3 = bounds.get("center", Vector3.ZERO)
+	var proxy_radius: float = max(radius, float(bounds.get("radius", radius)))
+
 	var proxy := StaticBody3D.new()
 	proxy.name = proxy_name
+	proxy.position = proxy_center
 	var shape := CollisionShape3D.new()
 	var sphere := SphereShape3D.new()
-	sphere.radius = radius
+	sphere.radius = proxy_radius
 	shape.shape = sphere
 	proxy.add_child(shape)
 	root.add_child(proxy)
@@ -659,7 +726,12 @@ func clear_anomaly() -> void:
 func on_anomaly_shot() -> void:
 	if _active_segment and _segment_has_planned_anomaly.has(_active_segment):
 		_segment_has_planned_anomaly[_active_segment] = false
+
+	var was_ghost_scare := _active_modification == MOD_GHOST_SCARE
 	clear_anomaly()
+	if was_ghost_scare:
+		_play_player_ghost_feedback()
+
 	GameManager.set_current_round_has_anomaly(false)
 	emit_signal("anomaly_shot_down")
 
