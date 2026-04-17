@@ -1,11 +1,13 @@
-[gd_scene load_steps=12 format=3 uid="uid://0xdkhyk7g122"]
+[gd_scene load_steps=14 format=3 uid="uid://0xdkhyk7g122"]
 
 [ext_resource type="Script" uid="uid://cer627qg5q4eb" path="res://scripts/Player.gd" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://dpbgatemq2x3w" path="res://assets/3d/shotgun/shotgun.tscn" id="2_dqkch"]
 [ext_resource type="Script" uid="uid://ca72sjdbbhb66" path="res://scripts/Shotgun.gd" id="2_shotgun"]
 [ext_resource type="Shader" uid="uid://baaa0vbgor10e" path="res://assets/shaders/buckshot.gdshader" id="3_qhqgy"]
+[ext_resource type="PackedScene" uid="uid://cekjhq6fmq1fs" path="res://assets/3d/ghost/ghost.tscn" id="4_smehm"]
 [ext_resource type="AudioStream" uid="uid://dpcudtdabb87" path="res://assets/audio/shot.mp3" id="5_qlg0r"]
 [ext_resource type="Shader" uid="uid://c58tnpttta1w4" path="res://assets/shaders/CRT.gdshader" id="5_tuyoq"]
+[ext_resource type="Script" uid="uid://djbja4q3yi4tv" path="res://scripts/shake.gd" id="5_ur7pv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.4
@@ -100,6 +102,10 @@ light_volumetric_fog_energy = 0.0
 shadow_enabled = true
 spot_range = 49.434
 spot_angle = 27.72
+
+[node name="ghost" parent="Head/Camera3D" instance=ExtResource("4_smehm")]
+transform = Transform3D(0.175, 0, 0, 0, 0.174532, -0.0127862, 0, 0.0127862, 0.174532, 0.224768, -1.78032, -0.000143766)
+script = ExtResource("5_ur7pv")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

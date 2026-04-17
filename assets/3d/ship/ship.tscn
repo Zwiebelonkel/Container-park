@@ -478,11 +478,11 @@ transform = Transform3D(-2.82157e-07, 0, -6.455, 0, 6.455, 0, 6.455, 0, -2.82157
 transform = Transform3D(-2.82157e-07, 0, -6.455, 0, 6.455, 0, 6.455, 0, -2.82157e-07, 48.4802, -0.295, 18.118)
 
 [node name="ghostSpawn" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.21801, 1.1616, -27.4803)
+transform = Transform3D(0.000925083, 0, 1, 0, 1, 0, -1, 0, 0.000925083, 31.4218, 1.1616, -27.4803)
 gizmo_extents = 1.71
 
 [node name="ghostArea" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.9855, 0, -25.3653)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.7714, 0, -25.3653)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ghostArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.37093, -2.02478)
