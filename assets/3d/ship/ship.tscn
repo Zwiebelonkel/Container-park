@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=4 uid="uid://00xsnpo38nw4"]
+[gd_scene load_steps=58 format=4 uid="uid://00xsnpo38nw4"]
 
 [ext_resource type="PackedScene" uid="uid://bd2pym1leqyri" path="res://assets/3d/ship/ship.glb" id="1_la6qk"]
 [ext_resource type="PackedScene" uid="uid://cfimwrldvrmjx" path="res://assets/3d/container/container.tscn" id="2_qfyhj"]
@@ -13,9 +13,17 @@
 [ext_resource type="PackedScene" uid="uid://dltsjdp7kdtfx" path="res://assets/3d/musicBox/scene.gltf" id="11_oj46n"]
 [ext_resource type="PackedScene" uid="uid://bopdpr8muvc8f" path="res://assets/3d/chair/chair.glb" id="12_cuepq"]
 [ext_resource type="AudioStream" uid="uid://cr6m1tosptbef" path="res://assets/audio/musicbox.mp3" id="12_i74pi"]
+[ext_resource type="PackedScene" uid="uid://c2e76nm5vfmt6" path="res://assets/3d/sedan/scene.gltf" id="13_lnal4"]
 [ext_resource type="PackedScene" uid="uid://b6jge6sxlkjm1" path="res://assets/3d/waschingmaschine/scene.gltf" id="13_oohmo"]
 [ext_resource type="AudioStream" uid="uid://bc2r7igx8sisr" path="res://assets/audio/scare_high.mp3" id="13_scare"]
+[ext_resource type="Script" uid="uid://c3wh52n1yb4cx" path="res://scripts/bounce.gd" id="14_8pf7b"]
 [ext_resource type="PackedScene" uid="uid://bu0606082uyxb" path="res://assets/3d/stairs/stairs.tscn" id="15_l4i4r"]
+[ext_resource type="Shader" uid="uid://bo45ycgh051gy" path="res://assets/shaders/shader_water.gdshader" id="17_nc0fd"]
+[ext_resource type="PackedScene" uid="uid://bsals7ao2thjd" path="res://assets/3d/toilet-paper/scene.gltf" id="18_b4mjg"]
+[ext_resource type="PackedScene" uid="uid://cnsvshcis3gr0" path="res://assets/3d/toilet/scene.gltf" id="19_lnal4"]
+[ext_resource type="PackedScene" uid="uid://csxtchs1dyaxm" path="res://assets/3d/fireextinguisher/scene.gltf" id="20_8pf7b"]
+[ext_resource type="PackedScene" uid="uid://csbnig467pu1y" path="res://assets/3d/metaldoor/scene.gltf" id="21_vdy35"]
+[ext_resource type="PackedScene" uid="uid://cwsfcg7ou8u1p" path="res://assets/3d/shit/scene.gltf" id="24_vdy35"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_mw7ba"]
 data = PackedVector3Array(187.408, 1.0756, 0.8768, 104.206, 1, 1, 104.206, 1.0756, 0.8768, 187.408, 1.0756, 0.8768, 187.408, 1, 1, 104.206, 1, 1, 104.206, -1, -1, 187.408, 1, -1, 104.206, 1, -1, 104.206, -1, -1, 187.408, -1, -1, 187.408, 1, -1, 187.408, -1, 0, 187.408, 1, -1, 187.408, -1, -1, 187.408, 1, -1, 187.408, -1, 0, 187.408, 0.5849, 0, 187.408, -1, 1, 187.408, 0.5849, 0, 187.408, -1, 0, 187.408, 1, -1, 187.408, 0.5849, 0, 187.408, 1.0756, -0.8768, 187.408, 0.5849, 0, 187.408, -1, 1, 187.408, 1, 1, 187.408, 0.5849, 0, 187.408, 1, 1, 187.408, 1.0756, 0.8768, 187.408, 1.0756, -0.8768, 187.408, 0.5849, 0, 187.408, 1.2726, -0.3209, 187.408, 1.2726, -0.3209, 187.408, 0.5849, 0, 187.408, 1.2726, 0.3209, 187.408, 1.2726, 0.3209, 187.408, 0.5849, 0, 187.408, 1.0756, 0.8768, 187.408, -1, 1, 104.206, 1, 1, 187.408, 1, 1, 187.408, -1, 1, 104.206, -1, 1, 104.206, 1, 1, 104.206, -1, 0, 187.408, -1, 1, 187.408, -1, 0, 104.206, -1, 0, 104.206, -1, 1, 187.408, -1, 1, 104.206, -1, -1, 104.206, -1, 0, 187.408, -1, 0, 104.206, -1, -1, 187.408, -1, 0, 187.408, -1, -1, 104.206, -1, 0, 104.206, 1, 1, 104.206, -1, 1, 104.206, 1, 1, 104.206, -1, 0, 104.206, 0.5849, 0, 104.206, -1, -1, 104.206, 0.5849, 0, 104.206, -1, 0, 104.206, 1, 1, 104.206, 0.5849, 0, 104.206, 1.0756, 0.8768, 104.206, 0.5849, 0, 104.206, -1, -1, 104.206, 1, -1, 104.206, 0.5849, 0, 104.206, 1, -1, 104.206, 1.0756, -0.8768, 104.206, 1.0756, 0.8768, 104.206, 0.5849, 0, 104.206, 1.2726, 0.3209, 104.206, 1.2726, 0.3209, 104.206, 0.5849, 0, 104.206, 1.2726, -0.3209, 104.206, 1.2726, -0.3209, 104.206, 0.5849, 0, 104.206, 1.0756, -0.8768, 104.206, 1.0756, 0.8768, 187.408, 1.2726, 0.3209, 187.408, 1.0756, 0.8768, 104.206, 1.0756, 0.8768, 104.206, 1.2726, 0.3209, 187.408, 1.2726, 0.3209, 104.206, 1.2726, 0.3209, 187.408, 1.2726, -0.3209, 187.408, 1.2726, 0.3209, 104.206, 1.2726, 0.3209, 104.206, 1.2726, -0.3209, 187.408, 1.2726, -0.3209, 104.206, 1.2726, -0.3209, 187.408, 1.0756, -0.8768, 187.408, 1.2726, -0.3209, 104.206, 1.2726, -0.3209, 104.206, 1.0756, -0.8768, 187.408, 1.0756, -0.8768, 187.408, 1, -1, 104.206, 1.0756, -0.8768, 104.206, 1, -1, 187.408, 1, -1, 187.408, 1.0756, -0.8768, 104.206, 1.0756, -0.8768)
@@ -38,13 +46,16 @@ size = Vector3(2.07495, 1.54016, 2.01123)
 size = Vector3(0.415428, 10.2033, 2.05701)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_oohmo"]
-size = Vector3(0.415428, 11.2466, 1.28398)
+size = Vector3(0.176464, 11.2466, 1.28398)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gai14"]
+size = Vector3(0.22019, 0.331796, 1.28398)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_aryny"]
 size = Vector3(0.157568, 11.4221, 0.373729)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i7k3y"]
-size = Vector3(0.408856, 11.4221, 0.0311027)
+size = Vector3(0.171225, 11.4221, 0.0311027)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_uuba2"]
 size = Vector3(0.408856, 11.4221, 0.0311027)
@@ -172,6 +183,64 @@ size = Vector3(51.9377, 76.9091, 173.134)
 [sub_resource type="BoxShape3D" id="BoxShape3D_0tqio"]
 size = Vector3(1, 11.7419, 6.73462)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4h1l3"]
+render_priority = 0
+shader = ExtResource("17_nc0fd")
+shader_parameter/wave_height = 1.438
+shader_parameter/wave_speed = 0.896
+shader_parameter/refraction_strength = 0.198
+shader_parameter/refraction_depth_scale = 0.5
+shader_parameter/wave_1 = Vector4(0.3, 4, 0.2, 0.6)
+shader_parameter/wave_2 = Vector4(-0.26, -0.19, 0.01, 0.47)
+shader_parameter/wave_3 = Vector4(-7.67, 5.63, 0.1, 0.38)
+shader_parameter/wave_4 = Vector4(-0.42, -1.63, 0.1, 0.28)
+shader_parameter/wave_5 = Vector4(1.66, 0.07, 0.15, 1.81)
+shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
+shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
+shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
+shader_parameter/time_factor = 2.5
+shader_parameter/noise_zoom = 2.93
+shader_parameter/noise_amp = 0.735
+shader_parameter/base_water_color = Color(0, 0.498039, 0.596078, 1)
+shader_parameter/fresnel_water_color = Color(0, 0.666667, 0.403922, 1)
+shader_parameter/deep_water_color = Color(0, 0, 0, 1)
+shader_parameter/shallow_water_color = Color(0, 0.803922, 0.741176, 1)
+shader_parameter/beers_law = 0.5
+shader_parameter/depth_offset = -1.2
+shader_parameter/near = 7.0
+shader_parameter/far = 10000.0
+shader_parameter/edge_texture_scale = 14.23
+shader_parameter/edge_texture_offset = 8.47
+shader_parameter/edge_texture_speed = 0.1
+shader_parameter/edge_foam_intensity = 2.0
+shader_parameter/edge_fade_start = -3.0
+shader_parameter/edge_fade_end = 6.6
+shader_parameter/peak_height_threshold = 1.82
+shader_parameter/peak_color = Vector3(1, 1, 1)
+shader_parameter/peak_intensity = 1.0
+shader_parameter/foam_intensity = 1.0
+shader_parameter/foam_scale = 1.0
+shader_parameter/metallic = 0.0
+shader_parameter/roughness = 0.115
+shader_parameter/uv_scale_text_a = 0.1
+shader_parameter/uv_speed_text_a = Vector2(0.42, 0.3)
+shader_parameter/uv_scale_text_b = 0.6
+shader_parameter/uv_speed_text_b = Vector2(0.15, 0.1)
+shader_parameter/normal_strength = 1.385
+shader_parameter/uv_sampler_scale = 0.3
+shader_parameter/blend_factor = 0.28
+shader_parameter/perturbation_strength = 1.0
+shader_parameter/perturbation_time = 0.3
+shader_parameter/caustics_intensity = 15.0
+shader_parameter/num_caustic_layers = 16.0
+shader_parameter/caustic_distortion_strength = 0.001
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5smfn"]
+material = SubResource("ShaderMaterial_4h1l3")
+size = Vector2(200, 200)
+subdivide_width = 300
+subdivide_depth = 300
+
 [node name="Node3D" type="Node3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -197,15 +266,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.00017, -0.843783, 5.88095, 0.0
 shape = SubResource("BoxShape3D_l4i4r")
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="ship/Cube/StaticBody3D"]
-transform = Transform3D(0.999988, 0, 0, 0, 0.999987, 0, 0, 0, 1.00022, 0.839073, 5.29852, 0.372111)
+transform = Transform3D(0.999971, 0, 0, 0, 0.999968, 0, 0, 0, 1.0002, 0.719592, 5.29852, 0.372111)
 shape = SubResource("BoxShape3D_oohmo")
+
+[node name="CollisionShape3D19" type="CollisionShape3D" parent="ship/Cube/StaticBody3D"]
+transform = Transform3D(0.999962, 0, 0, 0, 0.999957, 0, 0, 0, 1.00019, 0.914566, 10.7557, 0.372111)
+shape = SubResource("BoxShape3D_gai14")
 
 [node name="CollisionShape3D12" type="CollisionShape3D" parent="ship/Cube/StaticBody3D"]
 transform = Transform3D(0.999954, 0, 0, 0, 0.999948, 0, 0, 0, 1.00017, 0.968, 5.21075, -0.45616)
 shape = SubResource("BoxShape3D_aryny")
 
 [node name="CollisionShape3D13" type="CollisionShape3D" parent="ship/Cube/StaticBody3D"]
-transform = Transform3D(0.999918, 0, 0, 0, 0.999908, 0, 0, 0, 1.00013, 0.840675, 5.21074, -0.260969)
+transform = Transform3D(0.999895, 0, 0, 0, 0.999882, 0, 0, 0, 1.0001, 0.721869, 5.21074, -0.260969)
 shape = SubResource("BoxShape3D_i7k3y")
 
 [node name="CollisionShape3D14" type="CollisionShape3D" parent="ship/Cube/StaticBody3D"]
@@ -244,6 +317,10 @@ shape = SubResource("BoxShape3D_vdy35")
 transform = Transform3D(0.975828, 0, 0.218389, 0, 0.999942, 0, -0.218302, 0, 0.976218, 0.778421, 6.02194, -0.821092)
 shape = SubResource("BoxShape3D_vdy35")
 
+[node name="CollisionShape3D20" type="CollisionShape3D" parent="ship/Cube/StaticBody3D"]
+transform = Transform3D(0.949835, 0, -0.312691, 0, 0.999936, 0, 0.312566, 0, 0.950215, 0.854535, 5.73679, -0.130914)
+shape = SubResource("BoxShape3D_vdy35")
+
 [node name="CollisionShape3D15" type="CollisionShape3D" parent="ship/Cube/StaticBody3D"]
 transform = Transform3D(0.999905, 0, 0, 0, 0.999894, 0, 0, 0, 1.0003, -0.00237413, 17.4317, -1.02487)
 shape = SubResource("BoxShape3D_j1owh")
@@ -276,6 +353,7 @@ shape = SubResource("BoxShape3D_qcucu")
 
 [node name="Cube_003" parent="ship" index="2"]
 transform = Transform3D(92.3071, 0, 0, 0, -2.50057, 0, 0, 0, 36.6858, 7.97361, 29.7816, 0)
+visible = false
 surface_material_override/0 = SubResource("StandardMaterial3D_qcucu")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="ship/Cube_003" index="0"]
@@ -442,7 +520,7 @@ transform = Transform3D(-0.555087, 0, 3.94615, 0, 3.985, 0, -3.94615, 0, -0.5550
 transform = Transform3D(-5.61292, 0, -3.19792, 0, 6.46, 0, 3.19792, 0, -5.61292, 5.02064, 1.27826, -9.35246)
 
 [node name="mannequin2" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("10_cuepq")]
-transform = Transform3D(-0.0562591, 0, -6.45975, 3.72545, 5.27746, -0.0324456, 5.27725, -3.7256, -0.0459605, 71.2954, 0.67665, -2.41113)
+transform = Transform3D(-0.0562591, 0, -6.45975, 3.72545, 5.27746, -0.0324456, 5.27725, -3.7256, -0.0459605, 66.7291, 0.67665, -5.26876)
 visible = false
 
 [node name="AnimationPlayer" parent="mannequin2" index="1"]
@@ -456,6 +534,10 @@ max_distance = 35.0
 [node name="Vendingmaschine" parent="." groups=["anomaly_objects"] instance=ExtResource("4_uv0cr")]
 transform = Transform3D(2.98296, 0, 3.06926, 0, 4.28, 0, -3.06926, 0, 2.98296, -79.2031, 13.3523, -26.4979)
 
+[node name="Vendingmaschine2" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("4_uv0cr")]
+transform = Transform3D(-1.87085e-07, 0, 4.28, 0, 4.28, 0, -4.28, 0, -1.87085e-07, -81.156, 13.3523, 26.074)
+visible = false
+
 [node name="Barrels" parent="." groups=["anomaly_objects"] instance=ExtResource("5_2k72t")]
 transform = Transform3D(3.58611, 0, 0.52955, 0, 3.625, 0, -0.52955, 0, 3.58611, -43.4788, 3.10207, -1.37515)
 
@@ -465,6 +547,14 @@ visible = false
 
 [node name="chair2" parent="." groups=["anomaly_objects"] instance=ExtResource("12_cuepq")]
 transform = Transform3D(0.286276, 0, 1.1499, 0, 1.185, 0, -1.1499, 0, 0.286276, 78.6684, 14.2266, 24.6436)
+
+[node name="sedan" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("13_lnal4")]
+transform = Transform3D(3.9333, 0, -5.14342, 0, 6.475, 0, 5.14342, 0, 3.9333, -71.1887, 16.2432, 5.97438)
+visible = false
+script = ExtResource("14_8pf7b")
+bounce_height = 0.835
+bounce_speed = 14.845
+enable_rotation = false
 
 [node name="waschingmaschine" parent="." groups=["anomaly_objects"] instance=ExtResource("13_oohmo")]
 transform = Transform3D(-5.52636, 0, -4.92883, 0, 7.405, 0, 4.92883, 0, -5.52636, 60.5974, 1.25286, -22.0584)
@@ -530,6 +620,40 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.7714, 0, -25.3653)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ghostArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.37093, -2.02478)
 shape = SubResource("BoxShape3D_0tqio")
+
+[node name="wasser" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.32396, 0)
+visible = false
+mesh = SubResource("PlaneMesh_5smfn")
+
+[node name="toiletpaper" parent="." groups=["anomaly_objects"] instance=ExtResource("18_b4mjg")]
+transform = Transform3D(10.075, 0, 0, 0, 10.075, 0, 0, 0, 10.075, -45.947, 7.27329, -3.34472)
+
+[node name="toilet" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("19_lnal4")]
+transform = Transform3D(-1.925, 0, -1.68289e-07, 0, 1.925, 0, 1.68289e-07, 0, -1.925, -2.13467, 0.79165, 6.64407)
+visible = false
+
+[node name="firelöscher" parent="." instance=ExtResource("20_8pf7b")]
+transform = Transform3D(0.99248, 0, 2.85226, 0, 3.02, 0, -2.85226, 0, 0.99248, -81.0945, 12.1978, 21.3935)
+
+[node name="firelöscher2" parent="." groups=["anomaly_objects"] instance=ExtResource("20_8pf7b")]
+transform = Transform3D(0.99248, 0, 2.85226, 0, 3.02, 0, -2.85226, 0, 0.99248, -81.0945, 12.1978, 18.8294)
+
+[node name="firelöscher3" parent="." instance=ExtResource("20_8pf7b")]
+transform = Transform3D(2.17701, 0, 2.09309, 0, 3.02, 0, -2.09309, 0, 2.17701, -80.061, 12.1978, 16.0104)
+
+[node name="door" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("21_vdy35")]
+transform = Transform3D(-5.47499, 0, 0.00936404, 0, 5.475, 0, -0.00936404, 0, -5.47499, -0.894699, 12.5153, 29.1104)
+visible = false
+
+[node name="shit" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("24_vdy35")]
+transform = Transform3D(-0.00500091, 0, -0.00865973, 0, 0.01, 0, 0.00865973, 0, -0.00500091, -45.5808, 4.21453, -1.52946)
+visible = false
+script = ExtResource("14_8pf7b")
+bounce_height = 0.1
+enable_impulse = false
+rotate_x = false
+rotate_y = true
 
 [editable path="ship"]
 [editable path="mannequin2"]

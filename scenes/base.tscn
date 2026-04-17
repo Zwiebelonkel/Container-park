@@ -58,17 +58,17 @@ step_height = 1.04
 [node name="Shotgun" parent="Player/Head/Camera3D" index="0"]
 max_ammo = 1000
 pellet_count = 20
-fire_range = 1000.0
+spread_degrees = 9.185
+fire_range = 500.0
 fire_rate = 0.1
 tracer_duration = 9.82
+tracer_color = Color(1, 0.0588235, 0.54902, 0.85098)
+movement_sway_amount = 7.98
 
 [node name="MuzzleFlash" parent="Player/Head/Camera3D/Shotgun" index="1"]
 visible = false
 omni_range = 4096.0
 omni_attenuation = -0.905
-
-[node name="ColorRect" parent="Player/CanvasLayer" index="1"]
-visible = false
 
 [node name="shot" parent="Player" index="3"]
 bus = &"SFX"
@@ -91,7 +91,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4902, 5.61128, 26.981)
 [node name="AnomalyManager" type="Node" parent="."]
 script = ExtResource("4_anomalymgr")
 anomaly_chance_per_segment = 1.0
-scale_up_factor = 2.135
+scale_up_factor = 1.575
 scale_down_factor = 0.67
 
 [node name="GameUI" type="CanvasLayer" parent="."]

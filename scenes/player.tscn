@@ -27,20 +27,20 @@ rings = 0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fjrip"]
 shader = ExtResource("5_tuyoq")
-shader_parameter/grain_intensity = 0.313
+shader_parameter/grain_intensity = 0.623
 shader_parameter/min_lum = 0.0
-shader_parameter/max_lum = 1.0
-shader_parameter/time_scale = 0.624
-shader_parameter/vignette_darkness = 0.5
-shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/max_lum = 0.27
+shader_parameter/time_scale = 0.303
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.1
 shader_parameter/vignette_inner_radius = 0.2
-shader_parameter/scanline_intensity = 0.2
-shader_parameter/barrel_distortion = 0.5
-shader_parameter/chromatic_aberration = 0.0
+shader_parameter/scanline_intensity = 0.531
+shader_parameter/barrel_distortion = 0.07
+shader_parameter/chromatic_aberration = 0.002
 shader_parameter/crt_vignette_power = 0.0
-shader_parameter/pixel_resolution_x = 410
+shader_parameter/pixel_resolution_x = 460
 shader_parameter/pixel_resolution_y = 900
-shader_parameter/enable_color_quantization = false
+shader_parameter/enable_color_quantization = true
 shader_parameter/color_quant_steps = 28.517
 shader_parameter/warble_amount = 0.003
 shader_parameter/warble_speed = 0.449
@@ -66,6 +66,8 @@ shader_parameter/viewport_size_override = Vector2(0, 0)
 script = ExtResource("1_player")
 walk_speed = 35.18
 jump_velocity = 2.815
+wave_sway_tilt_min_degrees = 1.565
+wave_sway_tilt_max_degrees = 12.79
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -120,6 +122,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+visible = false
 material = SubResource("ShaderMaterial_dqkch")
 anchors_preset = 15
 anchor_right = 1.0

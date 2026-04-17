@@ -665,14 +665,31 @@ func _create_hit_proxy(root: Node3D, proxy_name: String, radius: float) -> Stati
 	var proxy := StaticBody3D.new()
 	proxy.name = proxy_name
 	proxy.position = proxy_center
+
 	var shape := CollisionShape3D.new()
 	var sphere := SphereShape3D.new()
 	sphere.radius = proxy_radius
 	shape.shape = sphere
 	proxy.add_child(shape)
+
+	# 🔥 DEBUG VISUAL (NEU)
+	var mesh := MeshInstance3D.new()
+	var sphere_mesh := SphereMesh.new()
+	sphere_mesh.radius = proxy_radius
+	mesh.mesh = sphere_mesh
+
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(1, 0, 0, 0.3) # rot, transparent
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+	mesh.material_override = mat
+	proxy.add_child(mesh)
+
 	root.add_child(proxy)
 	proxy.owner = root.owner
 	shape.owner = root.owner
+	mesh.owner = root.owner
 
 	if root == _active_target:
 		_active_target_created_proxy = proxy
@@ -680,7 +697,6 @@ func _create_hit_proxy(root: Node3D, proxy_name: String, radius: float) -> Stati
 		_active_light_created_proxy = proxy
 
 	return proxy
-
 func _find_hit_root(root: Node) -> Node:
 	var stack: Array[Node] = [root]
 	while not stack.is_empty():

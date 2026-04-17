@@ -1,0 +1,11 @@
+Model Information:
+* title:	Poop
+* source:	https://sketchfab.com/3d-models/poop-1796247999904dea9fd0ae4424222c8e
+* author:	Xillute | Dev (https://sketchfab.com/janchristian)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Poop" (https://sketchfab.com/3d-models/poop-1796247999904dea9fd0ae4424222c8e) by Xillute | Dev (https://sketchfab.com/janchristian) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
