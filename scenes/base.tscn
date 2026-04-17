@@ -55,6 +55,13 @@ walk_speed = 19.21
 jump_velocity = 21.285
 step_height = 1.04
 
+[node name="Shotgun" parent="Player/Head/Camera3D" index="0"]
+max_ammo = 1000
+pellet_count = 20
+fire_range = 1000.0
+fire_rate = 0.1
+tracer_duration = 9.82
+
 [node name="MuzzleFlash" parent="Player/Head/Camera3D/Shotgun" index="1"]
 visible = false
 omni_range = 4096.0

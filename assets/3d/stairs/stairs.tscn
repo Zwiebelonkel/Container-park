@@ -1,6 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://bu0606082uyxb"]
+[gd_scene load_steps=6 format=3 uid="uid://bu0606082uyxb"]
 
 [ext_resource type="PackedScene" uid="uid://dyle1425w86ja" path="res://assets/3d/stairs/scene.gltf" id="1_sf7nf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sf7nf"]
+albedo_color = Color(0.136826, 0.136826, 0.136826, 1)
+metallic = 0.9
+roughness = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sf7nf"]
 size = Vector3(0.306274, 1, 0.245361)
@@ -12,10 +17,12 @@ size = Vector3(0.30777, 1, 0.174438)
 size = Vector3(0.312088, 1, 0.160461)
 
 [node name="stairs" type="Node3D"]
-transform = Transform3D(1.6, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("1_sf7nf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00266755, 0, -2.12472)
+
+[node name="Staircase__0" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_sf7nf")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Sketchfab_Scene/Sketchfab_model/5e015919f9ed4831a0a28bbc142191f3_fbx/RootNode/Staircase/Staircase__0" index="0"]
 

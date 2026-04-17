@@ -1,0 +1,11 @@
+Model Information:
+* title:	PSX Washing Machine
+* source:	https://sketchfab.com/3d-models/psx-washing-machine-e25cb370b5b6497f9aa0f06ced9412fc
+* author:	Voidy Entertainment (https://sketchfab.com/VoidyAssets)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "PSX Washing Machine" (https://sketchfab.com/3d-models/psx-washing-machine-e25cb370b5b6497f9aa0f06ced9412fc) by Voidy Entertainment (https://sketchfab.com/VoidyAssets) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

@@ -1,13 +1,11 @@
-res://scripts/AnomalyManager.gd
-res://scripts/RoomController.gd
-res://assets/3d/ship/ship.tscn
+res://scenes/player.tscn
 res://assets/shaders/ps1.gdshader
 res://assets/shaders/CRT.gdshader
 res://assets/shaders/sky2.gdshader
-res://scenes/player.tscn
 res://ui/mainMenu.tscn
+res://assets/3d/ship/ship.tscn
 res://assets/3d/container/container.tscn
 res://scenes/base.tscn
 res://ui/optionsPanel.tscn
 res://assets/3d/stairs/stairs.tscn
-res://scripts/Player.gd
+res://assets/3d/ghost/ghost.tscn

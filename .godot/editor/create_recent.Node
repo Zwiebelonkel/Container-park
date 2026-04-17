@@ -1,14 +1,14 @@
+SpotLight3D
 CollisionShape3D
+Area3D
+Marker3D
 StaticBody3D
 Node3D
 OmniLight3D
 AudioStreamPlayer3D
 AudioStreamPlayer
-Area3D
 MeshInstance3D
-SpotLight3D
 ColorRect
 CanvasLayer
 TextureRect
 Button
-DirectionalLight3D
