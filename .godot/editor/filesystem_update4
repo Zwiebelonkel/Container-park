@@ -9,3 +9,4 @@ res://scenes/base.tscn
 res://ui/optionsPanel.tscn
 res://assets/3d/stairs/stairs.tscn
 res://assets/3d/ghost/ghost.tscn
+res://scripts/AnomalyManager.gd

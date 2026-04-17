@@ -481,10 +481,10 @@ transform = Transform3D(-2.82157e-07, 0, -6.455, 0, 6.455, 0, 6.455, 0, -2.82157
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.21801, 1.1616, -27.4803)
 gizmo_extents = 1.71
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="ghostArea" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.9855, 0, -25.3653)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ghostArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.37093, -2.02478)
 shape = SubResource("BoxShape3D_0tqio")
 
