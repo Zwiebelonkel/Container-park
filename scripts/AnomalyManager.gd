@@ -21,6 +21,14 @@ signal anomaly_shot_down()
 @export var ghost_look_dot_threshold: float = 0.9
 @export var ghost_scene: PackedScene = preload("res://assets/3d/ghost/ghost.tscn")
 @export var ghost_scare_audio: AudioStream = preload("res://assets/audio/scare_mid.mp3")
+@export var correction_fog_enabled: bool = true
+@export var correction_fog_amount: int = 48
+@export var correction_fog_lifetime: float = 1.25
+@export var correction_fog_initial_velocity: float = 1.2
+@export var correction_fog_scale_min: float = 0.35
+@export var correction_fog_scale_max: float = 0.8
+@export var correction_fog_gravity: Vector3 = Vector3(0.0, 0.25, 0.0)
+@export var correction_fog_color: Color = Color(0.86, 0.9, 0.95, 0.55)
 
 const MOD_HIDE := "hide"
 const MOD_SHOW := "show"
@@ -709,6 +717,63 @@ func _find_hit_root(root: Node) -> Node:
 			stack.append(child)
 	return null
 
+func _get_active_anomaly_world_position() -> Vector3:
+	if is_instance_valid(_active_target):
+		return _active_target.global_position
+	if is_instance_valid(_active_light):
+		return _active_light.global_position
+	if is_instance_valid(_active_ghost_area):
+		return _active_ghost_area.global_position
+	return global_position
+
+func _spawn_correction_fog_effect(world_position: Vector3) -> void:
+	if not correction_fog_enabled:
+		return
+
+	var particles := GPUParticles3D.new()
+	particles.name = "CorrectionFogBurst"
+	particles.one_shot = true
+	particles.amount = max(1, correction_fog_amount)
+	particles.lifetime = max(0.1, correction_fog_lifetime)
+	particles.explosiveness = 0.95
+	particles.local_coords = false
+	particles.draw_order = GPUParticles3D.DRAW_ORDER_LIFETIME
+
+	var process_material := ParticleProcessMaterial.new()
+	process_material.direction = Vector3(0.0, 0.25, 0.0)
+	process_material.spread = 180.0
+	process_material.initial_velocity_min = max(0.1, correction_fog_initial_velocity * 0.6)
+	process_material.initial_velocity_max = max(0.2, correction_fog_initial_velocity)
+	process_material.gravity = correction_fog_gravity
+	process_material.scale_min = correction_fog_scale_min
+	process_material.scale_max = max(correction_fog_scale_min, correction_fog_scale_max)
+	process_material.color = correction_fog_color
+	process_material.damping_min = 1.4
+	process_material.damping_max = 2.1
+	particles.process_material = process_material
+
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.6, 0.6)
+	particles.draw_pass_1 = quad
+
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	material.albedo_color = correction_fog_color
+	material.disable_receive_shadows = true
+	particles.material_override = material
+
+	get_tree().current_scene.add_child(particles)
+	particles.global_position = world_position
+	particles.emitting = true
+	_queue_node_free_later(particles, particles.lifetime + 1.0)
+
+func _queue_node_free_later(node: Node, delay: float) -> void:
+	await get_tree().create_timer(max(0.1, delay)).timeout
+	if is_instance_valid(node):
+		node.queue_free()
+
 func clear_anomaly() -> void:
 	if is_instance_valid(_active_target):
 		_active_target.scale = _active_target_original_scale
@@ -767,8 +832,10 @@ func clear_anomaly() -> void:
 	emit_signal("anomaly_cleared")
 
 func on_anomaly_shot() -> void:
+	var anomaly_position := _get_active_anomaly_world_position()
 	var was_ghost_scare := _active_modification == MOD_GHOST_SCARE
 	clear_anomaly()
+	_spawn_correction_fog_effect(anomaly_position)
 	if was_ghost_scare:
 		_play_player_ghost_feedback()
 
