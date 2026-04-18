@@ -74,8 +74,8 @@ func _on_ammo_changed(current: int, max_ammo: int) -> void:
 	if not _ammo_value or not _ammo_bar:
 		return
 
-	var safe_max := max(max_ammo, 1)
-	var safe_current := clamp(current, 0, safe_max)
+	var safe_max :int= max(max_ammo, 1)
+	var safe_current :int= clamp(current, 0, safe_max)
 	_ammo_value.text = "%d / %d" % [safe_current, safe_max]
 	_ammo_bar.max_value = safe_max
 	_ammo_bar.value = safe_current

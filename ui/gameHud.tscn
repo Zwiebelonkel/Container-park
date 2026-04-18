@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cofe78xjh6h3k"]
 
 [node name="HUDRoot" type="Control"]
 layout_mode = 3
@@ -24,12 +24,12 @@ theme_override_constants/margin_bottom = 18
 
 [node name="TopRow" type="HBoxContainer" parent="ScreenMargin"]
 layout_mode = 2
-alignment = 1
 size_flags_vertical = 0
 theme_override_constants/separation = 14
+alignment = 1
 
 [node name="ProgressCard" type="PanelContainer" parent="ScreenMargin/TopRow"]
-custom_minimum_size = Vector2(300, 116)
+custom_minimum_size = Vector2(300, 37.35)
 layout_mode = 2
 mouse_filter = 2
 
@@ -45,21 +45,22 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="SubLabel" type="Label" parent="ScreenMargin/TopRow/ProgressCard/ProgressMargin/ProgressVBox"]
+visible = false
+modulate = Color(0.95, 0.91, 0.8, 1)
 layout_mode = 2
 text = "Anomalie-Jagd läuft"
-modulate = Color(0.95, 0.91, 0.8, 1)
 
 [node name="CounterLabel" type="Label" parent="ScreenMargin/TopRow/ProgressCard/ProgressMargin/ProgressVBox"]
 layout_mode = 2
-text = "Fortschritt: 0/0"
 theme_override_font_sizes/font_size = 30
+text = "Fortschritt: 0/0"
 
 [node name="StatusLabel" type="Label" parent="ScreenMargin/TopRow/ProgressCard/ProgressMargin/ProgressVBox"]
 visible = false
-layout_mode = 2
-text = "🏆 Ziel erreicht!"
-theme_override_font_sizes/font_size = 22
 modulate = Color(0.25, 1, 0.52, 1)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "🏆 Ziel erreicht!"
 
 [node name="Fill" type="Control" parent="ScreenMargin/TopRow"]
 custom_minimum_size = Vector2(24, 0)
@@ -89,14 +90,14 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="AmmoTitle" type="Label" parent="ScreenMargin/TopRow/RightColumn/AmmoCard/AmmoMargin/AmmoVBox"]
+modulate = Color(0.729412, 0.85098, 1, 1)
 layout_mode = 2
 text = "Munition"
-modulate = Color(0.729412, 0.85098, 1, 1)
 
 [node name="AmmoValue" type="Label" parent="ScreenMargin/TopRow/RightColumn/AmmoCard/AmmoMargin/AmmoVBox"]
 layout_mode = 2
-text = "6 / 6"
 theme_override_font_sizes/font_size = 30
+text = "6 / 6"
 
 [node name="AmmoBar" type="ProgressBar" parent="ScreenMargin/TopRow/RightColumn/AmmoCard/AmmoMargin/AmmoVBox"]
 layout_mode = 2
@@ -105,6 +106,7 @@ value = 6.0
 show_percentage = false
 
 [node name="ScannerChip" type="PanelContainer" parent="ScreenMargin/TopRow/RightColumn"]
+visible = false
 custom_minimum_size = Vector2(250, 52)
 layout_mode = 2
 mouse_filter = 2

@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=4 uid="uid://00xsnpo38nw4"]
+[gd_scene load_steps=61 format=4 uid="uid://00xsnpo38nw4"]
 
 [ext_resource type="PackedScene" uid="uid://bd2pym1leqyri" path="res://assets/3d/ship/ship.glb" id="1_la6qk"]
 [ext_resource type="PackedScene" uid="uid://cfimwrldvrmjx" path="res://assets/3d/container/container.tscn" id="2_qfyhj"]
@@ -22,7 +22,12 @@
 [ext_resource type="PackedScene" uid="uid://cnsvshcis3gr0" path="res://assets/3d/toilet/scene.gltf" id="19_lnal4"]
 [ext_resource type="PackedScene" uid="uid://csxtchs1dyaxm" path="res://assets/3d/fireextinguisher/scene.gltf" id="20_8pf7b"]
 [ext_resource type="PackedScene" uid="uid://csbnig467pu1y" path="res://assets/3d/metaldoor/scene.gltf" id="21_vdy35"]
+[ext_resource type="PackedScene" uid="uid://ctqo2l1py36pv" path="res://assets/3d/plakat1/plakat1.glb" id="24_0tqio"]
 [ext_resource type="PackedScene" uid="uid://cwsfcg7ou8u1p" path="res://assets/3d/shit/scene.gltf" id="24_vdy35"]
+[ext_resource type="PackedScene" uid="uid://1yavgmi4i2q8" path="res://assets/3d/plakat2/plakat2.glb" id="25_0tqio"]
+[ext_resource type="PackedScene" uid="uid://bc6mbmc6vdt2q" path="res://assets/3d/plakat3/plakat3.glb" id="26_aryny"]
+[ext_resource type="PackedScene" uid="uid://flb5b6fwrbfd" path="res://assets/3d/caution1/warning.glb" id="27_uuba2"]
+[ext_resource type="PackedScene" uid="uid://b7m1iw5nwpnaw" path="res://assets/3d/caution2/warning.glb" id="28_j1owh"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7juku"]
 albedo_texture = ExtResource("2_u4tj7")
@@ -634,6 +639,23 @@ visible = false
 
 [node name="shit" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("24_vdy35")]
 transform = Transform3D(-0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, -0.5, -45.581, 4.215, -1.41193)
+visible = false
+
+[node name="plakat1" parent="." instance=ExtResource("24_0tqio")]
+transform = Transform3D(-0.435, 6.56832e-08, 2.8711e-15, 0, -1.90145e-08, 0.435, 6.56832e-08, 0.435, 1.90145e-08, 44.6151, 7.60906, -22.2316)
+
+[node name="plakat2" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("25_0tqio")]
+transform = Transform3D(-0.435, 3.80289e-08, 1.6623e-15, 0, -1.90145e-08, 0.435, 3.80289e-08, 0.435, 1.90145e-08, 44.599, 7.59906, -22.2278)
+visible = false
+
+[node name="plakat3" parent="." instance=ExtResource("26_aryny")]
+transform = Transform3D(-0.63, 9.51274e-08, 4.15815e-15, 0, -2.75382e-08, 0.63, 9.51274e-08, 0.63, 2.75382e-08, 49.3182, 9.08858, -22.1939)
+
+[node name="warning" parent="." instance=ExtResource("27_uuba2")]
+transform = Transform3D(-2, 3.01992e-07, 1.32005e-14, 0, -8.74228e-08, 2, 3.01992e-07, 2, 8.74228e-08, 48.8383, 20.9974, -30.3134)
+
+[node name="warning2" parent="." groups=["anomaly_objects", "show_only"] instance=ExtResource("28_j1owh")]
+transform = Transform3D(-2, -1.74846e-07, -7.64274e-15, 0, -8.74228e-08, 2, -1.74846e-07, 2, 8.74228e-08, 48.8467, 20.9956, -30.3115)
 visible = false
 
 [editable path="ship"]
