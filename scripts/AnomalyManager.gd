@@ -37,6 +37,14 @@ const MOD_SCALE_UP := "scale_up"
 const MOD_SCALE_DOWN := "scale_down"
 const MOD_LIGHT_FLICKER := "light_flicker"
 const MOD_GHOST_SCARE := "ghostscare"
+const DEBUG_ANOMALY_IDS: Array[String] = [
+	MOD_HIDE,
+	MOD_SHOW,
+	MOD_SCALE_UP,
+	MOD_SCALE_DOWN,
+	MOD_LIGHT_FLICKER,
+	MOD_GHOST_SCARE
+]
 
 var _segment_order: Array[Node3D] = []
 var _segment_has_planned_anomaly: Dictionary = {}
@@ -196,6 +204,74 @@ func _apply_random_anomaly(segment: Node3D) -> bool:
 	print("TARGET PARENT:", target.get_parent().name)
 
 	return _apply_random_object_modification(target, is_hidden, is_show_only)
+
+func get_debug_anomaly_ids() -> PackedStringArray:
+	return PackedStringArray(DEBUG_ANOMALY_IDS)
+
+func apply_debug_anomaly(anomaly_id: String) -> bool:
+	if not DEBUG_ANOMALY_IDS.has(anomaly_id):
+		return false
+
+	if not is_instance_valid(_active_segment):
+		_update_active_segment()
+	if not is_instance_valid(_active_segment):
+		return false
+
+	clear_anomaly()
+	var applied := _apply_specific_anomaly(_active_segment, anomaly_id)
+	GameManager.set_current_round_has_anomaly(applied)
+	if applied:
+		_segment_has_planned_anomaly[_active_segment] = true
+	return applied
+
+func _apply_specific_anomaly(segment: Node3D, anomaly_id: String) -> bool:
+	if not is_instance_valid(segment):
+		return false
+
+	match anomaly_id:
+		MOD_LIGHT_FLICKER:
+			var light_candidates := _collect_anomaly_lights_in_segment(segment)
+			if light_candidates.is_empty():
+				return false
+			var picked_light: Light3D = light_candidates[randi_range(0, light_candidates.size() - 1)]
+			return _start_light_flicker(picked_light)
+
+		MOD_GHOST_SCARE:
+			var ghost_area := segment.find_child("ghostArea", true, false)
+			var ghost_spawn := segment.find_child("ghostSpawn", true, false)
+			if ghost_area is Area3D and ghost_spawn is Marker3D:
+				return _start_ghost_scare(ghost_area, ghost_spawn)
+			return false
+
+		MOD_SHOW, MOD_HIDE, MOD_SCALE_UP, MOD_SCALE_DOWN:
+			var object_candidates: Array[Node3D] = _collect_anomaly_objects_in_segment(segment)
+			var supported_targets: Array[Node3D] = []
+			for obj in object_candidates:
+				var is_hidden := not obj.visible
+				var is_show_only := obj.is_in_group("show_only")
+				var available_mods: Array[String] = []
+				if is_show_only:
+					available_mods = [MOD_SHOW]
+				elif is_hidden:
+					available_mods = [MOD_SHOW]
+				else:
+					available_mods = [MOD_SCALE_UP, MOD_SCALE_DOWN, MOD_HIDE]
+
+				if available_mods.has(anomaly_id):
+					supported_targets.append(obj)
+
+			if supported_targets.is_empty():
+				return false
+
+			var target: Node3D = supported_targets[randi_range(0, supported_targets.size() - 1)]
+			return _apply_random_object_modification(
+				target,
+				not target.visible,
+				target.is_in_group("show_only"),
+				anomaly_id
+			)
+
+	return false
 	
 	
 func _start_light_flicker(light: Light3D) -> bool:
@@ -214,7 +290,8 @@ func _start_light_flicker(light: Light3D) -> bool:
 func _apply_random_object_modification(
 	target: Node3D,
 	is_hidden_by_default: bool,
-	is_show_only: bool
+	is_show_only: bool,
+	forced_modification: String = ""
 ) -> bool:
 	if not is_instance_valid(target):
 		return false
@@ -243,7 +320,12 @@ func _apply_random_object_modification(
 	if modifications.is_empty():
 		return false
 
-	_active_modification = modifications[randi_range(0, modifications.size() - 1)]
+	if forced_modification != "":
+		if not modifications.has(forced_modification):
+			return false
+		_active_modification = forced_modification
+	else:
+		_active_modification = modifications[randi_range(0, modifications.size() - 1)]
 
 	# ─── Hitbox / Proxy ────────────────────────────────────
 	if _active_modification == MOD_HIDE:
@@ -594,14 +676,14 @@ func _is_in_parent_chain(node: Node, possible_ancestor: Node) -> bool:
 	return false
 
 
-func _get_player_ghost_feedback_node() -> Node:
+func _get_player_feedback_node(feedback_name: String = "ghost") -> Node:
 	var player := get_tree().get_first_node_in_group("player")
 	if not is_instance_valid(player):
 		return null
-	return player.find_child("ghost", true, false)
+	return player.find_child(feedback_name, true, false)
 
-func _play_player_ghost_feedback() -> void:
-	var feedback_node := _get_player_ghost_feedback_node()
+func _play_player_ghost_feedback(feedback_name: String = "ghost") -> void:
+	var feedback_node := _get_player_feedback_node(feedback_name)
 	if not is_instance_valid(feedback_node):
 		return
 
@@ -615,9 +697,9 @@ func _play_player_ghost_feedback() -> void:
 		if is_instance_valid(feedback_node):
 			(feedback_node as Node3D).visible = false
 
-func _play_player_ghost_feedback_delayed(delay_seconds: float) -> void:
+func _play_player_ghost_feedback_delayed(delay_seconds: float, feedback_name: String = "ghost") -> void:
 	await get_tree().create_timer(max(0.0, delay_seconds)).timeout
-	_play_player_ghost_feedback()
+	_play_player_ghost_feedback(feedback_name)
 
 func _get_visual_bounds_center_and_radius(root: Node3D) -> Dictionary:
 	var has_visual := false
@@ -847,9 +929,9 @@ func on_anomaly_shot() -> void:
 	clear_anomaly()
 	_spawn_correction_fog_effect(anomaly_position)
 	if was_ghost_scare:
-		_play_player_ghost_feedback()
+		_play_player_ghost_feedback("ghost")
 	elif was_warning2_fix:
-		_play_player_ghost_feedback_delayed(warning2_ghost_feedback_delay)
+		_play_player_ghost_feedback_delayed(warning2_ghost_feedback_delay, "killer")
 
 	GameManager.set_current_round_has_anomaly(false)
 	emit_signal("anomaly_shot_down")
