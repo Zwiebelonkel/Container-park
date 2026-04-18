@@ -5,6 +5,7 @@ const HUD_SCENE := preload("res://ui/gameHud.tscn")
 @export var counter_prefix: String = "Fortschritt"
 
 var _counter_label: Label
+var _sub_label: Label
 var _status_label: Label
 var _ammo_value: Label
 var _ammo_bar: ProgressBar
