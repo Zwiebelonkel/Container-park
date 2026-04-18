@@ -21,6 +21,7 @@ signal anomaly_shot_down()
 @export var ghost_look_dot_threshold: float = 0.9
 @export var ghost_scene: PackedScene = preload("res://assets/3d/ghost/ghost.tscn")
 @export var ghost_scare_audio: AudioStream = preload("res://assets/audio/scare_mid.mp3")
+@export var warning2_ghost_feedback_delay: float = 0.9
 @export var correction_fog_enabled: bool = true
 @export var correction_fog_amount: int = 48
 @export var correction_fog_lifetime: float = 1.25
@@ -614,6 +615,10 @@ func _play_player_ghost_feedback() -> void:
 		if is_instance_valid(feedback_node):
 			(feedback_node as Node3D).visible = false
 
+func _play_player_ghost_feedback_delayed(delay_seconds: float) -> void:
+	await get_tree().create_timer(max(0.0, delay_seconds)).timeout
+	_play_player_ghost_feedback()
+
 func _get_visual_bounds_center_and_radius(root: Node3D) -> Dictionary:
 	var has_visual := false
 	var min_corner := Vector3.ZERO
@@ -838,10 +843,13 @@ func clear_anomaly() -> void:
 func on_anomaly_shot() -> void:
 	var anomaly_position := _get_active_anomaly_world_position()
 	var was_ghost_scare := _active_modification == MOD_GHOST_SCARE
+	var was_warning2_fix := is_instance_valid(_active_target) and _active_target.name.to_lower() == "warning2"
 	clear_anomaly()
 	_spawn_correction_fog_effect(anomaly_position)
 	if was_ghost_scare:
 		_play_player_ghost_feedback()
+	elif was_warning2_fix:
+		_play_player_ghost_feedback_delayed(warning2_ghost_feedback_delay)
 
 	GameManager.set_current_round_has_anomaly(false)
 	emit_signal("anomaly_shot_down")
