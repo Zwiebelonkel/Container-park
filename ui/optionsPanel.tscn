@@ -115,6 +115,35 @@ layout_mode = 2
 text = "Steuerung: WASD bewegen • Leertaste springen • Linksklick schießen"
 autowrap_mode = 2
 
+[node name="DebugDivider" type="Panel" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxLine_divider")
+
+[node name="DebugTitle" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Debug-Menü (Anomalien)"
+
+[node name="DebugRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="DebugAnomalyPicker" type="OptionButton" parent="MarginContainer/VBoxContainer/DebugRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RunDebugAnomalyButton" type="Button" parent="MarginContainer/VBoxContainer/DebugRow"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Anomalie starten"
+
+[node name="DebugStatus" type="Label" parent="MarginContainer/VBoxContainer"]
+modulate = Color(0.713726, 0.803922, 0.960784, 0.72)
+layout_mode = 2
+text = "Wendet die ausgewählte Anomalie im aktuellen Raum an."
+autowrap_mode = 2
+
 [node name="DividerBottom" type="Panel" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
