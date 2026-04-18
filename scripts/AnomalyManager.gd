@@ -594,14 +594,14 @@ func _is_in_parent_chain(node: Node, possible_ancestor: Node) -> bool:
 	return false
 
 
-func _get_player_ghost_feedback_node() -> Node:
+func _get_player_feedback_node(feedback_name: String = "ghost") -> Node:
 	var player := get_tree().get_first_node_in_group("player")
 	if not is_instance_valid(player):
 		return null
-	return player.find_child("ghost", true, false)
+	return player.find_child(feedback_name, true, false)
 
-func _play_player_ghost_feedback() -> void:
-	var feedback_node := _get_player_ghost_feedback_node()
+func _play_player_ghost_feedback(feedback_name: String = "ghost") -> void:
+	var feedback_node := _get_player_feedback_node(feedback_name)
 	if not is_instance_valid(feedback_node):
 		return
 
@@ -615,9 +615,9 @@ func _play_player_ghost_feedback() -> void:
 		if is_instance_valid(feedback_node):
 			(feedback_node as Node3D).visible = false
 
-func _play_player_ghost_feedback_delayed(delay_seconds: float) -> void:
+func _play_player_ghost_feedback_delayed(delay_seconds: float, feedback_name: String = "ghost") -> void:
 	await get_tree().create_timer(max(0.0, delay_seconds)).timeout
-	_play_player_ghost_feedback()
+	_play_player_ghost_feedback(feedback_name)
 
 func _get_visual_bounds_center_and_radius(root: Node3D) -> Dictionary:
 	var has_visual := false
@@ -847,9 +847,9 @@ func on_anomaly_shot() -> void:
 	clear_anomaly()
 	_spawn_correction_fog_effect(anomaly_position)
 	if was_ghost_scare:
-		_play_player_ghost_feedback()
+		_play_player_ghost_feedback("ghost")
 	elif was_warning2_fix:
-		_play_player_ghost_feedback_delayed(warning2_ghost_feedback_delay)
+		_play_player_ghost_feedback_delayed(warning2_ghost_feedback_delay, "killer")
 
 	GameManager.set_current_round_has_anomaly(false)
 	emit_signal("anomaly_shot_down")
