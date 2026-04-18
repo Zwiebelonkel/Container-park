@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://jnm6jbf67b2l"]
+
+[ext_resource type="PackedScene" uid="uid://bi8yilbwgih4e" path="res://assets/3d/mannequin/scene.gltf" id="1_yl0vp"]
+
+[node name="killer" type="Node3D"]
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_yl0vp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0294557, 0, -0.0161695)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707773, 0.70644, 0, -0.70644, 0.707773, 0, 2.18863, 0.416804)
+light_color = Color(1, 0, 0, 1)
+light_energy = 0.667

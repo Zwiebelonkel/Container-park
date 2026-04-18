@@ -685,6 +685,7 @@ func _get_player_feedback_node(feedback_name: String = "ghost") -> Node:
 func _play_player_ghost_feedback(feedback_name: String = "ghost") -> void:
 	var feedback_node := _get_player_feedback_node(feedback_name)
 	if not is_instance_valid(feedback_node):
+		print("Kein Valid Node")
 		return
 
 	if feedback_node.has_method("play_scare_once"):

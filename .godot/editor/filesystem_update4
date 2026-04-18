@@ -14,3 +14,5 @@ res://assets/3d/ghost/ghost.tscn
 res://scenes/baseScene.tscn
 res://ui/gameHud.tscn
 res://scripts/AnomalyManager.gd
+res://assets/3d/killer.tscn
+res://scripts/OptionsPanel.gd

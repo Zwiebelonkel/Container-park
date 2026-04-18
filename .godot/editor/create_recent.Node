@@ -1,5 +1,5 @@
-MeshInstance3D
 SpotLight3D
+MeshInstance3D
 CollisionShape3D
 Area3D
 Marker3D
