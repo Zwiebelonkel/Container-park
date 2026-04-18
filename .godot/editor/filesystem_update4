@@ -13,3 +13,4 @@ res://assets/3d/stairs/stairs.tscn
 res://assets/3d/ghost/ghost.tscn
 res://scenes/baseScene.tscn
 res://ui/gameHud.tscn
+res://scripts/AnomalyManager.gd
