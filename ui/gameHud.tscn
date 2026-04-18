@@ -1,0 +1,123 @@
+[gd_scene format=3]
+
+[node name="HUDRoot" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ScreenMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="TopRow" type="HBoxContainer" parent="ScreenMargin"]
+layout_mode = 2
+alignment = 1
+size_flags_vertical = 0
+theme_override_constants/separation = 14
+
+[node name="ProgressCard" type="PanelContainer" parent="ScreenMargin/TopRow"]
+custom_minimum_size = Vector2(300, 116)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ProgressMargin" type="MarginContainer" parent="ScreenMargin/TopRow/ProgressCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="ProgressVBox" type="VBoxContainer" parent="ScreenMargin/TopRow/ProgressCard/ProgressMargin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="SubLabel" type="Label" parent="ScreenMargin/TopRow/ProgressCard/ProgressMargin/ProgressVBox"]
+layout_mode = 2
+text = "Anomalie-Jagd läuft"
+modulate = Color(0.95, 0.91, 0.8, 1)
+
+[node name="CounterLabel" type="Label" parent="ScreenMargin/TopRow/ProgressCard/ProgressMargin/ProgressVBox"]
+layout_mode = 2
+text = "Fortschritt: 0/0"
+theme_override_font_sizes/font_size = 30
+
+[node name="StatusLabel" type="Label" parent="ScreenMargin/TopRow/ProgressCard/ProgressMargin/ProgressVBox"]
+visible = false
+layout_mode = 2
+text = "🏆 Ziel erreicht!"
+theme_override_font_sizes/font_size = 22
+modulate = Color(0.25, 1, 0.52, 1)
+
+[node name="Fill" type="Control" parent="ScreenMargin/TopRow"]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RightColumn" type="VBoxContainer" parent="ScreenMargin/TopRow"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 10
+
+[node name="AmmoCard" type="PanelContainer" parent="ScreenMargin/TopRow/RightColumn"]
+custom_minimum_size = Vector2(250, 96)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="AmmoMargin" type="MarginContainer" parent="ScreenMargin/TopRow/RightColumn/AmmoCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="AmmoVBox" type="VBoxContainer" parent="ScreenMargin/TopRow/RightColumn/AmmoCard/AmmoMargin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="AmmoTitle" type="Label" parent="ScreenMargin/TopRow/RightColumn/AmmoCard/AmmoMargin/AmmoVBox"]
+layout_mode = 2
+text = "Munition"
+modulate = Color(0.729412, 0.85098, 1, 1)
+
+[node name="AmmoValue" type="Label" parent="ScreenMargin/TopRow/RightColumn/AmmoCard/AmmoMargin/AmmoVBox"]
+layout_mode = 2
+text = "6 / 6"
+theme_override_font_sizes/font_size = 30
+
+[node name="AmmoBar" type="ProgressBar" parent="ScreenMargin/TopRow/RightColumn/AmmoCard/AmmoMargin/AmmoVBox"]
+layout_mode = 2
+max_value = 6.0
+value = 6.0
+show_percentage = false
+
+[node name="ScannerChip" type="PanelContainer" parent="ScreenMargin/TopRow/RightColumn"]
+custom_minimum_size = Vector2(250, 52)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ScannerMargin" type="MarginContainer" parent="ScreenMargin/TopRow/RightColumn/ScannerChip"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="ScannerLabel" type="Label" parent="ScreenMargin/TopRow/RightColumn/ScannerChip/ScannerMargin"]
+layout_mode = 2
+text = "SCANNER: ONLINE"
+horizontal_alignment = 1
+vertical_alignment = 1
