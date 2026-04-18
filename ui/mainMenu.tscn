@@ -5,11 +5,22 @@
 
 [sub_resource type="Gradient" id="Gradient_bg"]
 colors = PackedColorArray(0.0196078, 0.027451, 0.0470588, 1, 0.0509804, 0.0980392, 0.164706, 1)
-offsets = PackedFloat32Array(0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_bg"]
 gradient = SubResource("Gradient_bg")
 fill = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+bg_color = Color(0.262745, 0.509804, 1, 0.24)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.588235, 0.788235, 1, 0.68)
+corner_radius_top_left = 999
+corner_radius_top_right = 999
+corner_radius_bottom_right = 999
+corner_radius_bottom_left = 999
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menu"]
 bg_color = Color(0.054902, 0.0745098, 0.113725, 0.9)
@@ -24,18 +35,6 @@ corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 shadow_color = Color(0, 0, 0, 0.45)
 shadow_size = 12
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
-bg_color = Color(0.262745, 0.509804, 1, 0.24)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.588235, 0.788235, 1, 0.68)
-corner_radius_top_left = 999
-corner_radius_top_right = 999
-corner_radius_bottom_right = 999
-corner_radius_bottom_left = 999
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -59,9 +58,7 @@ expand_mode = 1
 [node name="BuildBadge" type="PanelContainer" parent="."]
 layout_mode = 0
 anchor_left = 1.0
-anchor_top = 0.0
 anchor_right = 1.0
-anchor_bottom = 0.0
 offset_left = -170.0
 offset_top = 18.0
 offset_right = -20.0
@@ -107,15 +104,15 @@ theme_override_constants/separation = 16
 
 [node name="Title" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 44
 text = "Container Park"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 44
 
 [node name="Subtitle" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+modulate = Color(0.792157, 0.862745, 1, 0.82)
 layout_mode = 2
 text = "Finde die Anomalie, halte die Serie am Leben."
 horizontal_alignment = 1
-modulate = Color(0.792157, 0.862745, 1, 0.82)
 
 [node name="Spacer" type="Control" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 8)
@@ -137,12 +134,13 @@ layout_mode = 2
 text = "Beenden"
 
 [node name="Hint" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+modulate = Color(0.658824, 0.74902, 0.901961, 0.78)
 layout_mode = 2
 text = "ESC im Spiel öffnet das Pause-Menü"
 horizontal_alignment = 1
-modulate = Color(0.658824, 0.74902, 0.901961, 0.78)
 
 [node name="OptionsPanel" parent="." instance=ExtResource("2_opts")]
+custom_minimum_size = Vector2(420, 320)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

@@ -19,7 +19,6 @@ shadow_size = 8
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_divider"]
 color = Color(0.454902, 0.67451, 1, 0.4)
 thickness = 2
-vertical = false
 
 [node name="OptionsPanel" type="Panel"]
 visible = false
@@ -46,15 +45,15 @@ theme_override_constants/separation = 14
 
 [node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Optionen"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 32
 
 [node name="Subtitle" type="Label" parent="MarginContainer/VBoxContainer"]
+modulate = Color(0.729412, 0.827451, 1, 0.76)
 layout_mode = 2
 text = "Passe Darstellung & Steuerung an"
 horizontal_alignment = 1
-modulate = Color(0.729412, 0.827451, 1, 0.76)
 
 [node name="DividerTop" type="Panel" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 8)
@@ -111,10 +110,10 @@ text = "0.002"
 horizontal_alignment = 2
 
 [node name="ControlsInfo" type="Label" parent="MarginContainer/VBoxContainer"]
+modulate = Color(0.713726, 0.803922, 0.960784, 0.72)
 layout_mode = 2
 text = "Steuerung: WASD bewegen • Leertaste springen • Linksklick schießen"
 autowrap_mode = 2
-modulate = Color(0.713726, 0.803922, 0.960784, 0.72)
 
 [node name="DividerBottom" type="Panel" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 8)

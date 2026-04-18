@@ -102,7 +102,7 @@ func _connect_ammo_signal() -> void:
 func _on_streak_changed(streak: int) -> void:
 	if not _counter_label:
 		return
-	var target := max(GameManager.rounds_to_win, 0)
+	var target : int= max(GameManager.rounds_to_win, 0)
 	if target > 0:
 		_counter_label.text = "%s: %d/%d" % [counter_prefix, streak, target]
 	else:
