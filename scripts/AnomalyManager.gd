@@ -37,13 +37,16 @@ const MOD_SCALE_UP := "scale_up"
 const MOD_SCALE_DOWN := "scale_down"
 const MOD_LIGHT_FLICKER := "light_flicker"
 const MOD_GHOST_SCARE := "ghostscare"
+const MOD_ROTATE_TO_PLAYER := "rotate_to_player"
+const ROTATE_TO_PLAYER_SCRIPT: Script = preload("res://scripts/rotateToPlayer.gd")
 const DEBUG_ANOMALY_IDS: Array[String] = [
 	MOD_HIDE,
 	MOD_SHOW,
 	MOD_SCALE_UP,
 	MOD_SCALE_DOWN,
 	MOD_LIGHT_FLICKER,
-	MOD_GHOST_SCARE
+	MOD_GHOST_SCARE,
+	MOD_ROTATE_TO_PLAYER
 ]
 
 var _segment_order: Array[Node3D] = []
@@ -75,6 +78,8 @@ var _ghost_scare_player: AudioStreamPlayer3D = null
 var _ghost_scare_played: bool = false
 var _active_musicbox_audio: AudioStreamPlayer3D = null
 var _scene_lights_before_musicbox: Dictionary = {}
+var _active_script_target: Node3D = null
+var _active_script_target_original_script: Script = null
 
 func _ready() -> void:
 	set_process(false)
@@ -243,7 +248,7 @@ func _apply_specific_anomaly(segment: Node3D, anomaly_id: String) -> bool:
 				return _start_ghost_scare(ghost_area, ghost_spawn)
 			return false
 
-		MOD_SHOW, MOD_HIDE, MOD_SCALE_UP, MOD_SCALE_DOWN:
+		MOD_SHOW, MOD_HIDE, MOD_SCALE_UP, MOD_SCALE_DOWN, MOD_ROTATE_TO_PLAYER:
 			var object_candidates: Array[Node3D] = _collect_anomaly_objects_in_segment(segment)
 			var supported_targets: Array[Node3D] = []
 			for obj in object_candidates:
@@ -256,6 +261,8 @@ func _apply_specific_anomaly(segment: Node3D, anomaly_id: String) -> bool:
 					available_mods = [MOD_SHOW]
 				else:
 					available_mods = [MOD_SCALE_UP, MOD_SCALE_DOWN, MOD_HIDE]
+					if obj.name.to_lower() == "mannequin":
+						available_mods.append(MOD_ROTATE_TO_PLAYER)
 
 				if available_mods.has(anomaly_id):
 					supported_targets.append(obj)
@@ -315,6 +322,8 @@ func _apply_random_object_modification(
 	else:
 		# 🔥 normale sichtbare Objekte
 		modifications = [MOD_SCALE_UP, MOD_SCALE_DOWN, MOD_HIDE]
+		if _active_target.name.to_lower() == "mannequin":
+			modifications.append(MOD_ROTATE_TO_PLAYER)
 
 	# ─── Zufällige Auswahl ─────────────────────────────────
 	if modifications.is_empty():
@@ -352,6 +361,11 @@ func _apply_random_object_modification(
 
 		MOD_SCALE_DOWN:
 			_active_target.scale = _active_target_original_scale * scale_down_factor
+			
+		MOD_ROTATE_TO_PLAYER:
+			_active_script_target = _active_target
+			_active_script_target_original_script = _active_script_target.get_script()
+			_active_script_target.set_script(ROTATE_TO_PLAYER_SCRIPT)
 
 	# ─── Laufzeit / Signals ────────────────────────────────
 	set_process(is_instance_valid(_active_light) or _active_mannequin_swap)
@@ -876,6 +890,9 @@ func clear_anomaly() -> void:
 	if is_instance_valid(_active_light):
 		_active_light.light_energy = _active_light_original_energy
 
+	if is_instance_valid(_active_script_target):
+		_active_script_target.set_script(_active_script_target_original_script)
+
 	if is_instance_valid(_active_mannequin2):
 		_apply_hidden_state(_active_mannequin2, false)
 	if is_instance_valid(_active_mannequin_primary):
@@ -919,6 +936,8 @@ func clear_anomaly() -> void:
 	_ghost_scare_player = null
 	_ghost_scare_played = false
 	_active_musicbox_audio = null
+	_active_script_target = null
+	_active_script_target_original_script = null
 	set_process(false)
 
 	emit_signal("anomaly_cleared")

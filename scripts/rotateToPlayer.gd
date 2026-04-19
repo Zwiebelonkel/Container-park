@@ -6,13 +6,18 @@ extends Node3D
 var target: Node3D
 
 func _ready() -> void:
-	if target_path:
-		target = get_node(target_path)
-	else:
-		target = get_tree().get_first_node_in_group("player") as Node3D
+	_resolve_target()
+
+func _resolve_target() -> void:
+	if target_path and has_node(target_path):
+		target = get_node(target_path) as Node3D
+		return
+	target = get_tree().get_first_node_in_group("player") as Node3D
 
 func _process(delta: float) -> void:
-	if not target:
+	if not is_instance_valid(target):
+		_resolve_target()
+	if not is_instance_valid(target):
 		return
 
 	# Richtung zum Player
