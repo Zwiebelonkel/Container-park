@@ -6,7 +6,7 @@
 [ext_resource type="Shader" uid="uid://baaa0vbgor10e" path="res://assets/shaders/buckshot.gdshader" id="3_qhqgy"]
 [ext_resource type="PackedScene" uid="uid://cekjhq6fmq1fs" path="res://assets/3d/ghost/ghost.tscn" id="4_smehm"]
 [ext_resource type="PackedScene" uid="uid://bi8yilbwgih4e" path="res://assets/3d/mannequin/scene.gltf" id="4_ur7pv"]
-[ext_resource type="AudioStream" uid="uid://dpcudtdabb87" path="res://assets/audio/shot.mp3" id="5_qlg0r"]
+[ext_resource type="AudioStream" uid="uid://csifx612lipmy" path="res://assets/audio/shot.mp3" id="5_qlg0r"]
 [ext_resource type="Shader" uid="uid://c58tnpttta1w4" path="res://assets/shaders/CRT.gdshader" id="5_tuyoq"]
 [ext_resource type="Script" uid="uid://djbja4q3yi4tv" path="res://scripts/shake.gd" id="5_ur7pv"]
 [ext_resource type="PackedScene" uid="uid://jnm6jbf67b2l" path="res://assets/3d/killer.tscn" id="6_y4r1p"]
@@ -23,9 +23,10 @@ emission_energy_multiplier = 16.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_fjrip"]
 material = SubResource("StandardMaterial3D_tuyoq")
-top_radius = 0.3
+top_radius = 0.29
 bottom_radius = 0.0
-radial_segments = 4
+height = 0.526
+radial_segments = 9
 rings = 0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fjrip"]
@@ -84,18 +85,20 @@ current = true
 fov = 85.0
 
 [node name="Shotgun" parent="Head/Camera3D" instance=ExtResource("2_dqkch")]
-transform = Transform3D(-1.25061, 0.336082, -0.344423, 0.347766, 1.29409, 3.04027e-08, 0.332621, -0.0893869, -1.29498, 0.453067, -0.644929, -0.523642)
+transform = Transform3D(-1.29402, 0.347748, 0.0135872, 0.347766, 1.29409, 4.2058e-08, -0.0131226, 0.00352629, -1.33993, 0.30254, -0.644929, -0.531169)
 script = ExtResource("2_shotgun")
+mouse_sway_strength = 0.01
 
 [node name="MuzzleFlash" type="OmniLight3D" parent="Head/Camera3D/Shotgun"]
-transform = Transform3D(0.746268, -5.01983e-07, -4.91738e-07, 4.74975e-08, 0.746266, 1.11759e-08, -2.98023e-08, 1.11759e-08, 0.746269, -0.238189, 0.160996, 1.05241)
+transform = Transform3D(0.746268, -4.68455e-07, -5.06639e-07, 2.79397e-09, 0.746266, 2.23517e-08, -2.98023e-08, 7.45058e-09, 0.746269, -0.298797, 0.177283, 1.28837)
 light_color = Color(1, 0.8, 0.4, 1)
-light_energy = 16.0
-light_specular = 2.909
+light_energy = 0.028
+light_specular = 1.864
+shadow_enabled = true
 omni_range = 3.0
 
 [node name="flash" type="MeshInstance3D" parent="Head/Camera3D/Shotgun/MuzzleFlash"]
-transform = Transform3D(1.33865, -0.0592531, 0.0107483, 0.012065, 0.0295599, -1.33962, 0.0590002, 1.33836, 0.0300636, 0.29922, 0.120271, 0.949675)
+transform = Transform3D(1.33865, -0.0592531, 0.0107483, 0.0120655, 0.0295599, -1.33962, 0.0590002, 1.33836, 0.0300636, 0.450632, 0.079581, -0.474196)
 mesh = SubResource("CylinderMesh_fjrip")
 skeleton = NodePath("../..")
 
@@ -146,7 +149,7 @@ mouse_filter = 2
 [node name="shot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_qlg0r")
 volume_db = -0.36
-pitch_scale = 0.91
+pitch_scale = 0.83
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 visible = false

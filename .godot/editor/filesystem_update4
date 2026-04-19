@@ -16,3 +16,6 @@ res://ui/gameHud.tscn
 res://scripts/AnomalyManager.gd
 res://assets/3d/killer.tscn
 res://scripts/OptionsPanel.gd
+res://assets/3d/gun/gun.tscn
+res://scripts/Shotgun.gd
+res://scripts/rotateToPlayer.gd

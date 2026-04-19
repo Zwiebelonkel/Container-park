@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://d23ltactdn1ih"]
+
+[ext_resource type="PackedScene" uid="uid://rwmtq4s8ls4c" path="res://assets/3d/gun/scene.gltf" id="1_0g3pc"]
+[ext_resource type="Shader" uid="uid://c7l6htfbm8hw5" path="res://assets/shaders/ps1.gdshader" id="2_4wuo3"]
+[ext_resource type="Texture2D" uid="uid://dk8v86dpwghof" path="res://assets/3d/gun/textures/material_diffuse.png" id="3_xvnw1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qj1a"]
+render_priority = 0
+shader = ExtResource("2_4wuo3")
+shader_parameter/affine_mapping = false
+shader_parameter/albedo = ExtResource("3_xvnw1")
+shader_parameter/alpha_scissor = 0.5
+shader_parameter/jitter = 0.25
+shader_parameter/resolution = Vector2i(320, 240)
+
+[node name="gun" type="Node3D"]
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_0g3pc")]
+transform = Transform3D(0.245, 0, 0, 0, 0.0688988, 0.235113, 0, -0.235113, 0.0688988, 0.0271281, 0.014576, -0.0012362)
+
+[node name="Object_4" parent="Sketchfab_Scene/Sketchfab_model/root/GLTF_SceneRootNode/glock_reference_2" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_1qj1a")
+
+[editable path="Sketchfab_Scene"]

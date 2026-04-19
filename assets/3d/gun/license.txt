@@ -1,0 +1,11 @@
+Model Information:
+* title:	USP-S PSX Style +Half-Life Mod
+* source:	https://sketchfab.com/3d-models/usp-s-psx-style-half-life-mod-7a5f18f7035c41e39daa521ffc556288
+* author:	Iron Minecart2 (https://sketchfab.com/iron_minecart2)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "USP-S PSX Style +Half-Life Mod" (https://sketchfab.com/3d-models/usp-s-psx-style-half-life-mod-7a5f18f7035c41e39daa521ffc556288) by Iron Minecart2 (https://sketchfab.com/iron_minecart2) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

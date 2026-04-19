@@ -14,6 +14,10 @@ signal ammo_changed(current: int, max_ammo: int)
 @export var tracer_duration: float = 0.08
 @export var tracer_color: Color = Color(1.0, 0.95, 0.55, 0.85)
 
+@export var recoil_strength_x: float = -0.9   # hoch/runter
+@export var recoil_strength_y: float = 0.8   # seitlich random
+@export var recoil_recover_speed: float = 10.0
+
 # ── Sway ───────────────────────────────
 @export var idle_sway_x_amplitude: float = 0.01
 @export var idle_sway_y_amplitude: float = 0.007
@@ -44,6 +48,9 @@ var _mouse_sway_target: Vector2 = Vector2.ZERO
 var _mouse_sway_current: Vector2 = Vector2.ZERO
 var _fire_kick_offset_z: float = 0.0
 
+var _recoil_offset: Vector2 = Vector2.ZERO
+var _recoil_current: Vector2 = Vector2.ZERO
+
 
 # ──────────────────────────────────────
 
@@ -71,6 +78,18 @@ func _process(delta: float) -> void:
 	_update_weapon_sway(delta)
 
 # ──────────────────────────────────────
+
+func _update_camera_recoil(delta: float) -> void:
+	if not camera:
+		return
+
+	# weich zurück zur Mitte
+	_recoil_offset = _recoil_offset.lerp(Vector2.ZERO, delta * recoil_recover_speed)
+	_recoil_current = _recoil_current.lerp(_recoil_offset, delta * recoil_recover_speed)
+
+	# auf Kamera anwenden
+	camera.rotation_degrees.x -= _recoil_current.y
+	camera.rotation_degrees.y += _recoil_current.x
 
 func _input(event: InputEvent) -> void:
 	# Maus-Sway
@@ -245,6 +264,10 @@ func _trigger_muzzle_flash() -> void:
 		flash.visible = false
 
 # ──────────────────────────────────────
+
+func _apply_camera_recoil() -> void:
+	_recoil_offset.x += randf_range(-recoil_strength_y, recoil_strength_y)
+	_recoil_offset.y += recoil_strength_x
 
 func _play_empty_click() -> void:
 	print("[Shotgun] *click* – leer!")
